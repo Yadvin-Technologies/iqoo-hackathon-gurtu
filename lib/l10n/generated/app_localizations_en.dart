@@ -967,4 +967,727 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get yesterday => 'Yesterday';
+
+  @override
+  String get doctorVisit => 'Doctor visit';
+
+  @override
+  String get doctorVisitHint => 'Note what the doctor says';
+
+  @override
+  String get askDoctor => 'Questions for the doctor';
+
+  @override
+  String get askDoctorHint => 'Gurtu helps you prepare';
+
+  @override
+  String questionsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count questions ready',
+      one: '1 question ready',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lastVisitOn(String date) {
+    return 'Last visit: $date';
+  }
+
+  @override
+  String nextVisitOn(String date) {
+    return 'Next visit: $date';
+  }
+
+  @override
+  String get visitsTitle => 'Doctor visits';
+
+  @override
+  String get visitsSubtitle => 'What every doctor said, kept in one place.';
+
+  @override
+  String get recordVisit => 'Record a visit';
+
+  @override
+  String get visitsOverview => 'All visits at a glance';
+
+  @override
+  String visitsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count visits',
+      one: '1 visit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String doctorsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count doctors',
+      one: '1 doctor',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lastVisit => 'Last visit';
+
+  @override
+  String get nextVisit => 'Next visit';
+
+  @override
+  String get notPlanned => 'Not planned yet';
+
+  @override
+  String get pastVisits => 'Past visits';
+
+  @override
+  String get noVisitsTitle => 'No visits recorded yet';
+
+  @override
+  String get noVisitsBody =>
+      'At the next appointment, tap Record a visit and Gurtu will note what the doctor says.';
+
+  @override
+  String get questionsForNextVisit => 'Questions for the next visit';
+
+  @override
+  String get prepareQuestionsHint =>
+      'Tell Gurtu how you feel. It will suggest what to ask the doctor.';
+
+  @override
+  String get prepareQuestions => 'Prepare questions';
+
+  @override
+  String get viewQuestions => 'View questions';
+
+  @override
+  String get doctorFallback => 'Doctor';
+
+  @override
+  String get doctorSaid => 'What the doctor said';
+
+  @override
+  String get medicinesSection => 'Medicines';
+
+  @override
+  String get testsSection => 'Tests to do';
+
+  @override
+  String get questionsAsked => 'Questions asked';
+
+  @override
+  String askedOf(int asked, int total) {
+    return '$asked of $total asked';
+  }
+
+  @override
+  String get deleteVisit => 'Delete visit';
+
+  @override
+  String get deleteVisitConfirm => 'Delete this visit? This cannot be undone.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get doctorName => 'Doctor\'s name';
+
+  @override
+  String get doctorNameHint => 'e.g. Dr. Meena Rao';
+
+  @override
+  String get visitReason => 'Reason for the visit';
+
+  @override
+  String get visitReasonHint => 'e.g. Sugar check-up';
+
+  @override
+  String get visitDate => 'Date of visit';
+
+  @override
+  String get listenToDoctor => 'Listen to the doctor';
+
+  @override
+  String get stopListening => 'Stop listening';
+
+  @override
+  String get speak => 'Speak';
+
+  @override
+  String get recordingConsent =>
+      'Let the doctor know you are noting the conversation with Gurtu.';
+
+  @override
+  String get doctorSaidHint => 'Speak or type what the doctor says';
+
+  @override
+  String get medicinesHint => 'e.g. Metformin 500 mg after breakfast';
+
+  @override
+  String get testsHint => 'e.g. HbA1c blood test';
+
+  @override
+  String get addNextVisit => 'Add next visit date';
+
+  @override
+  String get yourQuestions => 'Your questions';
+
+  @override
+  String get tickWhenAsked => 'Tick each one once the doctor has answered.';
+
+  @override
+  String get saveVisit => 'Save visit';
+
+  @override
+  String get visitSaved => 'Visit saved';
+
+  @override
+  String get leaveVisitTitle => 'Leave without saving?';
+
+  @override
+  String get leaveVisitBody => 'What you noted for this visit will be lost.';
+
+  @override
+  String get discard => 'Discard';
+
+  @override
+  String get keepEditing => 'Keep editing';
+
+  @override
+  String get voiceUnavailable =>
+      'Voice input isn\'t available right now. You can type instead.';
+
+  @override
+  String get prepTitle => 'Prepare for the doctor';
+
+  @override
+  String get prepIntro =>
+      'Let\'s get ready for the doctor. What health problems should we talk about?';
+
+  @override
+  String get prepPickOrSay =>
+      'Tap the problems below, or say it in your own words.';
+
+  @override
+  String get prepDescribeHint =>
+      'e.g. Headache for three days and feeling tired';
+
+  @override
+  String prepHeard(String symptoms) {
+    return 'I heard: $symptoms';
+  }
+
+  @override
+  String askSince(String symptom) {
+    return '$symptom — since when?';
+  }
+
+  @override
+  String askSeverity(String symptom) {
+    return '$symptom — how bad is it?';
+  }
+
+  @override
+  String get askNewMedicine => 'Was any medicine started or changed recently?';
+
+  @override
+  String get askAnythingElse => 'Anything else the doctor should know?';
+
+  @override
+  String get urgentWarning =>
+      'Severe chest pain or breathlessness can be an emergency. Don\'t wait for the appointment — get medical help now.';
+
+  @override
+  String get prepThinking => 'Preparing your questions…';
+
+  @override
+  String get prepResultIntro =>
+      'Here is what to ask the doctor. Remove any you don\'t need, or add your own.';
+
+  @override
+  String get prepNotDoctor =>
+      'Gurtu is not a doctor. These questions help you talk to one.';
+
+  @override
+  String get addOwnQuestion => 'Add your own question';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get saveQuestions => 'Save for the visit';
+
+  @override
+  String get questionsSaved => 'Questions saved for the visit';
+
+  @override
+  String get startAgain => 'Start again';
+
+  @override
+  String get startVisit => 'Start the visit';
+
+  @override
+  String get deleteQuestions => 'Delete these questions';
+
+  @override
+  String get removeQuestion => 'Remove question';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get healthProblems => 'Health problems';
+
+  @override
+  String preparedOn(String date) {
+    return 'Prepared $date';
+  }
+
+  @override
+  String get symFever => 'Fever';
+
+  @override
+  String get symHeadache => 'Headache';
+
+  @override
+  String get symBodyPain => 'Body or joint pain';
+
+  @override
+  String get symChestPain => 'Chest pain';
+
+  @override
+  String get symBreathless => 'Breathlessness';
+
+  @override
+  String get symCough => 'Cough';
+
+  @override
+  String get symDizziness => 'Dizziness';
+
+  @override
+  String get symTiredness => 'Tiredness';
+
+  @override
+  String get symStomach => 'Stomach trouble';
+
+  @override
+  String get symPoorSleep => 'Poor sleep';
+
+  @override
+  String get symPoorAppetite => 'Low appetite';
+
+  @override
+  String get symLowMood => 'Low mood or worry';
+
+  @override
+  String get kwFever => 'fever,temperature,feverish,chills';
+
+  @override
+  String get kwHeadache => 'headache,head ache,head pain,migraine';
+
+  @override
+  String get kwBodyPain => 'body pain,joint pain,knee,back pain,leg pain,aches';
+
+  @override
+  String get kwChestPain => 'chest pain,chest,heart pain';
+
+  @override
+  String get kwBreathless => 'breathless,short of breath,breathing,breath';
+
+  @override
+  String get kwCough => 'cough,cold,phlegm';
+
+  @override
+  String get kwDizziness => 'dizzy,dizziness,giddy,faint';
+
+  @override
+  String get kwTiredness => 'tired,weak,weakness,fatigue';
+
+  @override
+  String get kwStomach =>
+      'stomach,acidity,gas,vomit,loose motion,diarrhoea,constipation,nausea';
+
+  @override
+  String get kwPoorSleep => 'sleep,insomnia';
+
+  @override
+  String get kwPoorAppetite => 'appetite,not eating,no hunger';
+
+  @override
+  String get kwLowMood =>
+      'sad,worried,anxious,anxiety,depressed,stress,tension';
+
+  @override
+  String get sinceToday => 'Since today';
+
+  @override
+  String get sinceFewDays => 'A few days';
+
+  @override
+  String get sinceWeek => 'About a week';
+
+  @override
+  String get sinceMonth => 'A month or more';
+
+  @override
+  String get sevMild => 'Mild';
+
+  @override
+  String get sevModerate => 'Moderate';
+
+  @override
+  String get sevSevere => 'Severe';
+
+  @override
+  String qCause(String symptom) {
+    return 'What could be causing the $symptom?';
+  }
+
+  @override
+  String qTests(String symptom) {
+    return 'Does the $symptom need any tests?';
+  }
+
+  @override
+  String qWarningSigns(String symptom) {
+    return 'Which signs with the $symptom mean we should come back straight away?';
+  }
+
+  @override
+  String qHomeCare(String symptom) {
+    return 'What can we do at home to ease the $symptom?';
+  }
+
+  @override
+  String qConditionLink(String symptom, String conditions) {
+    return 'Could the $symptom be linked to $conditions?';
+  }
+
+  @override
+  String get qSideEffect =>
+      'Could a new or changed medicine be causing any of this?';
+
+  @override
+  String get qMedicinesStillRight =>
+      'Are the current medicines still right, or should any change?';
+
+  @override
+  String get qNextCheckup => 'When should we come back for a check-up?';
+
+  @override
+  String qTellDoctor(String text) {
+    return 'Tell the doctor: “$text”';
+  }
+
+  @override
+  String get sampleVisitDiabetesReason => 'Diabetes review';
+
+  @override
+  String get sampleVisitDiabetesNotes =>
+      'Sugar is better controlled. Continue the same medicines. Walk for 30 minutes every day and cut down on sweets.';
+
+  @override
+  String get sampleVisitDiabetesMeds =>
+      'Metformin 500 mg after breakfast and dinner';
+
+  @override
+  String get sampleVisitDiabetesTests =>
+      'HbA1c blood test before the next visit';
+
+  @override
+  String get sampleVisitKneeReason => 'Knee pain';
+
+  @override
+  String get sampleVisitKneeNotes =>
+      'Mild arthritis in the right knee. Use a warm compress in the evening and avoid too many stairs.';
+
+  @override
+  String get sampleVisitKneeMeds => 'Pain relief gel twice a day';
+
+  @override
+  String get scanVerify => 'Scan & verify medicine';
+
+  @override
+  String get scanVerifyHint => 'Is this the right tablet, right now?';
+
+  @override
+  String scanVerifySubtitle(String name) {
+    return 'Scan the strip or box. Gurtu checks it against $name\'s medicine list.';
+  }
+
+  @override
+  String get scanWithCamera => 'Scan the medicine';
+
+  @override
+  String get orTypeName => 'Or type the name printed on the strip';
+
+  @override
+  String get typeNameHint => 'e.g. Glycomet 500';
+
+  @override
+  String get checkMedicine => 'Check';
+
+  @override
+  String get checkAnother => 'Check another medicine';
+
+  @override
+  String get readingStrip => 'Reading the strip…';
+
+  @override
+  String get cameraUnavailable =>
+      'Camera scanning works in the phone app. Type the name instead.';
+
+  @override
+  String get scanFailed =>
+      'Couldn\'t read the photo. Try again, or type the name.';
+
+  @override
+  String readFromStrip(String text) {
+    return 'Read from the strip: “$text”';
+  }
+
+  @override
+  String get verifyDisclaimer =>
+      'Gurtu only checks against the medicines you saved. It never suggests medicines.';
+
+  @override
+  String get verdictTakeNow => 'Yes — this is the right medicine to take now.';
+
+  @override
+  String get verdictNotNow => 'Right medicine, but it\'s not due now.';
+
+  @override
+  String get verdictAlreadyTaken => 'Already taken. Don\'t take it again now.';
+
+  @override
+  String get verdictNoTimes => 'Right medicine, but no time is saved for it.';
+
+  @override
+  String get verdictWrongStrength =>
+      'Stop — the strength is different from the prescription.';
+
+  @override
+  String verdictNotOnList(String name) {
+    return 'Stop — this medicine is not on $name\'s list.';
+  }
+
+  @override
+  String verdictOtherPatient(String other, String name) {
+    return 'Stop — this medicine is on $other\'s list, not $name\'s.';
+  }
+
+  @override
+  String get verdictUnreadable =>
+      'Couldn\'t read a medicine name. Try again in good light, or type it.';
+
+  @override
+  String get verdictCheckFirst =>
+      'Don\'t take it until you check with the doctor or pharmacist.';
+
+  @override
+  String get rowOnList => 'On the medicine list';
+
+  @override
+  String rowStrengthMatches(String strength) {
+    return 'Strength matches: $strength';
+  }
+
+  @override
+  String rowStrengthDiffers(String found, String prescribed) {
+    return 'Strip says $found, prescription says $prescribed';
+  }
+
+  @override
+  String rowDueNow(String slot) {
+    return 'Due now: $slot dose';
+  }
+
+  @override
+  String rowTakenAt(String slot, String time) {
+    return '$slot dose taken at $time';
+  }
+
+  @override
+  String rowNextDose(String slot) {
+    return 'Next dose: $slot';
+  }
+
+  @override
+  String get rowSetTimes => 'Add when to take it on the medicine list';
+
+  @override
+  String get markTaken => 'Mark as taken';
+
+  @override
+  String get markedTaken => 'Marked as taken';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get medicineList => 'Medicine list';
+
+  @override
+  String get medicineListSubtitle =>
+      'Every medicine from the prescriptions, with when to take it.';
+
+  @override
+  String medicinesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count medicines',
+      one: '1 medicine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get addMedicine => 'Add medicine';
+
+  @override
+  String get editMedicine => 'Edit medicine';
+
+  @override
+  String get addFromPrescription => 'Add from a prescription photo';
+
+  @override
+  String get noMedicinesTitle => 'No medicines added yet';
+
+  @override
+  String get noMedicinesBody =>
+      'Add each medicine from the prescription once. Then scan any strip to check it\'s the right one.';
+
+  @override
+  String addMedicinesFirst(String name) {
+    return 'Add $name\'s medicines first, so Gurtu has something to check against.';
+  }
+
+  @override
+  String get medicineName => 'Medicine name';
+
+  @override
+  String get medicineNameHint => 'e.g. Metformin';
+
+  @override
+  String get alsoCalled => 'Other name on the strip';
+
+  @override
+  String get alsoCalledHint => 'e.g. Glycomet';
+
+  @override
+  String get strength => 'Strength';
+
+  @override
+  String get strengthHint => 'e.g. 500 mg';
+
+  @override
+  String get whenToTake => 'When to take it';
+
+  @override
+  String get doseMorning => 'Morning';
+
+  @override
+  String get doseAfternoon => 'Afternoon';
+
+  @override
+  String get doseEvening => 'Evening';
+
+  @override
+  String get doseNight => 'Night';
+
+  @override
+  String get foodAfter => 'After food';
+
+  @override
+  String get foodBefore => 'Before food';
+
+  @override
+  String get foodAny => 'With or without food';
+
+  @override
+  String get saveMedicine => 'Save medicine';
+
+  @override
+  String get medicineSaved => 'Medicine saved';
+
+  @override
+  String get deleteMedicine => 'Delete medicine';
+
+  @override
+  String get deleteMedicineConfirm => 'Remove this medicine from the list?';
+
+  @override
+  String get scanToFill => 'Scan the strip to fill this in';
+
+  @override
+  String get timesNotSet => 'Times not set';
+
+  @override
+  String get takenToday => 'Taken today';
+
+  @override
+  String get prescriptionTitle => 'Add from a prescription';
+
+  @override
+  String get prescriptionHint =>
+      'Take a clear photo of a printed prescription. Gurtu finds the medicines; you choose which to add.';
+
+  @override
+  String get takePhoto => 'Take a photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from gallery';
+
+  @override
+  String get medicinesFound => 'Medicines found';
+
+  @override
+  String get tickToAdd =>
+      'Tick the ones to add. Check each name and time against the prescription.';
+
+  @override
+  String addSelected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add $count medicines',
+      one: 'Add 1 medicine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nothingFound =>
+      'No medicines found. Try a clearer photo, or add them by hand.';
+
+  @override
+  String get handwrittenNote =>
+      'Handwritten prescriptions may not read well. Check every name.';
+
+  @override
+  String medicinesAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count medicines added',
+      one: '1 medicine added',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowStrengthCheck(String strength) {
+    return 'Check the strip says $strength';
+  }
 }

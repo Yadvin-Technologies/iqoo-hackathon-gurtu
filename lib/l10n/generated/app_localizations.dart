@@ -1869,6 +1869,1200 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yesterday'**
   String get yesterday;
+
+  /// No description provided for @doctorVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor visit'**
+  String get doctorVisit;
+
+  /// No description provided for @doctorVisitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Note what the doctor says'**
+  String get doctorVisitHint;
+
+  /// No description provided for @askDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions for the doctor'**
+  String get askDoctor;
+
+  /// No description provided for @askDoctorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu helps you prepare'**
+  String get askDoctorHint;
+
+  /// No description provided for @questionsReady.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 question ready} other{{count} questions ready}}'**
+  String questionsReady(int count);
+
+  /// No description provided for @lastVisitOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Last visit: {date}'**
+  String lastVisitOn(String date);
+
+  /// No description provided for @nextVisitOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Next visit: {date}'**
+  String nextVisitOn(String date);
+
+  /// No description provided for @visitsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor visits'**
+  String get visitsTitle;
+
+  /// No description provided for @visitsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What every doctor said, kept in one place.'**
+  String get visitsSubtitle;
+
+  /// No description provided for @recordVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a visit'**
+  String get recordVisit;
+
+  /// No description provided for @visitsOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'All visits at a glance'**
+  String get visitsOverview;
+
+  /// No description provided for @visitsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 visit} other{{count} visits}}'**
+  String visitsCount(int count);
+
+  /// No description provided for @doctorsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 doctor} other{{count} doctors}}'**
+  String doctorsCount(int count);
+
+  /// No description provided for @lastVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Last visit'**
+  String get lastVisit;
+
+  /// No description provided for @nextVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Next visit'**
+  String get nextVisit;
+
+  /// No description provided for @notPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not planned yet'**
+  String get notPlanned;
+
+  /// No description provided for @pastVisits.
+  ///
+  /// In en, this message translates to:
+  /// **'Past visits'**
+  String get pastVisits;
+
+  /// No description provided for @noVisitsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No visits recorded yet'**
+  String get noVisitsTitle;
+
+  /// No description provided for @noVisitsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'At the next appointment, tap Record a visit and Gurtu will note what the doctor says.'**
+  String get noVisitsBody;
+
+  /// No description provided for @questionsForNextVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions for the next visit'**
+  String get questionsForNextVisit;
+
+  /// No description provided for @prepareQuestionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell Gurtu how you feel. It will suggest what to ask the doctor.'**
+  String get prepareQuestionsHint;
+
+  /// No description provided for @prepareQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare questions'**
+  String get prepareQuestions;
+
+  /// No description provided for @viewQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'View questions'**
+  String get viewQuestions;
+
+  /// No description provided for @doctorFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor'**
+  String get doctorFallback;
+
+  /// No description provided for @doctorSaid.
+  ///
+  /// In en, this message translates to:
+  /// **'What the doctor said'**
+  String get doctorSaid;
+
+  /// No description provided for @medicinesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicines'**
+  String get medicinesSection;
+
+  /// No description provided for @testsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Tests to do'**
+  String get testsSection;
+
+  /// No description provided for @questionsAsked.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions asked'**
+  String get questionsAsked;
+
+  /// No description provided for @askedOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{asked} of {total} asked'**
+  String askedOf(int asked, int total);
+
+  /// No description provided for @deleteVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete visit'**
+  String get deleteVisit;
+
+  /// No description provided for @deleteVisitConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this visit? This cannot be undone.'**
+  String get deleteVisitConfirm;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @doctorName.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor\'s name'**
+  String get doctorName;
+
+  /// No description provided for @doctorNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Dr. Meena Rao'**
+  String get doctorNameHint;
+
+  /// No description provided for @visitReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason for the visit'**
+  String get visitReason;
+
+  /// No description provided for @visitReasonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Sugar check-up'**
+  String get visitReasonHint;
+
+  /// No description provided for @visitDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of visit'**
+  String get visitDate;
+
+  /// No description provided for @listenToDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to the doctor'**
+  String get listenToDoctor;
+
+  /// No description provided for @stopListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop listening'**
+  String get stopListening;
+
+  /// No description provided for @speak.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak'**
+  String get speak;
+
+  /// No description provided for @recordingConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Let the doctor know you are noting the conversation with Gurtu.'**
+  String get recordingConsent;
+
+  /// No description provided for @doctorSaidHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak or type what the doctor says'**
+  String get doctorSaidHint;
+
+  /// No description provided for @medicinesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Metformin 500 mg after breakfast'**
+  String get medicinesHint;
+
+  /// No description provided for @testsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. HbA1c blood test'**
+  String get testsHint;
+
+  /// No description provided for @addNextVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add next visit date'**
+  String get addNextVisit;
+
+  /// No description provided for @yourQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Your questions'**
+  String get yourQuestions;
+
+  /// No description provided for @tickWhenAsked.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick each one once the doctor has answered.'**
+  String get tickWhenAsked;
+
+  /// No description provided for @saveVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save visit'**
+  String get saveVisit;
+
+  /// No description provided for @visitSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit saved'**
+  String get visitSaved;
+
+  /// No description provided for @leaveVisitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave without saving?'**
+  String get leaveVisitTitle;
+
+  /// No description provided for @leaveVisitBody.
+  ///
+  /// In en, this message translates to:
+  /// **'What you noted for this visit will be lost.'**
+  String get leaveVisitBody;
+
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// No description provided for @keepEditing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get keepEditing;
+
+  /// No description provided for @voiceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice input isn\'t available right now. You can type instead.'**
+  String get voiceUnavailable;
+
+  /// No description provided for @prepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare for the doctor'**
+  String get prepTitle;
+
+  /// No description provided for @prepIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get ready for the doctor. What health problems should we talk about?'**
+  String get prepIntro;
+
+  /// No description provided for @prepPickOrSay.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the problems below, or say it in your own words.'**
+  String get prepPickOrSay;
+
+  /// No description provided for @prepDescribeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Headache for three days and feeling tired'**
+  String get prepDescribeHint;
+
+  /// No description provided for @prepHeard.
+  ///
+  /// In en, this message translates to:
+  /// **'I heard: {symptoms}'**
+  String prepHeard(String symptoms);
+
+  /// No description provided for @askSince.
+  ///
+  /// In en, this message translates to:
+  /// **'{symptom} — since when?'**
+  String askSince(String symptom);
+
+  /// No description provided for @askSeverity.
+  ///
+  /// In en, this message translates to:
+  /// **'{symptom} — how bad is it?'**
+  String askSeverity(String symptom);
+
+  /// No description provided for @askNewMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Was any medicine started or changed recently?'**
+  String get askNewMedicine;
+
+  /// No description provided for @askAnythingElse.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything else the doctor should know?'**
+  String get askAnythingElse;
+
+  /// No description provided for @urgentWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Severe chest pain or breathlessness can be an emergency. Don\'t wait for the appointment — get medical help now.'**
+  String get urgentWarning;
+
+  /// No description provided for @prepThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing your questions…'**
+  String get prepThinking;
+
+  /// No description provided for @prepResultIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Here is what to ask the doctor. Remove any you don\'t need, or add your own.'**
+  String get prepResultIntro;
+
+  /// No description provided for @prepNotDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu is not a doctor. These questions help you talk to one.'**
+  String get prepNotDoctor;
+
+  /// No description provided for @addOwnQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your own question'**
+  String get addOwnQuestion;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @saveQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Save for the visit'**
+  String get saveQuestions;
+
+  /// No description provided for @questionsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions saved for the visit'**
+  String get questionsSaved;
+
+  /// No description provided for @startAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Start again'**
+  String get startAgain;
+
+  /// No description provided for @startVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the visit'**
+  String get startVisit;
+
+  /// No description provided for @deleteQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete these questions'**
+  String get deleteQuestions;
+
+  /// No description provided for @removeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove question'**
+  String get removeQuestion;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @healthProblems.
+  ///
+  /// In en, this message translates to:
+  /// **'Health problems'**
+  String get healthProblems;
+
+  /// No description provided for @preparedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepared {date}'**
+  String preparedOn(String date);
+
+  /// No description provided for @symFever.
+  ///
+  /// In en, this message translates to:
+  /// **'Fever'**
+  String get symFever;
+
+  /// No description provided for @symHeadache.
+  ///
+  /// In en, this message translates to:
+  /// **'Headache'**
+  String get symHeadache;
+
+  /// No description provided for @symBodyPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Body or joint pain'**
+  String get symBodyPain;
+
+  /// No description provided for @symChestPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest pain'**
+  String get symChestPain;
+
+  /// No description provided for @symBreathless.
+  ///
+  /// In en, this message translates to:
+  /// **'Breathlessness'**
+  String get symBreathless;
+
+  /// No description provided for @symCough.
+  ///
+  /// In en, this message translates to:
+  /// **'Cough'**
+  String get symCough;
+
+  /// No description provided for @symDizziness.
+  ///
+  /// In en, this message translates to:
+  /// **'Dizziness'**
+  String get symDizziness;
+
+  /// No description provided for @symTiredness.
+  ///
+  /// In en, this message translates to:
+  /// **'Tiredness'**
+  String get symTiredness;
+
+  /// No description provided for @symStomach.
+  ///
+  /// In en, this message translates to:
+  /// **'Stomach trouble'**
+  String get symStomach;
+
+  /// No description provided for @symPoorSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor sleep'**
+  String get symPoorSleep;
+
+  /// No description provided for @symPoorAppetite.
+  ///
+  /// In en, this message translates to:
+  /// **'Low appetite'**
+  String get symPoorAppetite;
+
+  /// No description provided for @symLowMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Low mood or worry'**
+  String get symLowMood;
+
+  /// No description provided for @kwFever.
+  ///
+  /// In en, this message translates to:
+  /// **'fever,temperature,feverish,chills'**
+  String get kwFever;
+
+  /// No description provided for @kwHeadache.
+  ///
+  /// In en, this message translates to:
+  /// **'headache,head ache,head pain,migraine'**
+  String get kwHeadache;
+
+  /// No description provided for @kwBodyPain.
+  ///
+  /// In en, this message translates to:
+  /// **'body pain,joint pain,knee,back pain,leg pain,aches'**
+  String get kwBodyPain;
+
+  /// No description provided for @kwChestPain.
+  ///
+  /// In en, this message translates to:
+  /// **'chest pain,chest,heart pain'**
+  String get kwChestPain;
+
+  /// No description provided for @kwBreathless.
+  ///
+  /// In en, this message translates to:
+  /// **'breathless,short of breath,breathing,breath'**
+  String get kwBreathless;
+
+  /// No description provided for @kwCough.
+  ///
+  /// In en, this message translates to:
+  /// **'cough,cold,phlegm'**
+  String get kwCough;
+
+  /// No description provided for @kwDizziness.
+  ///
+  /// In en, this message translates to:
+  /// **'dizzy,dizziness,giddy,faint'**
+  String get kwDizziness;
+
+  /// No description provided for @kwTiredness.
+  ///
+  /// In en, this message translates to:
+  /// **'tired,weak,weakness,fatigue'**
+  String get kwTiredness;
+
+  /// No description provided for @kwStomach.
+  ///
+  /// In en, this message translates to:
+  /// **'stomach,acidity,gas,vomit,loose motion,diarrhoea,constipation,nausea'**
+  String get kwStomach;
+
+  /// No description provided for @kwPoorSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'sleep,insomnia'**
+  String get kwPoorSleep;
+
+  /// No description provided for @kwPoorAppetite.
+  ///
+  /// In en, this message translates to:
+  /// **'appetite,not eating,no hunger'**
+  String get kwPoorAppetite;
+
+  /// No description provided for @kwLowMood.
+  ///
+  /// In en, this message translates to:
+  /// **'sad,worried,anxious,anxiety,depressed,stress,tension'**
+  String get kwLowMood;
+
+  /// No description provided for @sinceToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Since today'**
+  String get sinceToday;
+
+  /// No description provided for @sinceFewDays.
+  ///
+  /// In en, this message translates to:
+  /// **'A few days'**
+  String get sinceFewDays;
+
+  /// No description provided for @sinceWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'About a week'**
+  String get sinceWeek;
+
+  /// No description provided for @sinceMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'A month or more'**
+  String get sinceMonth;
+
+  /// No description provided for @sevMild.
+  ///
+  /// In en, this message translates to:
+  /// **'Mild'**
+  String get sevMild;
+
+  /// No description provided for @sevModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get sevModerate;
+
+  /// No description provided for @sevSevere.
+  ///
+  /// In en, this message translates to:
+  /// **'Severe'**
+  String get sevSevere;
+
+  /// No description provided for @qCause.
+  ///
+  /// In en, this message translates to:
+  /// **'What could be causing the {symptom}?'**
+  String qCause(String symptom);
+
+  /// No description provided for @qTests.
+  ///
+  /// In en, this message translates to:
+  /// **'Does the {symptom} need any tests?'**
+  String qTests(String symptom);
+
+  /// No description provided for @qWarningSigns.
+  ///
+  /// In en, this message translates to:
+  /// **'Which signs with the {symptom} mean we should come back straight away?'**
+  String qWarningSigns(String symptom);
+
+  /// No description provided for @qHomeCare.
+  ///
+  /// In en, this message translates to:
+  /// **'What can we do at home to ease the {symptom}?'**
+  String qHomeCare(String symptom);
+
+  /// No description provided for @qConditionLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Could the {symptom} be linked to {conditions}?'**
+  String qConditionLink(String symptom, String conditions);
+
+  /// No description provided for @qSideEffect.
+  ///
+  /// In en, this message translates to:
+  /// **'Could a new or changed medicine be causing any of this?'**
+  String get qSideEffect;
+
+  /// No description provided for @qMedicinesStillRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Are the current medicines still right, or should any change?'**
+  String get qMedicinesStillRight;
+
+  /// No description provided for @qNextCheckup.
+  ///
+  /// In en, this message translates to:
+  /// **'When should we come back for a check-up?'**
+  String get qNextCheckup;
+
+  /// No description provided for @qTellDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell the doctor: “{text}”'**
+  String qTellDoctor(String text);
+
+  /// No description provided for @sampleVisitDiabetesReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Diabetes review'**
+  String get sampleVisitDiabetesReason;
+
+  /// No description provided for @sampleVisitDiabetesNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Sugar is better controlled. Continue the same medicines. Walk for 30 minutes every day and cut down on sweets.'**
+  String get sampleVisitDiabetesNotes;
+
+  /// No description provided for @sampleVisitDiabetesMeds.
+  ///
+  /// In en, this message translates to:
+  /// **'Metformin 500 mg after breakfast and dinner'**
+  String get sampleVisitDiabetesMeds;
+
+  /// No description provided for @sampleVisitDiabetesTests.
+  ///
+  /// In en, this message translates to:
+  /// **'HbA1c blood test before the next visit'**
+  String get sampleVisitDiabetesTests;
+
+  /// No description provided for @sampleVisitKneeReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Knee pain'**
+  String get sampleVisitKneeReason;
+
+  /// No description provided for @sampleVisitKneeNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Mild arthritis in the right knee. Use a warm compress in the evening and avoid too many stairs.'**
+  String get sampleVisitKneeNotes;
+
+  /// No description provided for @sampleVisitKneeMeds.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain relief gel twice a day'**
+  String get sampleVisitKneeMeds;
+
+  /// No description provided for @scanVerify.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan & verify medicine'**
+  String get scanVerify;
+
+  /// No description provided for @scanVerifyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Is this the right tablet, right now?'**
+  String get scanVerifyHint;
+
+  /// No description provided for @scanVerifySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the strip or box. Gurtu checks it against {name}\'s medicine list.'**
+  String scanVerifySubtitle(String name);
+
+  /// No description provided for @scanWithCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the medicine'**
+  String get scanWithCamera;
+
+  /// No description provided for @orTypeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Or type the name printed on the strip'**
+  String get orTypeName;
+
+  /// No description provided for @typeNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Glycomet 500'**
+  String get typeNameHint;
+
+  /// No description provided for @checkMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get checkMedicine;
+
+  /// No description provided for @checkAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Check another medicine'**
+  String get checkAnother;
+
+  /// No description provided for @readingStrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the strip…'**
+  String get readingStrip;
+
+  /// No description provided for @cameraUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera scanning works in the phone app. Type the name instead.'**
+  String get cameraUnavailable;
+
+  /// No description provided for @scanFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read the photo. Try again, or type the name.'**
+  String get scanFailed;
+
+  /// No description provided for @readFromStrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Read from the strip: “{text}”'**
+  String readFromStrip(String text);
+
+  /// No description provided for @verifyDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu only checks against the medicines you saved. It never suggests medicines.'**
+  String get verifyDisclaimer;
+
+  /// No description provided for @verdictTakeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes — this is the right medicine to take now.'**
+  String get verdictTakeNow;
+
+  /// No description provided for @verdictNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Right medicine, but it\'s not due now.'**
+  String get verdictNotNow;
+
+  /// No description provided for @verdictAlreadyTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Already taken. Don\'t take it again now.'**
+  String get verdictAlreadyTaken;
+
+  /// No description provided for @verdictNoTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Right medicine, but no time is saved for it.'**
+  String get verdictNoTimes;
+
+  /// No description provided for @verdictWrongStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop — the strength is different from the prescription.'**
+  String get verdictWrongStrength;
+
+  /// No description provided for @verdictNotOnList.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop — this medicine is not on {name}\'s list.'**
+  String verdictNotOnList(String name);
+
+  /// No description provided for @verdictOtherPatient.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop — this medicine is on {other}\'s list, not {name}\'s.'**
+  String verdictOtherPatient(String other, String name);
+
+  /// No description provided for @verdictUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t read a medicine name. Try again in good light, or type it.'**
+  String get verdictUnreadable;
+
+  /// No description provided for @verdictCheckFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t take it until you check with the doctor or pharmacist.'**
+  String get verdictCheckFirst;
+
+  /// No description provided for @rowOnList.
+  ///
+  /// In en, this message translates to:
+  /// **'On the medicine list'**
+  String get rowOnList;
+
+  /// No description provided for @rowStrengthMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength matches: {strength}'**
+  String rowStrengthMatches(String strength);
+
+  /// No description provided for @rowStrengthDiffers.
+  ///
+  /// In en, this message translates to:
+  /// **'Strip says {found}, prescription says {prescribed}'**
+  String rowStrengthDiffers(String found, String prescribed);
+
+  /// No description provided for @rowDueNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Due now: {slot} dose'**
+  String rowDueNow(String slot);
+
+  /// No description provided for @rowTakenAt.
+  ///
+  /// In en, this message translates to:
+  /// **'{slot} dose taken at {time}'**
+  String rowTakenAt(String slot, String time);
+
+  /// No description provided for @rowNextDose.
+  ///
+  /// In en, this message translates to:
+  /// **'Next dose: {slot}'**
+  String rowNextDose(String slot);
+
+  /// No description provided for @rowSetTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Add when to take it on the medicine list'**
+  String get rowSetTimes;
+
+  /// No description provided for @markTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as taken'**
+  String get markTaken;
+
+  /// No description provided for @markedTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as taken'**
+  String get markedTaken;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @medicineList.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine list'**
+  String get medicineList;
+
+  /// No description provided for @medicineListSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every medicine from the prescriptions, with when to take it.'**
+  String get medicineListSubtitle;
+
+  /// No description provided for @medicinesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 medicine} other{{count} medicines}}'**
+  String medicinesCount(int count);
+
+  /// No description provided for @addMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add medicine'**
+  String get addMedicine;
+
+  /// No description provided for @editMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit medicine'**
+  String get editMedicine;
+
+  /// No description provided for @addFromPrescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add from a prescription photo'**
+  String get addFromPrescription;
+
+  /// No description provided for @noMedicinesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No medicines added yet'**
+  String get noMedicinesTitle;
+
+  /// No description provided for @noMedicinesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add each medicine from the prescription once. Then scan any strip to check it\'s the right one.'**
+  String get noMedicinesBody;
+
+  /// No description provided for @addMedicinesFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {name}\'s medicines first, so Gurtu has something to check against.'**
+  String addMedicinesFirst(String name);
+
+  /// No description provided for @medicineName.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine name'**
+  String get medicineName;
+
+  /// No description provided for @medicineNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Metformin'**
+  String get medicineNameHint;
+
+  /// No description provided for @alsoCalled.
+  ///
+  /// In en, this message translates to:
+  /// **'Other name on the strip'**
+  String get alsoCalled;
+
+  /// No description provided for @alsoCalledHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Glycomet'**
+  String get alsoCalledHint;
+
+  /// No description provided for @strength.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get strength;
+
+  /// No description provided for @strengthHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 500 mg'**
+  String get strengthHint;
+
+  /// No description provided for @whenToTake.
+  ///
+  /// In en, this message translates to:
+  /// **'When to take it'**
+  String get whenToTake;
+
+  /// No description provided for @doseMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get doseMorning;
+
+  /// No description provided for @doseAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get doseAfternoon;
+
+  /// No description provided for @doseEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get doseEvening;
+
+  /// No description provided for @doseNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get doseNight;
+
+  /// No description provided for @foodAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'After food'**
+  String get foodAfter;
+
+  /// No description provided for @foodBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'Before food'**
+  String get foodBefore;
+
+  /// No description provided for @foodAny.
+  ///
+  /// In en, this message translates to:
+  /// **'With or without food'**
+  String get foodAny;
+
+  /// No description provided for @saveMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Save medicine'**
+  String get saveMedicine;
+
+  /// No description provided for @medicineSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine saved'**
+  String get medicineSaved;
+
+  /// No description provided for @deleteMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete medicine'**
+  String get deleteMedicine;
+
+  /// No description provided for @deleteMedicineConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this medicine from the list?'**
+  String get deleteMedicineConfirm;
+
+  /// No description provided for @scanToFill.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the strip to fill this in'**
+  String get scanToFill;
+
+  /// No description provided for @timesNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Times not set'**
+  String get timesNotSet;
+
+  /// No description provided for @takenToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken today'**
+  String get takenToday;
+
+  /// No description provided for @prescriptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add from a prescription'**
+  String get prescriptionTitle;
+
+  /// No description provided for @prescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a clear photo of a printed prescription. Gurtu finds the medicines; you choose which to add.'**
+  String get prescriptionHint;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @medicinesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicines found'**
+  String get medicinesFound;
+
+  /// No description provided for @tickToAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick the ones to add. Check each name and time against the prescription.'**
+  String get tickToAdd;
+
+  /// No description provided for @addSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Add 1 medicine} other{Add {count} medicines}}'**
+  String addSelected(int count);
+
+  /// No description provided for @nothingFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No medicines found. Try a clearer photo, or add them by hand.'**
+  String get nothingFound;
+
+  /// No description provided for @handwrittenNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Handwritten prescriptions may not read well. Check every name.'**
+  String get handwrittenNote;
+
+  /// No description provided for @medicinesAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 medicine added} other{{count} medicines added}}'**
+  String medicinesAdded(int count);
+
+  /// No description provided for @rowStrengthCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the strip says {strength}'**
+  String rowStrengthCheck(String strength);
 }
 
 class _AppLocalizationsDelegate

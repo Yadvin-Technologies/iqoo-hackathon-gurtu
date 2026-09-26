@@ -458,5 +458,429 @@
   "sampleMomentPrescriptionDetail": "2 medicines found",
   "sampleMomentBp": "BP recorded",
   "today": "Today",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "doctorVisit": "Doctor visit",
+  "doctorVisitHint": "Note what the doctor says",
+  "askDoctor": "Questions for the doctor",
+  "askDoctorHint": "Gurtu helps you prepare",
+  "questionsReady": "{count, plural, =1{1 question ready} other{{count} questions ready}}",
+  "@questionsReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastVisitOn": "Last visit: {date}",
+  "@lastVisitOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "nextVisitOn": "Next visit: {date}",
+  "@nextVisitOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "visitsTitle": "Doctor visits",
+  "visitsSubtitle": "What every doctor said, kept in one place.",
+  "recordVisit": "Record a visit",
+  "visitsOverview": "All visits at a glance",
+  "visitsCount": "{count, plural, =1{1 visit} other{{count} visits}}",
+  "@visitsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "doctorsCount": "{count, plural, =1{1 doctor} other{{count} doctors}}",
+  "@doctorsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastVisit": "Last visit",
+  "nextVisit": "Next visit",
+  "notPlanned": "Not planned yet",
+  "pastVisits": "Past visits",
+  "noVisitsTitle": "No visits recorded yet",
+  "noVisitsBody": "At the next appointment, tap Record a visit and Gurtu will note what the doctor says.",
+  "questionsForNextVisit": "Questions for the next visit",
+  "prepareQuestionsHint": "Tell Gurtu how you feel. It will suggest what to ask the doctor.",
+  "prepareQuestions": "Prepare questions",
+  "viewQuestions": "View questions",
+  "doctorFallback": "Doctor",
+  "doctorSaid": "What the doctor said",
+  "medicinesSection": "Medicines",
+  "testsSection": "Tests to do",
+  "questionsAsked": "Questions asked",
+  "askedOf": "{asked} of {total} asked",
+  "@askedOf": {
+    "placeholders": {
+      "asked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteVisit": "Delete visit",
+  "deleteVisitConfirm": "Delete this visit? This cannot be undone.",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "doctorName": "Doctor's name",
+  "doctorNameHint": "e.g. Dr. Meena Rao",
+  "visitReason": "Reason for the visit",
+  "visitReasonHint": "e.g. Sugar check-up",
+  "visitDate": "Date of visit",
+  "listenToDoctor": "Listen to the doctor",
+  "stopListening": "Stop listening",
+  "speak": "Speak",
+  "recordingConsent": "Let the doctor know you are noting the conversation with Gurtu.",
+  "doctorSaidHint": "Speak or type what the doctor says",
+  "medicinesHint": "e.g. Metformin 500 mg after breakfast",
+  "testsHint": "e.g. HbA1c blood test",
+  "addNextVisit": "Add next visit date",
+  "yourQuestions": "Your questions",
+  "tickWhenAsked": "Tick each one once the doctor has answered.",
+  "saveVisit": "Save visit",
+  "visitSaved": "Visit saved",
+  "leaveVisitTitle": "Leave without saving?",
+  "leaveVisitBody": "What you noted for this visit will be lost.",
+  "discard": "Discard",
+  "keepEditing": "Keep editing",
+  "voiceUnavailable": "Voice input isn't available right now. You can type instead.",
+  "prepTitle": "Prepare for the doctor",
+  "prepIntro": "Let's get ready for the doctor. What health problems should we talk about?",
+  "prepPickOrSay": "Tap the problems below, or say it in your own words.",
+  "prepDescribeHint": "e.g. Headache for three days and feeling tired",
+  "prepHeard": "I heard: {symptoms}",
+  "@prepHeard": {
+    "placeholders": {
+      "symptoms": {
+        "type": "String"
+      }
+    }
+  },
+  "askSince": "{symptom} — since when?",
+  "@askSince": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "askSeverity": "{symptom} — how bad is it?",
+  "@askSeverity": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "askNewMedicine": "Was any medicine started or changed recently?",
+  "askAnythingElse": "Anything else the doctor should know?",
+  "urgentWarning": "Severe chest pain or breathlessness can be an emergency. Don't wait for the appointment — get medical help now.",
+  "prepThinking": "Preparing your questions…",
+  "prepResultIntro": "Here is what to ask the doctor. Remove any you don't need, or add your own.",
+  "prepNotDoctor": "Gurtu is not a doctor. These questions help you talk to one.",
+  "addOwnQuestion": "Add your own question",
+  "add": "Add",
+  "saveQuestions": "Save for the visit",
+  "questionsSaved": "Questions saved for the visit",
+  "startAgain": "Start again",
+  "startVisit": "Start the visit",
+  "deleteQuestions": "Delete these questions",
+  "removeQuestion": "Remove question",
+  "done": "Done",
+  "healthProblems": "Health problems",
+  "preparedOn": "Prepared {date}",
+  "@preparedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "symFever": "Fever",
+  "symHeadache": "Headache",
+  "symBodyPain": "Body or joint pain",
+  "symChestPain": "Chest pain",
+  "symBreathless": "Breathlessness",
+  "symCough": "Cough",
+  "symDizziness": "Dizziness",
+  "symTiredness": "Tiredness",
+  "symStomach": "Stomach trouble",
+  "symPoorSleep": "Poor sleep",
+  "symPoorAppetite": "Low appetite",
+  "symLowMood": "Low mood or worry",
+  "kwFever": "fever,temperature,feverish,chills",
+  "kwHeadache": "headache,head ache,head pain,migraine",
+  "kwBodyPain": "body pain,joint pain,knee,back pain,leg pain,aches",
+  "kwChestPain": "chest pain,chest,heart pain",
+  "kwBreathless": "breathless,short of breath,breathing,breath",
+  "kwCough": "cough,cold,phlegm",
+  "kwDizziness": "dizzy,dizziness,giddy,faint",
+  "kwTiredness": "tired,weak,weakness,fatigue",
+  "kwStomach": "stomach,acidity,gas,vomit,loose motion,diarrhoea,constipation,nausea",
+  "kwPoorSleep": "sleep,insomnia",
+  "kwPoorAppetite": "appetite,not eating,no hunger",
+  "kwLowMood": "sad,worried,anxious,anxiety,depressed,stress,tension",
+  "sinceToday": "Since today",
+  "sinceFewDays": "A few days",
+  "sinceWeek": "About a week",
+  "sinceMonth": "A month or more",
+  "sevMild": "Mild",
+  "sevModerate": "Moderate",
+  "sevSevere": "Severe",
+  "qCause": "What could be causing the {symptom}?",
+  "@qCause": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "qTests": "Does the {symptom} need any tests?",
+  "@qTests": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "qWarningSigns": "Which signs with the {symptom} mean we should come back straight away?",
+  "@qWarningSigns": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "qHomeCare": "What can we do at home to ease the {symptom}?",
+  "@qHomeCare": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      }
+    }
+  },
+  "qConditionLink": "Could the {symptom} be linked to {conditions}?",
+  "@qConditionLink": {
+    "placeholders": {
+      "symptom": {
+        "type": "String"
+      },
+      "conditions": {
+        "type": "String"
+      }
+    }
+  },
+  "qSideEffect": "Could a new or changed medicine be causing any of this?",
+  "qMedicinesStillRight": "Are the current medicines still right, or should any change?",
+  "qNextCheckup": "When should we come back for a check-up?",
+  "qTellDoctor": "Tell the doctor: “{text}”",
+  "@qTellDoctor": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "sampleVisitDiabetesReason": "Diabetes review",
+  "sampleVisitDiabetesNotes": "Sugar is better controlled. Continue the same medicines. Walk for 30 minutes every day and cut down on sweets.",
+  "sampleVisitDiabetesMeds": "Metformin 500 mg after breakfast and dinner",
+  "sampleVisitDiabetesTests": "HbA1c blood test before the next visit",
+  "sampleVisitKneeReason": "Knee pain",
+  "sampleVisitKneeNotes": "Mild arthritis in the right knee. Use a warm compress in the evening and avoid too many stairs.",
+  "sampleVisitKneeMeds": "Pain relief gel twice a day",
+  "scanVerify": "Scan & verify medicine",
+  "scanVerifyHint": "Is this the right tablet, right now?",
+  "scanVerifySubtitle": "Scan the strip or box. Gurtu checks it against {name}'s medicine list.",
+  "@scanVerifySubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "scanWithCamera": "Scan the medicine",
+  "orTypeName": "Or type the name printed on the strip",
+  "typeNameHint": "e.g. Glycomet 500",
+  "checkMedicine": "Check",
+  "checkAnother": "Check another medicine",
+  "readingStrip": "Reading the strip…",
+  "cameraUnavailable": "Camera scanning works in the phone app. Type the name instead.",
+  "scanFailed": "Couldn't read the photo. Try again, or type the name.",
+  "readFromStrip": "Read from the strip: “{text}”",
+  "@readFromStrip": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyDisclaimer": "Gurtu only checks against the medicines you saved. It never suggests medicines.",
+  "verdictTakeNow": "Yes — this is the right medicine to take now.",
+  "verdictNotNow": "Right medicine, but it's not due now.",
+  "verdictAlreadyTaken": "Already taken. Don't take it again now.",
+  "verdictNoTimes": "Right medicine, but no time is saved for it.",
+  "verdictWrongStrength": "Stop — the strength is different from the prescription.",
+  "verdictNotOnList": "Stop — this medicine is not on {name}'s list.",
+  "@verdictNotOnList": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "verdictOtherPatient": "Stop — this medicine is on {other}'s list, not {name}'s.",
+  "@verdictOtherPatient": {
+    "placeholders": {
+      "other": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "verdictUnreadable": "Couldn't read a medicine name. Try again in good light, or type it.",
+  "verdictCheckFirst": "Don't take it until you check with the doctor or pharmacist.",
+  "rowOnList": "On the medicine list",
+  "rowStrengthMatches": "Strength matches: {strength}",
+  "@rowStrengthMatches": {
+    "placeholders": {
+      "strength": {
+        "type": "String"
+      }
+    }
+  },
+  "rowStrengthDiffers": "Strip says {found}, prescription says {prescribed}",
+  "@rowStrengthDiffers": {
+    "placeholders": {
+      "found": {
+        "type": "String"
+      },
+      "prescribed": {
+        "type": "String"
+      }
+    }
+  },
+  "rowDueNow": "Due now: {slot} dose",
+  "@rowDueNow": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "rowTakenAt": "{slot} dose taken at {time}",
+  "@rowTakenAt": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "rowNextDose": "Next dose: {slot}",
+  "@rowNextDose": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "rowSetTimes": "Add when to take it on the medicine list",
+  "markTaken": "Mark as taken",
+  "markedTaken": "Marked as taken",
+  "undo": "Undo",
+  "medicineList": "Medicine list",
+  "medicineListSubtitle": "Every medicine from the prescriptions, with when to take it.",
+  "medicinesCount": "{count, plural, =1{1 medicine} other{{count} medicines}}",
+  "@medicinesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addMedicine": "Add medicine",
+  "editMedicine": "Edit medicine",
+  "addFromPrescription": "Add from a prescription photo",
+  "noMedicinesTitle": "No medicines added yet",
+  "noMedicinesBody": "Add each medicine from the prescription once. Then scan any strip to check it's the right one.",
+  "addMedicinesFirst": "Add {name}'s medicines first, so Gurtu has something to check against.",
+  "@addMedicinesFirst": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medicineName": "Medicine name",
+  "medicineNameHint": "e.g. Metformin",
+  "alsoCalled": "Other name on the strip",
+  "alsoCalledHint": "e.g. Glycomet",
+  "strength": "Strength",
+  "strengthHint": "e.g. 500 mg",
+  "whenToTake": "When to take it",
+  "doseMorning": "Morning",
+  "doseAfternoon": "Afternoon",
+  "doseEvening": "Evening",
+  "doseNight": "Night",
+  "foodAfter": "After food",
+  "foodBefore": "Before food",
+  "foodAny": "With or without food",
+  "saveMedicine": "Save medicine",
+  "medicineSaved": "Medicine saved",
+  "deleteMedicine": "Delete medicine",
+  "deleteMedicineConfirm": "Remove this medicine from the list?",
+  "scanToFill": "Scan the strip to fill this in",
+  "timesNotSet": "Times not set",
+  "takenToday": "Taken today",
+  "prescriptionTitle": "Add from a prescription",
+  "prescriptionHint": "Take a clear photo of a printed prescription. Gurtu finds the medicines; you choose which to add.",
+  "takePhoto": "Take a photo",
+  "chooseFromGallery": "Choose from gallery",
+  "medicinesFound": "Medicines found",
+  "tickToAdd": "Tick the ones to add. Check each name and time against the prescription.",
+  "addSelected": "{count, plural, =1{Add 1 medicine} other{Add {count} medicines}}",
+  "@addSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nothingFound": "No medicines found. Try a clearer photo, or add them by hand.",
+  "handwrittenNote": "Handwritten prescriptions may not read well. Check every name.",
+  "medicinesAdded": "{count, plural, =1{1 medicine added} other{{count} medicines added}}",
+  "@medicinesAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rowStrengthCheck": "Check the strip says {strength}",
+  "@rowStrengthCheck": {
+    "placeholders": {
+      "strength": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -974,4 +974,731 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get yesterday => 'ഇന്നലെ';
+
+  @override
+  String get doctorVisit => 'ഡോക്ടർ സന്ദർശനം';
+
+  @override
+  String get doctorVisitHint => 'ഡോക്ടർ പറയുന്നത് കുറിച്ചുവെക്കുക';
+
+  @override
+  String get askDoctor => 'ഡോക്ടറോട് ചോദിക്കേണ്ടവ';
+
+  @override
+  String get askDoctorHint => 'തയ്യാറെടുക്കാൻ Gurtu സഹായിക്കും';
+
+  @override
+  String questionsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ചോദ്യങ്ങൾ തയ്യാർ',
+      one: '1 ചോദ്യം തയ്യാർ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lastVisitOn(String date) {
+    return 'അവസാന സന്ദർശനം: $date';
+  }
+
+  @override
+  String nextVisitOn(String date) {
+    return 'അടുത്ത സന്ദർശനം: $date';
+  }
+
+  @override
+  String get visitsTitle => 'ഡോക്ടർ സന്ദർശനങ്ങൾ';
+
+  @override
+  String get visitsSubtitle => 'ഓരോ ഡോക്ടറും പറഞ്ഞത്, എല്ലാം ഒരിടത്ത്.';
+
+  @override
+  String get recordVisit => 'സന്ദർശനം രേഖപ്പെടുത്തുക';
+
+  @override
+  String get visitsOverview => 'എല്ലാ സന്ദർശനങ്ങളും ഒറ്റനോട്ടത്തിൽ';
+
+  @override
+  String visitsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count സന്ദർശനങ്ങൾ',
+      one: '1 സന്ദർശനം',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String doctorsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ഡോക്ടർമാർ',
+      one: '1 ഡോക്ടർ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lastVisit => 'അവസാന സന്ദർശനം';
+
+  @override
+  String get nextVisit => 'അടുത്ത സന്ദർശനം';
+
+  @override
+  String get notPlanned => 'ഇതുവരെ തീരുമാനിച്ചിട്ടില്ല';
+
+  @override
+  String get pastVisits => 'മുൻ സന്ദർശനങ്ങൾ';
+
+  @override
+  String get noVisitsTitle => 'ഇതുവരെ സന്ദർശനങ്ങളൊന്നും രേഖപ്പെടുത്തിയിട്ടില്ല';
+
+  @override
+  String get noVisitsBody =>
+      'അടുത്ത അപ്പോയിന്റ്മെന്റിൽ ‘സന്ദർശനം രേഖപ്പെടുത്തുക’ അമർത്തുക, ഡോക്ടർ പറയുന്നത് Gurtu കുറിച്ചുവെക്കും.';
+
+  @override
+  String get questionsForNextVisit => 'അടുത്ത സന്ദർശനത്തിനുള്ള ചോദ്യങ്ങൾ';
+
+  @override
+  String get prepareQuestionsHint =>
+      'നിങ്ങൾക്ക് എങ്ങനെയുണ്ടെന്ന് Gurtu-വിനോട് പറയൂ. ഡോക്ടറോട് എന്ത് ചോദിക്കണമെന്ന് നിർദ്ദേശിക്കും.';
+
+  @override
+  String get prepareQuestions => 'ചോദ്യങ്ങൾ തയ്യാറാക്കുക';
+
+  @override
+  String get viewQuestions => 'ചോദ്യങ്ങൾ കാണുക';
+
+  @override
+  String get doctorFallback => 'ഡോക്ടർ';
+
+  @override
+  String get doctorSaid => 'ഡോക്ടർ പറഞ്ഞത്';
+
+  @override
+  String get medicinesSection => 'മരുന്നുകൾ';
+
+  @override
+  String get testsSection => 'ചെയ്യേണ്ട പരിശോധനകൾ';
+
+  @override
+  String get questionsAsked => 'ചോദിച്ച ചോദ്യങ്ങൾ';
+
+  @override
+  String askedOf(int asked, int total) {
+    return '$total-ൽ $asked ചോദിച്ചു';
+  }
+
+  @override
+  String get deleteVisit => 'സന്ദർശനം ഇല്ലാതാക്കുക';
+
+  @override
+  String get deleteVisitConfirm =>
+      'ഈ സന്ദർശനം ഇല്ലാതാക്കണോ? ഇത് തിരികെ കിട്ടില്ല.';
+
+  @override
+  String get cancel => 'റദ്ദാക്കുക';
+
+  @override
+  String get delete => 'ഇല്ലാതാക്കുക';
+
+  @override
+  String get doctorName => 'ഡോക്ടറുടെ പേര്';
+
+  @override
+  String get doctorNameHint => 'ഉദാ. ഡോ. മീന റാവു';
+
+  @override
+  String get visitReason => 'സന്ദർശനത്തിന്റെ കാരണം';
+
+  @override
+  String get visitReasonHint => 'ഉദാ. ഷുഗർ പരിശോധന';
+
+  @override
+  String get visitDate => 'സന്ദർശന തീയതി';
+
+  @override
+  String get listenToDoctor => 'ഡോക്ടർ പറയുന്നത് കേൾക്കുക';
+
+  @override
+  String get stopListening => 'കേൾക്കുന്നത് നിർത്തുക';
+
+  @override
+  String get speak => 'സംസാരിക്കുക';
+
+  @override
+  String get recordingConsent =>
+      'Gurtu ഉപയോഗിച്ച് സംഭാഷണം കുറിക്കുന്നുണ്ടെന്ന് ഡോക്ടറെ അറിയിക്കുക.';
+
+  @override
+  String get doctorSaidHint =>
+      'ഡോക്ടർ പറയുന്നത് സംസാരിക്കുക അല്ലെങ്കിൽ ടൈപ്പ് ചെയ്യുക';
+
+  @override
+  String get medicinesHint => 'ഉദാ. മെറ്റ്ഫോർമിൻ 500 mg പ്രാതലിന് ശേഷം';
+
+  @override
+  String get testsHint => 'ഉദാ. HbA1c രക്തപരിശോധന';
+
+  @override
+  String get addNextVisit => 'അടുത്ത സന്ദർശന തീയതി ചേർക്കുക';
+
+  @override
+  String get yourQuestions => 'നിങ്ങളുടെ ചോദ്യങ്ങൾ';
+
+  @override
+  String get tickWhenAsked => 'ഡോക്ടർ മറുപടി പറഞ്ഞാൽ ഓരോന്നും ടിക്ക് ചെയ്യുക.';
+
+  @override
+  String get saveVisit => 'സന്ദർശനം സേവ് ചെയ്യുക';
+
+  @override
+  String get visitSaved => 'സന്ദർശനം സേവ് ചെയ്തു';
+
+  @override
+  String get leaveVisitTitle => 'സേവ് ചെയ്യാതെ പോകണോ?';
+
+  @override
+  String get leaveVisitBody => 'ഈ സന്ദർശനത്തിനായി കുറിച്ചത് നഷ്ടപ്പെടും.';
+
+  @override
+  String get discard => 'ഉപേക്ഷിക്കുക';
+
+  @override
+  String get keepEditing => 'എഴുത്ത് തുടരുക';
+
+  @override
+  String get voiceUnavailable =>
+      'ഇപ്പോൾ വോയ്സ് ഇൻപുട്ട് ലഭ്യമല്ല. നിങ്ങൾക്ക് ടൈപ്പ് ചെയ്യാം.';
+
+  @override
+  String get prepTitle => 'ഡോക്ടറെ കാണാൻ തയ്യാറെടുക്കാം';
+
+  @override
+  String get prepIntro =>
+      'ഡോക്ടറെ കാണാൻ തയ്യാറെടുക്കാം. ഏതൊക്കെ ആരോഗ്യപ്രശ്നങ്ങളെക്കുറിച്ച് സംസാരിക്കണം?';
+
+  @override
+  String get prepPickOrSay =>
+      'താഴെ പ്രശ്നങ്ങൾ തിരഞ്ഞെടുക്കുക, അല്ലെങ്കിൽ സ്വന്തം വാക്കുകളിൽ പറയുക.';
+
+  @override
+  String get prepDescribeHint => 'ഉദാ. മൂന്ന് ദിവസമായി തലവേദന, ക്ഷീണം';
+
+  @override
+  String prepHeard(String symptoms) {
+    return 'ഞാൻ കേട്ടത്: $symptoms';
+  }
+
+  @override
+  String askSince(String symptom) {
+    return '$symptom — എപ്പോൾ മുതൽ?';
+  }
+
+  @override
+  String askSeverity(String symptom) {
+    return '$symptom — എത്ര കഠിനമാണ്?';
+  }
+
+  @override
+  String get askNewMedicine =>
+      'അടുത്തിടെ ഏതെങ്കിലും മരുന്ന് തുടങ്ങുകയോ മാറ്റുകയോ ചെയ്തോ?';
+
+  @override
+  String get askAnythingElse => 'ഡോക്ടറോട് മറ്റെന്തെങ്കിലും പറയാനുണ്ടോ?';
+
+  @override
+  String get urgentWarning =>
+      'കഠിനമായ നെഞ്ചുവേദനയോ ശ്വാസംമുട്ടലോ അടിയന്തരാവസ്ഥയാകാം. അപ്പോയിന്റ്മെന്റിനായി കാത്തിരിക്കരുത് — ഉടൻ വൈദ്യസഹായം തേടുക.';
+
+  @override
+  String get prepThinking => 'നിങ്ങളുടെ ചോദ്യങ്ങൾ തയ്യാറാക്കുന്നു…';
+
+  @override
+  String get prepResultIntro =>
+      'ഡോക്ടറോട് ഇവ ചോദിക്കുക. ആവശ്യമില്ലാത്തവ നീക്കുക, അല്ലെങ്കിൽ നിങ്ങളുടെ ചോദ്യം ചേർക്കുക.';
+
+  @override
+  String get prepNotDoctor =>
+      'Gurtu ഡോക്ടറല്ല. ഈ ചോദ്യങ്ങൾ ഡോക്ടറോട് സംസാരിക്കാൻ സഹായിക്കും.';
+
+  @override
+  String get addOwnQuestion => 'സ്വന്തം ചോദ്യം ചേർക്കുക';
+
+  @override
+  String get add => 'ചേർക്കുക';
+
+  @override
+  String get saveQuestions => 'സന്ദർശനത്തിനായി സേവ് ചെയ്യുക';
+
+  @override
+  String get questionsSaved => 'ചോദ്യങ്ങൾ സന്ദർശനത്തിനായി സേവ് ചെയ്തു';
+
+  @override
+  String get startAgain => 'വീണ്ടും തുടങ്ങുക';
+
+  @override
+  String get startVisit => 'സന്ദർശനം തുടങ്ങുക';
+
+  @override
+  String get deleteQuestions => 'ഈ ചോദ്യങ്ങൾ ഇല്ലാതാക്കുക';
+
+  @override
+  String get removeQuestion => 'ചോദ്യം നീക്കുക';
+
+  @override
+  String get done => 'കഴിഞ്ഞു';
+
+  @override
+  String get healthProblems => 'ആരോഗ്യപ്രശ്നങ്ങൾ';
+
+  @override
+  String preparedOn(String date) {
+    return '$date-ന് തയ്യാറാക്കിയത്';
+  }
+
+  @override
+  String get symFever => 'പനി';
+
+  @override
+  String get symHeadache => 'തലവേദന';
+
+  @override
+  String get symBodyPain => 'ശരീരവേദന അല്ലെങ്കിൽ സന്ധിവേദന';
+
+  @override
+  String get symChestPain => 'നെഞ്ചുവേദന';
+
+  @override
+  String get symBreathless => 'ശ്വാസംമുട്ടൽ';
+
+  @override
+  String get symCough => 'ചുമ';
+
+  @override
+  String get symDizziness => 'തലകറക്കം';
+
+  @override
+  String get symTiredness => 'ക്ഷീണം';
+
+  @override
+  String get symStomach => 'വയറിന്റെ പ്രശ്നം';
+
+  @override
+  String get symPoorSleep => 'ഉറക്കക്കുറവ്';
+
+  @override
+  String get symPoorAppetite => 'വിശപ്പില്ലായ്മ';
+
+  @override
+  String get symLowMood => 'വിഷമം അല്ലെങ്കിൽ ഉത്കണ്ഠ';
+
+  @override
+  String get kwFever => 'പനി,ജ്വരം,കുളിര്';
+
+  @override
+  String get kwHeadache => 'തലവേദന,തല വേദന';
+
+  @override
+  String get kwBodyPain =>
+      'ശരീരവേദന,ദേഹവേദന,സന്ധിവേദന,മുട്ടുവേദന,മുട്ട്,നടുവേദന,കാൽവേദന';
+
+  @override
+  String get kwChestPain => 'നെഞ്ചുവേദന,നെഞ്ച്,നെഞ്ചിൽ';
+
+  @override
+  String get kwBreathless => 'ശ്വാസം,ശ്വാസംമുട്ട്,കിതപ്പ്';
+
+  @override
+  String get kwCough => 'ചുമ,കഫം,ജലദോഷം';
+
+  @override
+  String get kwDizziness => 'തലകറക്കം,തല കറങ്ങുന്നു,ബോധക്കേട്';
+
+  @override
+  String get kwTiredness => 'ക്ഷീണം,തളർച്ച,ബലക്കുറവ്';
+
+  @override
+  String get kwStomach =>
+      'വയറ്,വയറിൽ,അസിഡിറ്റി,ഗ്യാസ്,ഛർദ്ദി,വയറിളക്കം,മലബന്ധം,ഓക്കാനം';
+
+  @override
+  String get kwPoorSleep => 'ഉറക്കം,ഉറക്കമില്ല';
+
+  @override
+  String get kwPoorAppetite => 'വിശപ്പ്,കഴിക്കാൻ തോന്നുന്നില്ല';
+
+  @override
+  String get kwLowMood => 'വിഷമം,ഉത്കണ്ഠ,പേടി,ടെൻഷൻ,സമ്മർദ്ദം,സങ്കടം';
+
+  @override
+  String get sinceToday => 'ഇന്ന് മുതൽ';
+
+  @override
+  String get sinceFewDays => 'കുറച്ച് ദിവസമായി';
+
+  @override
+  String get sinceWeek => 'ഏകദേശം ഒരാഴ്ചയായി';
+
+  @override
+  String get sinceMonth => 'ഒരു മാസമോ അതിലധികമോ';
+
+  @override
+  String get sevMild => 'നേരിയത്';
+
+  @override
+  String get sevModerate => 'മിതമായത്';
+
+  @override
+  String get sevSevere => 'കഠിനം';
+
+  @override
+  String qCause(String symptom) {
+    return '$symptom ഉണ്ടാകാൻ കാരണം എന്തായിരിക്കാം?';
+  }
+
+  @override
+  String qTests(String symptom) {
+    return '$symptom-ന് എന്തെങ്കിലും പരിശോധന വേണോ?';
+  }
+
+  @override
+  String qWarningSigns(String symptom) {
+    return '$symptom-നൊപ്പം ഏതൊക്കെ ലക്ഷണങ്ങൾ കണ്ടാൽ ഉടൻ തിരികെ വരണം?';
+  }
+
+  @override
+  String qHomeCare(String symptom) {
+    return '$symptom കുറയ്ക്കാൻ വീട്ടിൽ എന്ത് ചെയ്യാം?';
+  }
+
+  @override
+  String qConditionLink(String symptom, String conditions) {
+    return '$symptom-ന് $conditions-മായി ബന്ധമുണ്ടാകുമോ?';
+  }
+
+  @override
+  String get qSideEffect => 'പുതിയതോ മാറ്റിയതോ ആയ മരുന്ന് കാരണമാണോ ഇത്?';
+
+  @override
+  String get qMedicinesStillRight =>
+      'ഇപ്പോഴത്തെ മരുന്നുകൾ ശരിയാണോ, അതോ എന്തെങ്കിലും മാറ്റണോ?';
+
+  @override
+  String get qNextCheckup => 'അടുത്ത പരിശോധനയ്ക്ക് എപ്പോൾ വരണം?';
+
+  @override
+  String qTellDoctor(String text) {
+    return 'ഡോക്ടറോട് പറയുക: “$text”';
+  }
+
+  @override
+  String get sampleVisitDiabetesReason => 'പ്രമേഹ പുനഃപരിശോധന';
+
+  @override
+  String get sampleVisitDiabetesNotes =>
+      'ഷുഗർ മുമ്പത്തേക്കാൾ നന്നായി നിയന്ത്രണത്തിലാണ്. അതേ മരുന്നുകൾ തുടരുക. ദിവസവും 30 മിനിറ്റ് നടക്കുക, മധുരം കുറയ്ക്കുക.';
+
+  @override
+  String get sampleVisitDiabetesMeds =>
+      'മെറ്റ്ഫോർമിൻ 500 mg പ്രാതലിനും അത്താഴത്തിനും ശേഷം';
+
+  @override
+  String get sampleVisitDiabetesTests =>
+      'അടുത്ത സന്ദർശനത്തിന് മുമ്പ് HbA1c രക്തപരിശോധന';
+
+  @override
+  String get sampleVisitKneeReason => 'മുട്ടുവേദന';
+
+  @override
+  String get sampleVisitKneeNotes =>
+      'വലത് മുട്ടിൽ നേരിയ സന്ധിവാതം. വൈകുന്നേരം ചൂടുപിടിക്കുക, അധികം പടികൾ കയറുന്നത് ഒഴിവാക്കുക.';
+
+  @override
+  String get sampleVisitKneeMeds => 'വേദനസംഹാരി ജെൽ ദിവസം രണ്ടുതവണ';
+
+  @override
+  String get scanVerify => 'മരുന്ന് സ്കാൻ ചെയ്ത് ഉറപ്പാക്കുക';
+
+  @override
+  String get scanVerifyHint => 'ഈ ഗുളികയാണോ ഇപ്പോൾ കഴിക്കേണ്ടത്?';
+
+  @override
+  String scanVerifySubtitle(String name) {
+    return 'സ്ട്രിപ്പോ പെട്ടിയോ സ്കാൻ ചെയ്യുക. Gurtu അത് $name-ന്റെ മരുന്ന് പട്ടികയുമായി ഒത്തുനോക്കും.';
+  }
+
+  @override
+  String get scanWithCamera => 'മരുന്ന് സ്കാൻ ചെയ്യുക';
+
+  @override
+  String get orTypeName => 'അല്ലെങ്കിൽ സ്ട്രിപ്പിലെ പേര് ടൈപ്പ് ചെയ്യുക';
+
+  @override
+  String get typeNameHint => 'ഉദാ. Glycomet 500';
+
+  @override
+  String get checkMedicine => 'പരിശോധിക്കുക';
+
+  @override
+  String get checkAnother => 'മറ്റൊരു മരുന്ന് പരിശോധിക്കുക';
+
+  @override
+  String get readingStrip => 'സ്ട്രിപ്പ് വായിക്കുന്നു…';
+
+  @override
+  String get cameraUnavailable =>
+      'ക്യാമറ സ്കാൻ ഫോൺ ആപ്പിൽ പ്രവർത്തിക്കും. ഇപ്പോൾ പേര് ടൈപ്പ് ചെയ്യുക.';
+
+  @override
+  String get scanFailed =>
+      'ഫോട്ടോ വായിക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ പേര് ടൈപ്പ് ചെയ്യുക.';
+
+  @override
+  String readFromStrip(String text) {
+    return 'സ്ട്രിപ്പിൽ വായിച്ചത്: “$text”';
+  }
+
+  @override
+  String get verifyDisclaimer =>
+      'നിങ്ങൾ സേവ് ചെയ്ത മരുന്നുകളുമായി മാത്രമേ Gurtu ഒത്തുനോക്കൂ. അത് ഒരിക്കലും മരുന്ന് നിർദ്ദേശിക്കില്ല.';
+
+  @override
+  String get verdictTakeNow => 'അതെ — ഇതാണ് ശരിയായ മരുന്ന്, ഇപ്പോൾ കഴിക്കാം.';
+
+  @override
+  String get verdictNotNow =>
+      'മരുന്ന് ശരിയാണ്, പക്ഷേ ഇപ്പോൾ കഴിക്കേണ്ട സമയമല്ല.';
+
+  @override
+  String get verdictAlreadyTaken =>
+      'ഈ ഡോസ് ഇതിനകം കഴിച്ചു. വീണ്ടും കഴിക്കരുത്.';
+
+  @override
+  String get verdictNoTimes =>
+      'മരുന്ന് ശരിയാണ്, പക്ഷേ ഇതിന്റെ സമയം സേവ് ചെയ്തിട്ടില്ല.';
+
+  @override
+  String get verdictWrongStrength =>
+      'നിർത്തുക — അളവ് (mg) കുറിപ്പടിയിൽ നിന്ന് വ്യത്യസ്തമാണ്.';
+
+  @override
+  String verdictNotOnList(String name) {
+    return 'നിർത്തുക — ഈ മരുന്ന് $name-ന്റെ പട്ടികയിലില്ല.';
+  }
+
+  @override
+  String verdictOtherPatient(String other, String name) {
+    return 'നിർത്തുക — ഈ മരുന്ന് $other-ന്റെ പട്ടികയിലേതാണ്, $name-ന്റേതല്ല.';
+  }
+
+  @override
+  String get verdictUnreadable =>
+      'മരുന്നിന്റെ പേര് വായിക്കാനായില്ല. നല്ല വെളിച്ചത്തിൽ വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ ടൈപ്പ് ചെയ്യുക.';
+
+  @override
+  String get verdictCheckFirst =>
+      'ഡോക്ടറോടോ ഫാർമസിസ്റ്റിനോടോ ചോദിക്കാതെ കഴിക്കരുത്.';
+
+  @override
+  String get rowOnList => 'മരുന്ന് പട്ടികയിലുണ്ട്';
+
+  @override
+  String rowStrengthMatches(String strength) {
+    return 'അളവ് ഒക്കുന്നു: $strength';
+  }
+
+  @override
+  String rowStrengthDiffers(String found, String prescribed) {
+    return 'സ്ട്രിപ്പിൽ $found, കുറിപ്പടിയിൽ $prescribed';
+  }
+
+  @override
+  String rowDueNow(String slot) {
+    return 'ഇപ്പോൾ കഴിക്കേണ്ടത്: $slot ഡോസ്';
+  }
+
+  @override
+  String rowTakenAt(String slot, String time) {
+    return '$slot ഡോസ് $time-ന് കഴിച്ചു';
+  }
+
+  @override
+  String rowNextDose(String slot) {
+    return 'അടുത്ത ഡോസ്: $slot';
+  }
+
+  @override
+  String get rowSetTimes => 'മരുന്ന് പട്ടികയിൽ എപ്പോൾ കഴിക്കണമെന്ന് ചേർക്കുക';
+
+  @override
+  String get markTaken => 'കഴിച്ചതായി രേഖപ്പെടുത്തുക';
+
+  @override
+  String get markedTaken => 'ഡോസ് രേഖപ്പെടുത്തി';
+
+  @override
+  String get undo => 'പഴയപടിയാക്കുക';
+
+  @override
+  String get medicineList => 'മരുന്ന് പട്ടിക';
+
+  @override
+  String get medicineListSubtitle =>
+      'കുറിപ്പടികളിലെ ഓരോ മരുന്നും, എപ്പോൾ കഴിക്കണമെന്നതും.';
+
+  @override
+  String medicinesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count മരുന്നുകൾ',
+      one: '1 മരുന്ന്',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get addMedicine => 'മരുന്ന് ചേർക്കുക';
+
+  @override
+  String get editMedicine => 'മരുന്ന് തിരുത്തുക';
+
+  @override
+  String get addFromPrescription => 'കുറിപ്പടി ഫോട്ടോയിൽ നിന്ന് ചേർക്കുക';
+
+  @override
+  String get noMedicinesTitle => 'ഇതുവരെ മരുന്നുകൾ ചേർത്തിട്ടില്ല';
+
+  @override
+  String get noMedicinesBody =>
+      'കുറിപ്പടിയിലെ ഓരോ മരുന്നും ഒരിക്കൽ ചേർക്കുക. പിന്നെ ഏത് സ്ട്രിപ്പും സ്കാൻ ചെയ്ത് ശരിയാണോ എന്ന് നോക്കാം.';
+
+  @override
+  String addMedicinesFirst(String name) {
+    return 'ആദ്യം $name-ന്റെ മരുന്നുകൾ ചേർക്കുക, അപ്പോൾ Gurtu-വിന് അവയുമായി ഒത്തുനോക്കാം.';
+  }
+
+  @override
+  String get medicineName => 'മരുന്നിന്റെ പേര്';
+
+  @override
+  String get medicineNameHint => 'ഉദാ. Metformin';
+
+  @override
+  String get alsoCalled => 'സ്ട്രിപ്പിലെ മറ്റൊരു പേര്';
+
+  @override
+  String get alsoCalledHint => 'ഉദാ. Glycomet';
+
+  @override
+  String get strength => 'അളവ്';
+
+  @override
+  String get strengthHint => 'ഉദാ. 500 mg';
+
+  @override
+  String get whenToTake => 'എപ്പോൾ കഴിക്കണം';
+
+  @override
+  String get doseMorning => 'രാവിലെ';
+
+  @override
+  String get doseAfternoon => 'ഉച്ചയ്ക്ക്';
+
+  @override
+  String get doseEvening => 'വൈകുന്നേരം';
+
+  @override
+  String get doseNight => 'രാത്രി';
+
+  @override
+  String get foodAfter => 'ഭക്ഷണത്തിന് ശേഷം';
+
+  @override
+  String get foodBefore => 'ഭക്ഷണത്തിന് മുമ്പ്';
+
+  @override
+  String get foodAny => 'ഭക്ഷണത്തോടൊപ്പമോ അല്ലാതെയോ';
+
+  @override
+  String get saveMedicine => 'മരുന്ന് സേവ് ചെയ്യുക';
+
+  @override
+  String get medicineSaved => 'മരുന്ന് സേവ് ചെയ്തു';
+
+  @override
+  String get deleteMedicine => 'മരുന്ന് ഇല്ലാതാക്കുക';
+
+  @override
+  String get deleteMedicineConfirm => 'ഈ മരുന്ന് പട്ടികയിൽ നിന്ന് നീക്കണോ?';
+
+  @override
+  String get scanToFill => 'സ്ട്രിപ്പ് സ്കാൻ ചെയ്ത് പൂരിപ്പിക്കുക';
+
+  @override
+  String get timesNotSet => 'സമയം നിശ്ചയിച്ചിട്ടില്ല';
+
+  @override
+  String get takenToday => 'ഇന്ന് കഴിച്ചവ';
+
+  @override
+  String get prescriptionTitle => 'കുറിപ്പടിയിൽ നിന്ന് ചേർക്കുക';
+
+  @override
+  String get prescriptionHint =>
+      'അച്ചടിച്ച കുറിപ്പടിയുടെ വ്യക്തമായ ഫോട്ടോ എടുക്കുക. Gurtu മരുന്നുകൾ കണ്ടെത്തും; ഏതൊക്കെ ചേർക്കണമെന്ന് നിങ്ങൾ തിരഞ്ഞെടുക്കുക.';
+
+  @override
+  String get takePhoto => 'ഫോട്ടോ എടുക്കുക';
+
+  @override
+  String get chooseFromGallery => 'ഗാലറിയിൽ നിന്ന് തിരഞ്ഞെടുക്കുക';
+
+  @override
+  String get medicinesFound => 'കണ്ടെത്തിയ മരുന്നുകൾ';
+
+  @override
+  String get tickToAdd =>
+      'ചേർക്കേണ്ടവ ടിക്ക് ചെയ്യുക. ഓരോ പേരും സമയവും കുറിപ്പടിയുമായി ഒത്തുനോക്കുക.';
+
+  @override
+  String addSelected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count മരുന്നുകൾ ചേർക്കുക',
+      one: '1 മരുന്ന് ചേർക്കുക',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get nothingFound =>
+      'മരുന്നുകളൊന്നും കണ്ടെത്തിയില്ല. വ്യക്തമായ ഫോട്ടോ എടുക്കുക, അല്ലെങ്കിൽ കൈകൊണ്ട് ചേർക്കുക.';
+
+  @override
+  String get handwrittenNote =>
+      'കൈയെഴുത്ത് കുറിപ്പടികൾ ശരിയായി വായിക്കാനായേക്കില്ല. ഓരോ പേരും പരിശോധിക്കുക.';
+
+  @override
+  String medicinesAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count മരുന്നുകൾ ചേർത്തു',
+      one: '1 മരുന്ന് ചേർത്തു',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowStrengthCheck(String strength) {
+    return 'സ്ട്രിപ്പിൽ $strength എന്നുണ്ടോ എന്ന് നോക്കുക';
+  }
 }

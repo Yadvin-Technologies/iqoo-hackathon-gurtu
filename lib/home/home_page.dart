@@ -6,14 +6,17 @@ import '../theme/gurtu_theme.dart';
 import 'care_text.dart';
 import 'widgets/ai_help_card.dart';
 import 'widgets/care_circle_preview.dart';
+import 'widgets/doctor_shortcuts.dart';
 import 'widgets/getting_ready_card.dart';
+import 'widgets/medicine_check_tile.dart';
 import 'widgets/patient_header.dart';
 import 'widgets/quick_capture.dart';
 import 'widgets/recent_memory.dart';
 import 'widgets/sos_button.dart';
 import 'widgets/today_care_card.dart';
 
-/// Home, top to bottom: who · today · capture · recent · circle · ask.
+/// Home, top to bottom: who · today · capture · doctor & medicines · recent ·
+/// circle · ask.
 /// Detail lives in the other tabs; Home only answers "what now?".
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -78,6 +81,10 @@ class HomePage extends StatelessWidget {
           const TodayCareCard(),
           const SizedBox(height: 16),
           const CaptureCareButton(),
+          const SizedBox(height: 12),
+          const DoctorShortcuts(),
+          const SizedBox(height: 12),
+          const MedicineCheckTile(),
           // Below Capture Care so the main action stays above the fold.
           if (!repo.setupCardDismissed) ...[
             const SizedBox(height: 16),

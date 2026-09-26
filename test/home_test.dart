@@ -51,7 +51,8 @@ void main() {
     expect(find.text('SOS'), findsOneWidget);
     expect(find.text('Nothing urgent right now.'), findsOneWidget);
     expect(find.text('Capture Care'), findsOneWidget);
-    expect(find.text('GETTING GURTU READY'), findsOneWidget);
+    expect(find.text('Doctor visit'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('GETTING GURTU READY'), 200);
     for (final tab in ['Home', 'Memory', 'Circle', 'AI', 'Profile']) {
       expect(find.text(tab), findsOneWidget);
     }

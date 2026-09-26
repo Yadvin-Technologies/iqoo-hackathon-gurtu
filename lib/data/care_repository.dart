@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../onboarding/onboarding_state.dart';
 import 'care_models.dart';
+import 'medicine_models.dart';
+import 'visit_models.dart';
 
 /// Local store for all care data. Every read for the UI goes through
 /// [selectedPatient], so switching patients switches the whole context.
@@ -24,6 +26,10 @@ class CareRepository extends ChangeNotifier {
   final List<CareMember> members = [];
   final List<CareMoment> moments = [];
   final List<CareTask> tasks = [];
+  final List<DoctorVisit> visits = [];
+  final List<VisitPrep> preps = [];
+  final List<Medicine> medicines = [];
+  final List<DoseRecord> doses = [];
   String? _selectedId;
   bool setupCardDismissed = false;
 
@@ -32,7 +38,9 @@ class CareRepository extends ChangeNotifier {
       patients.any((p) => p.isSample) ||
       members.any((m) => m.isSample) ||
       moments.any((m) => m.isSample) ||
-      tasks.any((t) => t.isSample);
+      tasks.any((t) => t.isSample) ||
+      visits.any((v) => v.isSample) ||
+      medicines.any((m) => m.isSample);
 
   PatientProfile? get selectedPatient {
     if (patients.isEmpty) return null;
@@ -81,6 +89,57 @@ class CareRepository extends ChangeNotifier {
   bool needsAttention([DateTime? now]) {
     final t = now ?? DateTime.now();
     return todaysTasks(t).any((x) => !x.isDone && x.dueDate.isBefore(t));
+  }
+
+  /// Doctor visits, newest first.
+  List<DoctorVisit> get doctorVisits {
+    final id = selectedPatient?.id;
+    return visits.where((v) => v.patientId == id).toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  /// The soonest follow-up a doctor asked for that is still ahead.
+  DateTime? nextPlannedVisit([DateTime? now]) {
+    final today = DateUtils.dateOnly(now ?? DateTime.now());
+    final dates = [
+      for (final v in doctorVisits)
+        if (v.nextVisit != null && !v.nextVisit!.isBefore(today)) v.nextVisit!,
+    ]..sort();
+    return dates.firstOrNull;
+  }
+
+  /// Latest questions not yet taken to a visit.
+  VisitPrep? get openPrep {
+    final id = selectedPatient?.id;
+    final open = preps.where((p) => p.patientId == id && !p.isUsed).toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return open.firstOrNull;
+  }
+
+  VisitPrep? prepById(String? id) =>
+      preps.where((p) => p.id == id).cast<VisitPrep?>().firstOrNull;
+
+  /// The selected patient's medicine list, A to Z.
+  List<Medicine> get medicineList {
+    final id = selectedPatient?.id;
+    return medicines.where((m) => m.patientId == id).toList()
+      ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+  }
+
+  PatientProfile? patientById(String id) =>
+      patients.where((p) => p.id == id).cast<PatientProfile?>().firstOrNull;
+
+  /// When [medicine]'s [slot] dose was taken on the care day of [now].
+  DoseRecord? doseTaken(Medicine medicine, DoseTime slot, [DateTime? now]) {
+    final day = careDay(now ?? DateTime.now());
+    return doses
+        .where(
+          (d) =>
+              d.medicineId == medicine.id &&
+              d.slot == slot &&
+              d.day.isAtSameMomentAs(day),
+        )
+        .firstOrNull;
   }
 
   /// "Getting Gurtu ready" steps.
@@ -177,6 +236,137 @@ class CareRepository extends ChangeNotifier {
     _save();
   }
 
+  /// Saves new questions for the selected patient. Older unused ones are
+  /// replaced so there is only ever one list to take to the doctor.
+  VisitPrep? savePrep(VisitPrep Function(String id, String patientId) build) {
+    final patient = selectedPatient;
+    if (patient == null) return null;
+    preps.removeWhere((p) => p.patientId == patient.id && !p.isUsed);
+    final prep = build(
+      'q_${DateTime.now().microsecondsSinceEpoch}',
+      patient.id,
+    );
+    preps.add(prep);
+    _save();
+    return prep;
+  }
+
+  /// Call after changing a prep's questions in place.
+  void updatePrep(VisitPrep prep) => _save();
+
+  void deletePrep(VisitPrep prep) {
+    preps.remove(prep);
+    _save();
+  }
+
+  /// Records a visit for the selected patient. If questions were taken to
+  /// it, they are marked as used.
+  DoctorVisit? addVisit({
+    required DateTime date,
+    String doctorName = '',
+    String reason = '',
+    String notes = '',
+    String medicines = '',
+    String tests = '',
+    DateTime? nextVisit,
+    VisitPrep? prep,
+  }) {
+    final patient = selectedPatient;
+    if (patient == null) return null;
+    final visit = DoctorVisit(
+      id: 'v_${DateTime.now().microsecondsSinceEpoch}',
+      patientId: patient.id,
+      date: date,
+      createdBy: you?.id ?? '',
+      doctorName: doctorName.trim(),
+      reason: reason.trim(),
+      notes: notes.trim(),
+      medicines: medicines.trim(),
+      tests: tests.trim(),
+      nextVisit: nextVisit,
+      prepId: prep?.id,
+    );
+    visits.add(visit);
+    prep?.visitId = visit.id;
+    _save();
+    return visit;
+  }
+
+  void deleteVisit(DoctorVisit visit) {
+    visits.remove(visit);
+    // Its questions go with it; they belong to that appointment.
+    preps.removeWhere((p) => p.visitId == visit.id);
+    _save();
+  }
+
+  Medicine? addMedicine({
+    required String name,
+    String alsoCalled = '',
+    String strength = '',
+    List<DoseTime> times = const [],
+    FoodTiming food = FoodTiming.any,
+    MedicineSource source = MedicineSource.manual,
+  }) {
+    final patient = selectedPatient;
+    if (patient == null || name.trim().isEmpty) return null;
+    final now = DateTime.now();
+    final medicine = Medicine(
+      id: 'med_${now.microsecondsSinceEpoch}_${medicines.length}',
+      patientId: patient.id,
+      name: name.trim(),
+      alsoCalled: alsoCalled.trim(),
+      strength: strength.trim(),
+      times: [
+        for (final t in DoseTime.values)
+          if (times.contains(t)) t,
+      ],
+      food: food,
+      source: source,
+      createdAt: now,
+    );
+    medicines.add(medicine);
+    _save();
+    return medicine;
+  }
+
+  void updateMedicine(Medicine medicine) {
+    final i = medicines.indexWhere((m) => m.id == medicine.id);
+    if (i < 0) return;
+    medicines[i] = medicine;
+    _save();
+  }
+
+  void deleteMedicine(Medicine medicine) {
+    medicines.removeWhere((m) => m.id == medicine.id);
+    doses.removeWhere((d) => d.medicineId == medicine.id);
+    _save();
+  }
+
+  /// Marks [slot]'s dose as taken now. Taking it twice is prevented by the
+  /// check screen, not here, so a mistaken tap can still be undone.
+  void markTaken(Medicine medicine, DoseTime slot, [DateTime? now]) {
+    final at = now ?? DateTime.now();
+    if (doseTaken(medicine, slot, at) != null) return;
+    doses.add(
+      DoseRecord(
+        medicineId: medicine.id,
+        patientId: medicine.patientId,
+        slot: slot,
+        day: careDay(at),
+        at: at,
+        by: you?.id,
+      ),
+    );
+    _save();
+  }
+
+  void undoTaken(Medicine medicine, DoseTime slot, [DateTime? now]) {
+    final record = doseTaken(medicine, slot, now);
+    if (record == null) return;
+    doses.remove(record);
+    _save();
+  }
+
   void dismissSetupCard() {
     setupCardDismissed = true;
     _save();
@@ -217,6 +407,19 @@ class CareRepository extends ChangeNotifier {
         ),
       );
     }
+    medicines.add(
+      Medicine(
+        id: 'sample_med_nanna_1',
+        patientId: second.id,
+        name: 'Telmisartan',
+        alsoCalled: 'Telma',
+        strength: '40 mg',
+        times: const [DoseTime.morning],
+        food: FoodTiming.any,
+        isSample: true,
+        createdAt: DateTime.now(),
+      ),
+    );
     // Deliberately lighter so switching visibly changes the context.
     final today = DateUtils.dateOnly(DateTime.now());
     tasks.add(
@@ -245,6 +448,16 @@ class CareRepository extends ChangeNotifier {
     tasks.removeWhere(
       (t) => t.isSample || samplePatients.contains(t.patientId),
     );
+    visits.removeWhere(
+      (v) => v.isSample || samplePatients.contains(v.patientId),
+    );
+    preps.removeWhere((p) => samplePatients.contains(p.patientId));
+    final sampleMeds = {
+      for (final m in medicines)
+        if (m.isSample || samplePatients.contains(m.patientId)) m.id,
+    };
+    medicines.removeWhere((m) => sampleMeds.contains(m.id));
+    doses.removeWhere((d) => sampleMeds.contains(d.medicineId));
     if (samplePatients.contains(_selectedId)) _selectedId = patients.first.id;
     _save();
   }
@@ -334,6 +547,59 @@ class CareRepository extends ChangeNotifier {
         source: const SourceRef(type: MomentType.vital),
       ),
     ]);
+
+    visits.addAll([
+      DoctorVisit(
+        id: 'sample_v1',
+        patientId: patientId,
+        date: today.subtract(const Duration(days: 12, hours: -11)),
+        createdBy: youId,
+        doctorName: 'Dr. Meena Rao',
+        sample: SampleVisit.diabetesReview,
+        nextVisit: today.add(const Duration(days: 18)),
+      ),
+      DoctorVisit(
+        id: 'sample_v2',
+        patientId: patientId,
+        date: today.subtract(const Duration(days: 47, hours: -17)),
+        createdBy: sister,
+        doctorName: 'Dr. Arjun Iyer',
+        sample: SampleVisit.kneePain,
+      ),
+    ]);
+
+    Medicine med(
+      String id,
+      String name,
+      String alsoCalled,
+      String strength,
+      List<DoseTime> times,
+      FoodTiming food,
+    ) => Medicine(
+      id: 'sample_med_$id',
+      patientId: patientId,
+      name: name,
+      alsoCalled: alsoCalled,
+      strength: strength,
+      times: times,
+      food: food,
+      source: MedicineSource.prescription,
+      isSample: true,
+      createdAt: now,
+    );
+    // Drug names read the same in every language.
+    medicines.addAll([
+      med('1', 'Metformin', 'Glycomet', '500 mg', const [
+        DoseTime.morning,
+        DoseTime.night,
+      ], FoodTiming.afterFood),
+      med('2', 'Amlodipine', 'Amlong', '5 mg', const [
+        DoseTime.morning,
+      ], FoodTiming.any),
+      med('3', 'Atorvastatin', 'Atorva', '10 mg', const [
+        DoseTime.night,
+      ], FoodTiming.afterFood),
+    ]);
   }
 
   // --- Persistence -----------------------------------------------------------
@@ -352,12 +618,20 @@ class CareRepository extends ChangeNotifier {
       members.addAll(list('members').map(CareMember.fromJson));
       moments.addAll(list('moments').map(CareMoment.fromJson));
       tasks.addAll(list('tasks').map(CareTask.fromJson));
+      visits.addAll(list('visits').map(DoctorVisit.fromJson));
+      preps.addAll(list('preps').map(VisitPrep.fromJson));
+      medicines.addAll(list('medicines').map(Medicine.fromJson));
+      doses.addAll(list('doses').map(DoseRecord.fromJson));
     } catch (_) {
       // Unreadable data from an older build: start clean rather than crash.
       patients.clear();
       members.clear();
       moments.clear();
       tasks.clear();
+      visits.clear();
+      preps.clear();
+      medicines.clear();
+      doses.clear();
     }
   }
 
@@ -372,6 +646,10 @@ class CareRepository extends ChangeNotifier {
         'members': [for (final m in members) m.toJson()],
         'moments': [for (final m in moments) m.toJson()],
         'tasks': [for (final t in tasks) t.toJson()],
+        'visits': [for (final v in visits) v.toJson()],
+        'preps': [for (final p in preps) p.toJson()],
+        'medicines': [for (final m in medicines) m.toJson()],
+        'doses': [for (final d in doses) d.toJson()],
       }),
     );
     notifyListeners();
@@ -383,6 +661,10 @@ class CareRepository extends ChangeNotifier {
     members.clear();
     moments.clear();
     tasks.clear();
+    visits.clear();
+    preps.clear();
+    medicines.clear();
+    doses.clear();
     userName = '';
     _selectedId = null;
     setupCardDismissed = false;
