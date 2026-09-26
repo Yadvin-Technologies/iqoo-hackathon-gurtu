@@ -1,0 +1,462 @@
+{
+  "@@locale": "en",
+  "continueLabel": "Continue",
+  "next": "Next",
+  "skip": "Skip",
+  "later": "Later",
+  "back": "Back",
+  "optional": "Optional",
+  "yes": "Yes",
+  "no": "No",
+  "notSure": "Not sure",
+  "tagline": "Remember. Care. Together.",
+  "motherName": "Amma",
+  "@motherName": {
+    "description": "What people in this region commonly call their mother; used as an example name."
+  },
+  "phaseAbout": "About",
+  "phaseHealth": "Health",
+  "phasePermissions": "Permissions",
+  "phaseAi": "AI setup",
+  "phaseStep": "{phase} · {current} of {total}",
+  "@phaseStep": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "languageTitle": "Choose your language",
+  "languageSubtitle": "Gurtu will speak, listen and write in this language.",
+  "languageMixNote": "Doctors often mix English with your language. Gurtu understands both together.",
+  "welcomeTitle": "Your family's\nmemory of care",
+  "welcomeBody": "What the doctor said, what was prescribed and what happened at home — remembered together.",
+  "welcomeScript": "Different roles. Same love.",
+  "getStarted": "Get started",
+  "builtForBrand": "Built for {brand}",
+  "@builtForBrand": {
+    "description": "Footer; the brand is drawn in the iQOO gradient.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "madeInHyderabad": "Made in Hyderabad",
+  "introRecordEyebrow": "1 · Record",
+  "introRecordTitle": "Never forget what the doctor said",
+  "introRecordBody": "With everyone's consent, record the doctor, nurse or pharmacist. Gurtu keeps the important parts.",
+  "introPlanEyebrow": "2 · Understand & share",
+  "introPlanTitle": "One care plan for the whole family",
+  "introPlanBody": "Scan prescriptions and reports. Gurtu turns them into simple tasks the family can share.",
+  "introAskEyebrow": "3 · Ask & remember",
+  "introAskTitle": "Ask anything, see the proof",
+  "introAskBody": "Every answer shows where it came from — the recording, the prescription or the photo.",
+  "letsSetUp": "Let's set up",
+  "hospitalMode": "Hospital Mode",
+  "consentRecording": "Recording with consent of everyone present",
+  "doctorConversation": "Doctor's conversation",
+  "nurseInstructions": "Nurse instructions",
+  "pharmacistAdvice": "Pharmacist advice",
+  "yourCarePlan": "Your Care Plan",
+  "afterBreakfast": "After breakfast",
+  "checkBloodPressure": "Check blood pressure",
+  "twiceDaily": "Twice daily",
+  "bloodTest": "Blood test (CBC)",
+  "instructionsFound": "4 instructions found in your recordings and prescription",
+  "askQuestion": "What did the doctor say about the evening medicine?",
+  "askAnswer": "The doctor said to take Amlodipine after dinner.",
+  "sourceDoctorVisit": "Source: Doctor visit",
+  "careForTitle": "Who are you setting up Gurtu for?",
+  "careForSubtitle": "Gurtu builds one care memory around one person. You can invite the rest of the family later.",
+  "careForMyself": "Myself",
+  "careForMyselfHint": "I want to keep track of my own care",
+  "careForParent": "My parent",
+  "careForParentHint": "Mother, father or an elder in the family",
+  "careForPartner": "My partner",
+  "careForPartnerHint": "Husband, wife or partner",
+  "careForChild": "My child",
+  "careForChildHint": "Son or daughter",
+  "careForOther": "Someone else",
+  "careForOtherHint": "Relative, friend or neighbour",
+  "profileTitleSelf": "Tell us about you",
+  "profileTitleOther": "Tell us about them",
+  "profileSubtitleSelf": "This helps Gurtu talk to you by name.",
+  "profileSubtitleOther": "Use the name you call them at home.",
+  "yourName": "Your name",
+  "whatDoYouCallThem": "What do you call them?",
+  "exampleName": "e.g. {name}",
+  "@exampleName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sampleSelfName": "Lakshmi",
+  "sampleYourName": "Priya",
+  "yourAge": "Your age",
+  "theirAge": "Their age",
+  "years": "years",
+  "decreaseAge": "Decrease age",
+  "increaseAge": "Increase age",
+  "gender": "Gender",
+  "female": "Female",
+  "male": "Male",
+  "genderOther": "Other",
+  "andYou": "And you?",
+  "andYouBody": "You'll be the first member of their Care Circle.",
+  "conditionsTitleSelf": "Do you have any of these health conditions?",
+  "conditionsTitleOther": "Does {name} have any of these health conditions?",
+  "@conditionsTitleOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "conditionsSubtitle": "Tap all that apply. This helps Gurtu organise the care plan.",
+  "condDiabetes": "Sugar (Diabetes)",
+  "condHighBp": "High BP",
+  "condHeart": "Heart problem",
+  "condThyroid": "Thyroid",
+  "condCholesterol": "Cholesterol",
+  "condAsthma": "Asthma / breathing",
+  "condKidney": "Kidney problem",
+  "condArthritis": "Joint pain / arthritis",
+  "condStroke": "Past stroke",
+  "condCancer": "Cancer care",
+  "noneOfThese": "None of these",
+  "notADoctor": "Gurtu is not a doctor. It never diagnoses — it only helps your family remember and organise care.",
+  "medicinesTitleSelf": "Do you take medicines every day?",
+  "medicinesTitleOther": "Does {name} take medicines every day?",
+  "@medicinesTitleOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medicinesSubtitle": "Include tablets, syrups, inhalers or insulin.",
+  "howMany": "About how many?",
+  "sixOrMore": "6 or more",
+  "scanLaterTip": "Later, just scan the prescription or medicine strip — no typing needed.",
+  "allergiesTitleSelf": "Are you allergic to anything?",
+  "allergiesTitleOther": "Is {name} allergic to anything?",
+  "@allergiesTitleOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "allergiesSubtitle": "Gurtu will show this on every Doctor Brief so it is never missed.",
+  "allergyNone": "No known allergies",
+  "allergyPenicillin": "Penicillin",
+  "allergySulfa": "Sulfa drugs",
+  "allergyAspirin": "Aspirin / painkillers",
+  "allergyFood": "Food allergy",
+  "allergyDust": "Dust / pollen",
+  "allergyLatex": "Latex",
+  "mobilityTitleSelf": "How do you get around day to day?",
+  "mobilityTitleOther": "How does {name} get around day to day?",
+  "@mobilityTitleOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mobilitySubtitle": "This helps the family plan visits, tests and help at home.",
+  "mobilityIndependent": "Walks on their own",
+  "mobilityIndependentHint": "No help needed day to day",
+  "mobilitySomeHelp": "Needs some help",
+  "mobilitySomeHelpHint": "Stick, walker or a hand to hold",
+  "mobilityFullHelp": "Mostly in bed or wheelchair",
+  "mobilityFullHelpHint": "Needs help for most things",
+  "hospitalTitleSelf": "Have you been to a hospital or doctor in the last 30 days?",
+  "hospitalTitleOther": "Has {name} been to a hospital or doctor in the last 30 days?",
+  "@hospitalTitleOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hospitalSubtitle": "Recent visits usually come with new instructions to track.",
+  "hospitalTip": "Keep the discharge papers and prescriptions handy — you can scan them right after setup.",
+  "permissionsTitle": "A few permissions to help you",
+  "permissionsSubtitle": "Gurtu only asks for what it needs. Here is exactly why.",
+  "permMic": "Microphone",
+  "permMicWhy": "Record doctor visits and voice notes — only when you tap record.",
+  "permCamera": "Camera",
+  "permCameraWhy": "Scan prescriptions, medicine strips and BP machine readings.",
+  "permNotifications": "Notifications",
+  "permNotificationsWhy": "Medicine reminders and updates when family completes a task.",
+  "permPhotos": "Photos & files",
+  "permPhotosWhy": "Add reports and prescriptions already saved in your gallery.",
+  "permContacts": "Contacts",
+  "permContactsWhy": "Quickly invite family members to the Care Circle.",
+  "needed": "Needed",
+  "allow": "Allow",
+  "allowed": "Allowed",
+  "allowAndContinue": "Allow & continue",
+  "privacyNote": "Everything stays on this phone. Recording never starts on its own — it always shows a consent screen first.",
+  "permissionBlocked": "{permission} is blocked. Turn it on in Settings.",
+  "@permissionBlocked": {
+    "placeholders": {
+      "permission": {
+        "type": "String"
+      }
+    }
+  },
+  "settings": "Settings",
+  "permissionsMissing": "Without {items}, some features won't work. You can allow it later.",
+  "@permissionsMissing": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "modelTitleChoose": "Set up Gurtu's on-device AI",
+  "modelTitleDownloading": "Setting up your AI…",
+  "modelTitleDone": "Your AI is ready",
+  "modelSubtitleChoose": "These models run fully on your iQOO. Your family's health data never leaves the phone — and it works without internet.",
+  "modelSubtitleDownloading": "You can keep using your phone. This happens only once.",
+  "modelSubtitleDone": "Everything runs on this phone, even offline.",
+  "poweredByIqoo": "Powered by your iQOO",
+  "deviceCardSub": "On-device AI · Private · Works offline",
+  "chooseCareModel": "Choose the care model",
+  "careModelHint": "This is the brain that answers questions.",
+  "alwaysIncluded": "Always included",
+  "jobListens": "Listens",
+  "jobReads": "Reads",
+  "jobSees": "Sees",
+  "jobUnderstands": "Understands",
+  "speechModelName": "Speech · {language} + English",
+  "@speechModelName": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "speechModelWhat": "Turns conversations into text in your language.",
+  "readerModelName": "Document reader (OCR)",
+  "readerModelWhat": "Reads prescriptions, discharge papers and lab reports.",
+  "visionModelName": "Medicine & vitals vision",
+  "visionModelWhat": "Recognises medicine strips and BP / sugar machine numbers.",
+  "careModelName": "Care model · {model}",
+  "@careModelName": {
+    "placeholders": {
+      "model": {
+        "type": "String"
+      }
+    }
+  },
+  "tierLite": "Lite",
+  "tierBalanced": "Balanced",
+  "tierPro": "Pro",
+  "tierLiteNote": "Fastest. Short, simple answers.",
+  "tierBalancedNote": "Understands voice, photos and text together.",
+  "tierProNote": "Most detailed answers and Doctor Briefs.",
+  "bestForIqoo": "Best for iQOO",
+  "wifiOnly": "Download on Wi-Fi only",
+  "downloadSize": "Download · {size}",
+  "@downloadSize": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingUp": "Setting up…",
+  "ready": "Ready",
+  "allSetName": "All set, {name}!",
+  "@allSetName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "allSet": "You're all set!",
+  "readySelf": "Your care memory is ready.",
+  "readyOther": "{name}'s care memory is ready. Next, invite the family.",
+  "@readyOther": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rowYou": "You",
+  "rowCaringFor": "Caring for",
+  "rowHealth": "Health",
+  "rowAllergies": "Allergies",
+  "rowLanguage": "Language",
+  "rowAi": "On-device AI",
+  "notAdded": "Not added",
+  "ageYears": "{age} years",
+  "@ageYears": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "careQuote": "“Care is lighter when we do it together.”",
+  "enterGurtu": "Enter Gurtu",
+  "nextUpCareCircle": "Next up: Care Circle",
+  "homeComingSoon": "The home screens are coming in the next section.",
+  "restartOnboarding": "Restart onboarding",
+  "navHome": "Home",
+  "navMemory": "Memory",
+  "navCircle": "Circle",
+  "navAi": "AI",
+  "navProfile": "Profile",
+  "goodMorning": "Good morning, {name}",
+  "@goodMorning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goodAfternoon": "Good afternoon, {name}",
+  "@goodAfternoon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goodEvening": "Good evening, {name}",
+  "@goodEvening": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeName": "Welcome to Gurtu, {name}",
+  "@welcomeName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeHomeSubtitle": "Your family's healthcare, remembered together.",
+  "caringFor": "Caring for",
+  "switchPatientTitle": "Who are you caring for?",
+  "addAnotherPerson": "Add another person",
+  "statusOnTrack": "Care is on track",
+  "statusNeedsAttention": "Something needs attention",
+  "sosLabel": "SOS",
+  "sosHint": "Emergency",
+  "sosHoldTitle": "Hold to alert your Care Circle",
+  "sosHoldBody": "Press and hold the button for 2 seconds. Your emergency contacts will be alerted.",
+  "sosHoldButton": "Hold to send SOS",
+  "sosKeepHolding": "Keep holding…",
+  "sosPreviewNote": "Emergency alerts are not connected yet. This is a preview — no one will be alerted.",
+  "sosPreviewDone": "Preview finished. No one was alerted.",
+  "close": "Close",
+  "todayCare": "Today's care",
+  "completedOf": "{done} of {total} done",
+  "@completedOf": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "viewTodayCare": "View today's care",
+  "nothingUrgent": "Nothing urgent right now.",
+  "markDone": "Mark as done",
+  "markNotDone": "Mark as not done",
+  "openToCircle": "Open to Care Circle",
+  "captureCare": "Capture Care",
+  "captureCareSubtitle": "Record something important for the care journey.",
+  "whatHappened": "What happened?",
+  "captureVoice": "Voice",
+  "captureVoiceHint": "Record a conversation or voice note",
+  "captureScan": "Scan",
+  "captureScanHint": "Prescription or medicine strip",
+  "captureVital": "Vital",
+  "captureVitalHint": "BP, sugar or temperature",
+  "captureDocument": "Document",
+  "captureDocumentHint": "Discharge paper or lab report",
+  "captureNote": "Note",
+  "captureNoteHint": "Write what happened",
+  "comingSoon": "Coming soon",
+  "noteHint": "e.g. Felt dizzy after walking",
+  "saveNote": "Save note",
+  "noteSaved": "Saved to care memory",
+  "recentMemory": "Recent memory",
+  "viewAll": "View all",
+  "emptyMemory": "Your care story starts here.",
+  "addedBy": "by {name}",
+  "@addedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sourcePlay": "Play",
+  "sourceView": "View",
+  "sourceOpen": "Open",
+  "sourceTitle": "Source",
+  "sourceRecording": "Doctor recording",
+  "sourceScan": "Prescription scan",
+  "sourceVital": "Vital reading",
+  "sourceDocument": "Document",
+  "sourceNote": "Written note",
+  "sourceSampleNote": "This is sample data, so there is no original file. Real recordings and scans will open here.",
+  "yourCareCircle": "Your Care Circle",
+  "manageCircle": "Manage circle",
+  "emptyCircle": "Care is easier together.",
+  "addFamilyMember": "Add family member",
+  "rolePatient": "Patient",
+  "roleCaregiver": "Caregiver",
+  "roleFamily": "Family",
+  "roleHelper": "Trusted helper",
+  "askGurtuTitle": "Ask Gurtu",
+  "askGurtuPrompt": "Need help remembering something?",
+  "askExampleBloodTest": "When is the blood test?",
+  "askExampleDoctor": "What should I ask the doctor tomorrow?",
+  "askGurtuNote": "Answers come from your saved care information.",
+  "gettingReady": "Getting Gurtu ready",
+  "readyYourProfile": "Your profile",
+  "readyPatientProfile": "Patient profile",
+  "readyCareCircle": "Care Circle",
+  "readyEmergencyContact": "Emergency contact",
+  "previewSampleData": "Preview with sample data",
+  "sampleDataOn": "Showing sample care data",
+  "remove": "Remove",
+  "hide": "Hide",
+  "comingNextPhase": "This section is being built next.",
+  "fatherName": "Nanna",
+  "sampleTaskMorningMedicine": "Morning medicine",
+  "sampleTaskRecordBp": "Record BP",
+  "sampleTaskBloodTest": "Blood test",
+  "sampleTaskDoctorVisit": "Doctor appointment",
+  "sampleMomentDoctorTalk": "Doctor conversation",
+  "sampleMomentDoctorTalkDetail": "“Take the medicine after breakfast.”",
+  "sampleMomentPrescription": "Prescription scanned",
+  "sampleMomentPrescriptionDetail": "2 medicines found",
+  "sampleMomentBp": "BP recorded",
+  "today": "Today",
+  "yesterday": "Yesterday"
+}
