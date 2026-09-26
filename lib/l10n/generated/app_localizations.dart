@@ -3339,6 +3339,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In your words'**
   String get prepInTheirWords;
+
+  /// No description provided for @addPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photo'**
+  String get addPhoto;
+
+  /// No description provided for @recordVoiceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Record voice note'**
+  String get recordVoiceNote;
+
+  /// No description provided for @voiceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice note'**
+  String get voiceNote;
+
+  /// No description provided for @recordingNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording…'**
+  String get recordingNow;
+
+  /// No description provided for @stopAndSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop and save'**
+  String get stopAndSave;
+
+  /// No description provided for @removeAttachmentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this?'**
+  String get removeAttachmentTitle;
+
+  /// No description provided for @removeAttachmentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It will be deleted from this phone.'**
+  String get removeAttachmentBody;
+
+  /// No description provided for @attachFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t add that. Please try again.'**
+  String get attachFailed;
+
+  /// No description provided for @attachHintMedicines.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of the prescription, or record what the doctor said about the medicines.'**
+  String get attachHintMedicines;
+
+  /// No description provided for @attachHintTests.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of the test slip or report, or record what the doctor said.'**
+  String get attachHintTests;
+
+  /// No description provided for @attachHintNextVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of the appointment card, or record what the doctor said about the next visit.'**
+  String get attachHintNextVisit;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @viewPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'View photo'**
+  String get viewPhoto;
 }
 
 class _AppLocalizationsDelegate

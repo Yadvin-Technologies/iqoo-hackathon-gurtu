@@ -65,37 +65,66 @@ void main() {
   };
 
   group('planIntake', () {
-    test('follow-ups come from the bank, with every must-ask', () async {
+    test('the model writes its own follow-ups, danger checks kept', () async {
       final ai = _FakeAi(prefs, [
         // 1. understanding what was said
         '{"symptoms": ["headache", "flu"], "medicineChanged": false}',
-        // 2. choosing follow-ups: one real id, one made up
-        '{"ids": ["hd_where", "made_up"]}',
+        // 2. the follow-ups
+        '{"followUps": ['
+            '{"id": "new", "question": "Is your headache worse in the morning or at night?", '
+            '"options": ["Morning", "Night", "No difference"]},'
+            '{"id": "hd_danger", "question": "Did your headache start suddenly, as the worst headache ever?", '
+            '"options": ["No, it came slowly", "Yes, sudden and severe"]},'
+            '{"id": "new", "question": "Should you take 500 mg of paracetamol?", '
+            '"options": ["Yes", "No"]},'
+            '{"id": "new", "question": "Is your headache worse in the morning or at night?", '
+            '"options": ["Morning", "Night"]},'
+            '{"id": "new", "question": "Does long screen time make your headache worse?", '
+            '"options": "Yes | No | Not sure"}'
+            ']}',
       ]);
       final plan = await GemmaVisitAssistant(ai).planIntake(
         patient: me,
         picked: {},
-        description: 'bad headache',
+        description: 'bad headache since morning',
         keywords: keywords,
         language: AppLanguage.english,
       );
 
       expect(plan!.symptoms, {Symptom.headache}); // "flu" is not ours
-      final ids = plan.followUps.map((f) => f.id).toList();
-      // When it started (not said), both danger checks and what was tried
-      // are always asked; the invented id is dropped.
-      expect(ids, containsAll(['g_onset', 'hd_danger', 'hd_signs', 'g_tried']));
-      expect(ids, contains('hd_where'));
-      expect(ids, isNot(contains('made_up')));
-      // Danger answers carry their urgency to the chat.
-      final danger = plan.followUps.firstWhere((f) => f.id == 'hd_danger');
-      expect(danger.options.last.urgency, Urgency.emergency);
+      expect(plan.followUps.map((f) => f.question), [
+        'Is your headache worse in the morning or at night?',
+        // Left out by the model: asked anyway, right after the first.
+        'Does it come with vomiting, blurred vision, weakness or confusion?',
+        'Did your headache start suddenly, as the worst headache ever?',
+        'Does long screen time make your headache worse?',
+      ]);
+      // A dose and a repeated question are dropped.
+      expect(plan.followUps.first.id, startsWith('ai_'));
+      expect(plan.followUps.last.options.map((o) => o.text), [
+        'Yes',
+        'No',
+        'Not sure',
+      ]);
+      // Danger answers carry their urgency to the chat, reworded or not.
+      for (final id in ['hd_danger', 'hd_signs']) {
+        final danger = plan.followUps.firstWhere((f) => f.id == id);
+        expect(danger.options.last.urgency, Urgency.emergency);
+      }
+      // What they said and the checks reach the model.
+      expect(ai.prompts.last, contains('bad headache since morning'));
+      expect(ai.prompts.last, contains('hd_signs'));
     });
 
-    test('a medicine change they mention is not asked again', () async {
+    test('speaks to a caregiver about the patient', () async {
       final ai = _FakeAi(prefs, [
         '{"symptoms": ["dizziness"], "medicineChanged": true}',
-        '{"ids": ["g_medicine", "dz_when"]}',
+        '{"followUps": ['
+            '{"id": "dz_danger", "question": "Is she unwell?", '
+            '"options": ["No", "Yes"]},'
+            '{"id": "new", "question": "Does your mother feel dizzy when she stands up?", '
+            '"options": ["Yes", "No"]}'
+            ']}',
       ]);
       final plan = await GemmaVisitAssistant(ai).planIntake(
         patient: mother,
@@ -105,18 +134,45 @@ void main() {
         language: AppLanguage.english,
       );
       expect(plan!.medicineChanged, isTrue);
-      final ids = plan.followUps.map((f) => f.id);
-      expect(ids, isNot(contains('g_medicine')));
-      // "since" says when it started.
-      expect(ids, isNot(contains('g_onset')));
-      expect(ids, contains('dz_danger'));
+      expect(ai.systems.last, contains('your mother'));
+      expect(ai.prompts.last, contains('Diabetes'));
+      expect(ai.prompts.last, contains('medicine was started'));
+      // A danger check reworded out of its meaning keeps the bank's words.
+      final danger = plan.followUps.firstWhere((f) => f.id == 'dz_danger');
+      expect(
+        danger.question,
+        'Any slurred speech, drooping face, or weakness on one side?',
+      );
+      expect(danger.options.last.urgency, Urgency.emergency);
     });
 
-    test('translations keep the options one for one, minus English', () async {
+    test('in English, the bank follow-ups when nothing is usable', () async {
+      final ai = _FakeAi(prefs, ['Sorry, I cannot help.']);
+      final plan = await GemmaVisitAssistant(ai).planIntake(
+        patient: me,
+        picked: {Symptom.headache},
+        description: '',
+        keywords: keywords,
+        language: AppLanguage.english,
+      );
+      final ids = plan!.followUps.map((f) => f.id);
+      expect(ids, containsAll(['g_onset', 'hd_danger', 'hd_signs', 'g_tried']));
+    });
+
+    test('in Hindi, only Hindi questions, danger checks translated', () async {
       final ai = _FakeAi(prefs, [
-        '{"followUps": [{"id": "hd_danger", '
-            '"question": "क्या यह अचानक शुरू हुआ?", '
-            '"options": "नहीं (No) | हाँ, अचानक (Yes, sudden)"}]}',
+        '{"followUps": ['
+            '{"id": "hd_danger", "question": "क्या यह अचानक शुरू हुआ?", '
+            '"options": "नहीं (No) | हाँ, अचानक (Yes, sudden)"},'
+            '{"id": "new", "question": "Is it worse at night?", '
+            '"options": ["Yes", "No"]},'
+            '{"id": "new", "question": "क्या रात में सिरदर्द ज़्यादा होता है?", '
+            '"options": ["हाँ", "नहीं"]}'
+            ']}',
+        // The danger check the model left out, translated.
+        '{"followUps": [{"id": "hd_signs", '
+            '"question": "क्या उल्टी, धुंधला दिखना या कमजोरी भी है?", '
+            '"options": ["नहीं", "हाँ"]}]}',
       ]);
       final plan = await GemmaVisitAssistant(ai).planIntake(
         patient: me,
@@ -125,10 +181,33 @@ void main() {
         keywords: keywords,
         language: AppLanguage.hindi,
       );
-      final danger = plan!.followUps.firstWhere((f) => f.id == 'hd_danger');
-      expect(danger.question, 'क्या यह अचानक शुरू हुआ?');
+      expect(plan!.followUps.map((f) => f.question), [
+        'क्या यह अचानक शुरू हुआ?',
+        'क्या उल्टी, धुंधला दिखना या कमजोरी भी है?',
+        'क्या रात में सिरदर्द ज़्यादा होता है?',
+      ]);
+      final danger = plan.followUps.firstWhere((f) => f.id == 'hd_danger');
       expect(danger.options.map((o) => o.text), ['नहीं', 'हाँ, अचानक']);
       expect(danger.options.last.urgency, Urgency.emergency);
+      expect(
+        plan.followUps
+            .firstWhere((f) => f.id == 'hd_signs')
+            .options
+            .last
+            .urgency,
+        Urgency.emergency,
+      );
+    });
+
+    test('in Hindi, no plan when nothing is usable', () async {
+      final plan = await GemmaVisitAssistant(_FakeAi(prefs, ['{}'])).planIntake(
+        patient: me,
+        picked: {Symptom.headache},
+        description: '',
+        keywords: keywords,
+        language: AppLanguage.hindi,
+      );
+      expect(plan, isNull);
     });
 
     test('no plan without the model', () async {
@@ -156,62 +235,87 @@ void main() {
           id: 'g_tried',
           choice: 2,
         ),
+        IntakeAnswer(
+          question: 'Does she feel dizzy after her morning tablets?',
+          answer: 'Yes',
+          id: 'ai_0',
+          choice: 0,
+        ),
       ],
     );
 
     Future<PrepSuggestion> suggest(
       _FakeAi ai, {
       PatientProfile? patient,
-      PrepAnswers? prep,
+      AppLanguage language = AppLanguage.english,
     }) => GemmaVisitAssistant(ai).suggestQuestions(
       patient: patient ?? mother,
-      answers:
-          prep ??
-          PrepAnswers(
-            symptoms: [SymptomAnswer(Symptom.dizziness)],
-            description: answers.description,
-            intake: answers.intake,
-          ),
-      language: AppLanguage.english,
+      answers: PrepAnswers(
+        symptoms: [SymptomAnswer(Symptom.dizziness)],
+        description: answers.description,
+        intake: answers.intake,
+      ),
+      language: language,
     );
 
-    test('only bank questions, tailored, every topic covered', () async {
+    test('written for this patient, every topic covered', () async {
       final ai = _FakeAi(prefs, [
         '{"questions": ['
-            '{"id": "u_cause", "question": "What do you think is causing my mother\'s dizziness?"},'
-            '{"id": "dz_bp", "question": "Could blood pressure or the medicines be causing my mother\'s dizziness?"},'
-            '{"id": "made_up", "question": "Is it vertigo?"},'
-            '{"id": "m_side", "question": "Should she take 500 mg of something?"},'
-            '{"id": "h_do", "question": "What can I do at home for my dizziness?"},'
-            '{"id": "t_need", "question": "Is an MRI of the brain needed?"}'
+            '{"topic": "understand", "question": "What could be causing my mother\'s dizziness when she stands up?"},'
+            '{"topic": "understand", "question": "Could her diabetes be linked to the dizziness?"},'
+            '{"topic": "treatment", "question": "Could her morning tablets be making her dizzy?"},'
+            '{"topic": "treatment", "question": "Should she take 500 mg of something?"},'
+            '{"topic": "home", "question": "What can I do at home for my dizziness?"},'
+            '{"topic": "home", "question": "How can we stop my mother from falling when she feels dizzy?"},'
+            '{"topic": "tests", "question": "Should her sugar and blood pressure be checked?"},'
+            '{"topic": "Follow-up", "question": "When should we bring my mother back if it does not settle?"},'
+            '{"topic": "understand", "question": "What could be causing my mother\'s dizziness when she stands up?"}'
             ']}',
       ]);
       final s = await suggest(ai);
-      final texts = {
-        for (final q in s.questions) q.id.split('_').skip(2).join('_'): q.text,
-      };
 
       expect(s.byAi, isTrue);
-      expect(s.questions.every((q) => q.kind == QuestionKind.ai), isTrue);
-      // Tailored wording kept when it stays true to the bank question.
-      expect(
-        texts['u_cause'],
-        "What do you think is causing my mother's dizziness?",
-      );
-      // Invented question dropped; a dose sends back the bank wording.
-      expect(texts.containsKey('made_up'), isFalse);
-      expect(texts['m_side'], 'What side effects could the medicines cause?');
-      // A caregiver's question must not speak as the patient.
-      expect(texts['h_do'], 'What can be done at home to help with this?');
-      // New medical words ("MRI", "brain") send back the bank wording.
-      expect(texts['t_need'], 'Are any tests needed? What will they tell us?');
-      // Always there: what the answers make essential, and every topic.
-      expect(texts, contains('m_nothing'));
-      expect(texts, contains('f_warning'));
+      expect(s.questions.map((q) => q.text), [
+        "What could be causing my mother's dizziness when she stands up?",
+        'Could her diabetes be linked to the dizziness?',
+        'Should her sugar and blood pressure be checked?',
+        'Could her morning tablets be making her dizzy?',
+        'How can we stop my mother from falling when she feels dizzy?',
+        'When should we bring my mother back if it does not settle?',
+        // Always asked, even when the model forgets.
+        'Which warning signs mean going to the hospital straight away?',
+      ]);
+      // A dose, the wrong voice and a repeat are dropped.
       expect(
         s.questions.map((q) => q.topic).toSet(),
         QuestionTopic.values.toSet(),
       );
+      // Everything learned reaches the model, and what it must cover.
+      expect(ai.prompts.last, contains('after her morning tablets? → Yes'));
+      expect(ai.systems.last, contains('Nothing tried so far has helped'));
+      expect(ai.systems.last, contains('long-term conditions'));
+      expect(ai.systems.last, contains('my mother'));
+    });
+
+    test('in Hindi, missing topics from the app\'s own questions', () async {
+      final ai = _FakeAi(prefs, [
+        '{"questions": ['
+            '{"topic": "understand", "question": "माँ को खड़े होने पर चक्कर क्यों आता है?"},'
+            '{"topic": "understand", "question": "Could it be her sugar?"},'
+            '{"topic": "treatment", "question": "क्या सुबह की दवा से चक्कर आ सकता है?"},'
+            '{"topic": "home", "question": "घर पर माँ को गिरने से कैसे बचाएँ?"},'
+            '{"topic": "followUp", "question": "किन लक्षणों पर तुरंत अस्पताल जाना चाहिए?"},'
+            '{"topic": "followUp", "question": "अगर ठीक न हो तो दोबारा कब आएँ?"}'
+            ']}',
+      ]);
+      final s = await suggest(ai, language: AppLanguage.hindi);
+      expect(s.byAi, isTrue);
+      expect(s.questions.where((q) => q.kind == QuestionKind.ai), hasLength(5));
+      final tests = s.questions.singleWhere(
+        (q) => q.topic == QuestionTopic.tests,
+      );
+      expect(tests.kind, QuestionKind.tests);
+      expect(tests.symptom, Symptom.dizziness);
     });
 
     test('in English, a sensible bank list even without the model', () async {
@@ -227,7 +331,11 @@ void main() {
     });
 
     test('falls back on an unusable answer', () async {
-      for (final reply in ['Sorry, I cannot help.', '{"questions": "x"}']) {
+      for (final reply in [
+        'Sorry, I cannot help.',
+        '{"questions": "x"}',
+        '{"questions": [{"topic": "tests", "question": "Is a blood test needed?"}]}',
+      ]) {
         final s = await suggest(_FakeAi(prefs, [reply]));
         expect(s.byAi, isFalse, reason: reply);
         expect(s.questions, isNotEmpty);

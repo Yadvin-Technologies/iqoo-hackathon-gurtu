@@ -1858,4 +1858,49 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'ഫോട്ടോ ചേർക്കുക';
+
+  @override
+  String get recordVoiceNote => 'വോയ്‌സ് നോട്ട് റെക്കോർഡ് ചെയ്യുക';
+
+  @override
+  String get voiceNote => 'വോയ്‌സ് നോട്ട്';
+
+  @override
+  String get recordingNow => 'റെക്കോർഡ് ചെയ്യുന്നു…';
+
+  @override
+  String get stopAndSave => 'നിർത്തി സേവ് ചെയ്യുക';
+
+  @override
+  String get removeAttachmentTitle => 'ഇത് നീക്കം ചെയ്യണോ?';
+
+  @override
+  String get removeAttachmentBody => 'ഇത് ഈ ഫോണിൽ നിന്ന് ഇല്ലാതാക്കും.';
+
+  @override
+  String get attachFailed => 'ഇത് ചേർക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get attachHintMedicines =>
+      'കുറിപ്പടിയുടെ ഫോട്ടോ ചേർക്കുക, അല്ലെങ്കിൽ മരുന്നുകളെക്കുറിച്ച് ഡോക്ടർ പറഞ്ഞത് റെക്കോർഡ് ചെയ്യുക.';
+
+  @override
+  String get attachHintTests =>
+      'പരിശോധനാ ചീട്ടിന്റെയോ റിപ്പോർട്ടിന്റെയോ ഫോട്ടോ ചേർക്കുക, അല്ലെങ്കിൽ ഡോക്ടർ പറഞ്ഞത് റെക്കോർഡ് ചെയ്യുക.';
+
+  @override
+  String get attachHintNextVisit =>
+      'അപ്പോയിന്റ്മെന്റ് കാർഡിന്റെ ഫോട്ടോ ചേർക്കുക, അല്ലെങ്കിൽ അടുത്ത സന്ദർശനത്തെക്കുറിച്ച് ഡോക്ടർ പറഞ്ഞത് റെക്കോർഡ് ചെയ്യുക.';
+
+  @override
+  String get play => 'പ്ലേ ചെയ്യുക';
+
+  @override
+  String get pause => 'താൽക്കാലികമായി നിർത്തുക';
+
+  @override
+  String get viewPhoto => 'ഫോട്ടോ കാണുക';
 }

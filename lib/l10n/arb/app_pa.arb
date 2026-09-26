@@ -490,5 +490,19 @@
   "nothingFound": "ਕੋਈ ਦਵਾਈ ਨਹੀਂ ਲੱਭੀ। ਸਾਫ਼ ਫ਼ੋਟੋ ਲਓ, ਜਾਂ ਹੱਥ ਨਾਲ ਜੋੜੋ।",
   "handwrittenNote": "ਹੱਥ ਨਾਲ ਲਿਖੀਆਂ ਪਰਚੀਆਂ ਠੀਕ ਨਹੀਂ ਪੜ੍ਹੀਆਂ ਜਾਂਦੀਆਂ। ਹਰ ਨਾਂ ਜਾਂਚੋ।",
   "medicinesAdded": "{count, plural, =1{1 ਦਵਾਈ ਜੋੜੀ ਗਈ} other{{count} ਦਵਾਈਆਂ ਜੋੜੀਆਂ ਗਈਆਂ}}",
-  "rowStrengthCheck": "ਵੇਖ ਲਓ ਕਿ ਪੱਤੇ ‘ਤੇ {strength} ਲਿਖਿਆ ਹੈ"
+  "rowStrengthCheck": "ਵੇਖ ਲਓ ਕਿ ਪੱਤੇ ‘ਤੇ {strength} ਲਿਖਿਆ ਹੈ",
+  "addPhoto": "ਫ਼ੋਟੋ ਜੋੜੋ",
+  "recordVoiceNote": "ਆਵਾਜ਼ ਨੋਟ ਰਿਕਾਰਡ ਕਰੋ",
+  "voiceNote": "ਆਵਾਜ਼ ਨੋਟ",
+  "recordingNow": "ਰਿਕਾਰਡ ਹੋ ਰਿਹਾ ਹੈ…",
+  "stopAndSave": "ਰੋਕੋ ਅਤੇ ਸੇਵ ਕਰੋ",
+  "removeAttachmentTitle": "ਕੀ ਇਸਨੂੰ ਹਟਾਉਣਾ ਹੈ?",
+  "removeAttachmentBody": "ਇਹ ਇਸ ਫ਼ੋਨ ਤੋਂ ਮਿਟ ਜਾਵੇਗਾ।",
+  "attachFailed": "ਇਹ ਜੋੜਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  "attachHintMedicines": "ਪਰਚੀ ਦੀ ਫ਼ੋਟੋ ਜੋੜੋ, ਜਾਂ ਦਵਾਈਆਂ ਬਾਰੇ ਡਾਕਟਰ ਨੇ ਜੋ ਕਿਹਾ ਉਹ ਰਿਕਾਰਡ ਕਰੋ।",
+  "attachHintTests": "ਟੈਸਟ ਦੀ ਪਰਚੀ ਜਾਂ ਰਿਪੋਰਟ ਦੀ ਫ਼ੋਟੋ ਜੋੜੋ, ਜਾਂ ਡਾਕਟਰ ਨੇ ਜੋ ਕਿਹਾ ਉਹ ਰਿਕਾਰਡ ਕਰੋ।",
+  "attachHintNextVisit": "ਅਪੌਇੰਟਮੈਂਟ ਕਾਰਡ ਦੀ ਫ਼ੋਟੋ ਜੋੜੋ, ਜਾਂ ਅਗਲੀ ਮੁਲਾਕਾਤ ਬਾਰੇ ਡਾਕਟਰ ਨੇ ਜੋ ਕਿਹਾ ਉਹ ਰਿਕਾਰਡ ਕਰੋ।",
+  "play": "ਚਲਾਓ",
+  "pause": "ਰੋਕੋ",
+  "viewPhoto": "ਫ਼ੋਟੋ ਵੇਖੋ"
 }

@@ -13,17 +13,17 @@ import 'visit_knowledge.dart';
 
 /// "Prepare for the doctor" on the on-device model.
 ///
-/// The model never writes a medical question of its own. Every question
-/// comes from the reviewed bank in `visit_knowledge.dart`; the model's job is
-/// to understand what the family said, choose the questions that fit this
-/// patient, tailor their wording and translate them. It answers with bank
-/// ids, so an invented question has nowhere to go, and code then guarantees
-/// what must always be there: the danger-sign check for every symptom, one
-/// question per topic, and "which warning signs mean hospital".
+/// The model writes both conversations for this patient: the follow-ups it
+/// asks the family, from exactly what they said, and the questions to ask
+/// the doctor, from everything it learned. The reviewed bank in
+/// `visit_knowledge.dart` is its source of ideas, and the safety net code
+/// keeps no matter what the model writes: the danger-sign check for every
+/// symptom (with its urgent answers), one question per topic, "which warning
+/// signs mean hospital", no doses, and the right voice for a caregiver.
 ///
 /// Whenever the model is missing, slow or its answer doesn't pass the checks,
-/// the same bank is used without it (English) or [LocalVisitAssistant]
-/// (other languages), so the feature always works.
+/// the bank is used without it (English) or [LocalVisitAssistant] (other
+/// languages), so the feature always works.
 class GemmaVisitAssistant extends VisitAssistant {
   const GemmaVisitAssistant(
     this.ai, {
@@ -33,8 +33,11 @@ class GemmaVisitAssistant extends VisitAssistant {
   final GurtuAi ai;
   final LocalVisitAssistant fallback;
 
+  /// Follow-ups the model writes itself, besides the danger checks.
+  static const _maxOwnFollowUps = 4;
   static const _maxFollowUps = 5;
   static const _pickAsks = 8;
+  static const _minAsks = 5;
   static const _maxAsks = 10;
 
   @override
@@ -68,79 +71,203 @@ class GemmaVisitAssistant extends VisitAssistant {
       for (final s in Symptom.values)
         if (symptoms.contains(s)) ...?symptomIntake[s],
     ];
-    // Always asked: when it started (unless they said), every danger check,
-    // and what has been tried — the doctor's first questions too.
-    final must = [
-      if (!_mentionsTime(description)) 'g_onset',
+    // Every danger check for these problems is always asked: its answers
+    // carry the urgency that tells the family to get help now.
+    final danger = [
       for (final q in pool)
         if (q.danger) q.id,
-      'g_tried',
     ];
     final english = language == AppLanguage.english;
 
-    List<String> ids;
-    var shown = <String, FollowUp>{};
+    var written = <FollowUp>[];
     try {
       final reply = await ai.generate(
-        system: _intakeSystem(language),
+        system: _intakeSystem(language, patient),
         prompt: [
           _about(patient),
           '',
-          if (description.isNotEmpty)
-            'What they said: """$description"""'
-          else
-            'Problems they tapped: ${_labels(symptoms)}',
-          if (description.isNotEmpty && symptoms.isNotEmpty)
-            'Problems: ${_labels(symptoms)}',
+          if (description.isNotEmpty) 'What they said: """$description"""',
+          if (symptoms.isNotEmpty) 'Problems: ${_labels(symptoms)}',
+          if (medicineChanged)
+            'A medicine was started, stopped or changed recently: yes',
           '',
-          'Follow-up questions:',
+          if (danger.isNotEmpty) ...[
+            'Safety checks (include every one, with its id and its options '
+                'in the same order):',
+            for (final q in pool)
+              if (q.danger) _bankLine(q),
+            '',
+          ],
+          'Questions doctors often find useful (ideas only; reuse one by its '
+              'id, reworded for this patient, only if it fits):',
           for (final q in pool)
-            '- ${q.id}: ${q.text}'
-                '${english ? '' : ' Options: ${q.options.map((o) => o.text).join(' | ')}'}'
-                '${must.contains(q.id) ? ' [must]' : ''}',
+            if (!q.danger) _bankLine(q),
         ].join('\n'),
-        maxOutputTokens: english ? 120 : 700,
-        timeout: const Duration(seconds: 60),
+        maxOutputTokens: english ? 500 : 1000,
+        timeout: const Duration(seconds: 75),
       );
-      final j = _json(reply);
-      if (english) {
-        ids = [for (final id in j?['ids'] as List? ?? const []) '$id'];
-      } else {
-        shown = _translatedFollowUps(j?['followUps'], pool);
-        ids = shown.keys.toList();
-      }
+      written = _writtenFollowUps(_json(reply)?['followUps'], pool, language);
     } on Object catch (e) {
       debugPrint('Gurtu AI intake: $e');
-      // Untranslated bank questions would be in English: other languages
-      // use the app's own translated questions instead.
-      if (!english) return null;
-      ids = const [];
     }
 
-    final chosen = _pickFollowUps(ids, pool, must, symptoms);
-    if (!english) {
-      final missing = [
-        for (final q in chosen)
-          if (!shown.containsKey(q.id)) q,
+    final own = written.where((f) => !danger.contains(f.id)).toList();
+    if (own.isEmpty) {
+      debugPrint('Gurtu AI intake: nothing usable, using the built-in ones');
+      // Bank questions would be in English: other languages use the app's
+      // own translated questions instead.
+      if (!english) return null;
+      final must = [
+        if (!_mentionsTime(description)) 'g_onset',
+        ...danger,
+        'g_tried',
       ];
-      if (missing.isNotEmpty) {
-        shown = {...shown, ...await _translate(missing, language)};
-      }
+      return IntakePlan(
+        symptoms: symptoms,
+        medicineChanged: medicineChanged,
+        followUps: [
+          for (final q in _pickFollowUps(const [], pool, must, symptoms))
+            FollowUp(id: q.id, question: q.text, options: q.options),
+        ],
+      );
+    }
+
+    // The model's order, its own questions kept short, every danger check.
+    final room = (_maxFollowUps - danger.length).clamp(2, _maxOwnFollowUps);
+    var kept = 0;
+    final followUps = [
+      for (final f in written)
+        if (danger.contains(f.id) || kept++ < room) f,
+    ];
+    final missing = [
+      for (final q in pool)
+        if (q.danger && !followUps.any((f) => f.id == q.id)) q,
+    ];
+    if (missing.isNotEmpty) {
+      final translated = english
+          ? const <String, FollowUp>{}
+          : await _translate(missing, language);
+      // Right after the first question: asked early, without opening the
+      // conversation with them. Untranslated, a danger check is still asked.
+      followUps.insertAll(1, [
+        for (final q in missing)
+          translated[q.id] ??
+              FollowUp(id: q.id, question: q.text, options: q.options),
+      ]);
     }
     return IntakePlan(
       symptoms: symptoms,
       medicineChanged: medicineChanged,
-      followUps: [
-        for (final q in chosen)
-          if (shown[q.id] case final translated?)
-            translated
-          // An untranslated question would switch language mid-chat: only
-          // the ones that must be asked are shown as they are.
-          else if (english || must.contains(q.id))
-            FollowUp(id: q.id, question: q.text, options: q.options),
-      ],
+      followUps: followUps,
     );
   }
+
+  static String _bankLine(IntakeQuestion q) =>
+      '- ${q.id}: ${q.text} Options: '
+      '${q.options.map((o) => o.text).join(' | ')}';
+
+  /// The follow-ups as the model wrote them, in its order. A bank question
+  /// it reused keeps the bank's options one for one, so a tap still maps to
+  /// the bank's answer and its urgency; one of its own gets an `ai_` id.
+  static List<FollowUp> _writtenFollowUps(
+    Object? raw,
+    List<IntakeQuestion> pool,
+    AppLanguage language,
+  ) {
+    final english = language == AppLanguage.english;
+    final byId = {for (final q in pool) q.id: q};
+    final out = <FollowUp>[];
+    final seen = <String>{};
+    for (final item in raw is List ? raw : const []) {
+      if (item is! Map) continue;
+      final bank = byId['${item['id']}'.trim()];
+      if (bank != null && out.any((f) => f.id == bank.id)) continue;
+      final text = english
+          ? _clean(item['question'], max: 160)
+          : _translation(item['question'], max: 200);
+      final options = _options(item['options'], english);
+      final usable =
+          text.length >= 8 &&
+          options.every((o) => o.isNotEmpty) &&
+          _inLanguage('$text ${options.join(' ')}', language);
+
+      if (bank != null) {
+        final same =
+            usable &&
+            options.length == bank.options.length &&
+            // A reworded danger check must still ask about the same signs.
+            (!english || !bank.danger || _keepsMeaning(text, bank.text));
+        if (same) {
+          out.add(
+            FollowUp(
+              id: bank.id,
+              question: text,
+              options: [
+                for (final (i, o) in bank.options.indexed)
+                  AnswerOption(options[i], o.urgency),
+              ],
+            ),
+          );
+        } else if (english) {
+          out.add(
+            FollowUp(id: bank.id, question: bank.text, options: bank.options),
+          );
+        }
+        // Other languages: left out, to be translated again if it must be
+        // asked.
+        continue;
+      }
+
+      if (!usable ||
+          options.length < 2 ||
+          options.length > 5 ||
+          options.toSet().length != options.length ||
+          !seen.add(_key(text))) {
+        continue;
+      }
+      out.add(
+        FollowUp(
+          id: 'ai_${out.length}',
+          question: text,
+          options: [for (final o in options) AnswerOption(o)],
+        ),
+      );
+    }
+    return out;
+  }
+
+  /// Answer options, sometimes written as one "a | b | c" string. An option
+  /// that doesn't pass the checks stays in the list as ''.
+  static List<String> _options(Object? raw, bool english) => [
+    for (final o in raw is String ? raw.split('|') : raw as List? ?? const [])
+      english
+          ? _clean(o is String ? o.trim() : o, max: 50)
+          : _translation(o is String ? o.trim() : o, max: 50),
+  ];
+
+  /// Keeps most of the words that carry [original]'s meaning.
+  static bool _keepsMeaning(String text, String original) {
+    final kept = _keyWords(original);
+    final lost = kept.difference(_words(text).toSet());
+    return lost.length <= kept.length * 0.3;
+  }
+
+  /// Mostly in [language]'s script: Latin for English, anything else for the
+  /// Indian languages.
+  static bool _inLanguage(String text, AppLanguage language) {
+    final letters = RegExp(r'\p{L}', unicode: true).allMatches(text).length;
+    if (letters == 0) return false;
+    final latin = RegExp('[A-Za-z]').allMatches(text).length;
+    return language == AppLanguage.english
+        ? latin * 2 >= letters
+        : latin * 2 < letters;
+  }
+
+  /// For spotting the same question twice.
+  static String _key(String text) => text.toLowerCase().replaceAll(
+    RegExp(r'[^\p{L}\p{N}]', unicode: true),
+    '',
+  );
 
   /// Translates bank follow-ups the first pass left out, so the chat never
   /// switches language. Whatever still fails stays in English.
@@ -310,46 +437,149 @@ class GemmaVisitAssistant extends VisitAssistant {
 
     try {
       final reply = await ai.generate(
-        system: _askSystem(language, patient),
+        system: _askSystem(language, patient, _contexts(patient, answers)),
         prompt: [
           facts,
           '',
-          'Questions to choose from:',
-          for (final a in pool)
-            '- ${a.id}: ${a.text}${must.contains(a.id) ? ' [must]' : ''}',
+          'Example questions (ideas only; write your own for this patient):',
+          for (final a in pool) '- ${a.topic.name}: ${a.text}',
         ].join('\n'),
-        maxOutputTokens: english ? 600 : 1000,
-        timeout: const Duration(seconds: 90),
+        maxOutputTokens: english ? 700 : 1400,
+        timeout: const Duration(seconds: 120),
       );
-      final j = _json(reply);
-      final byId = {for (final a in pool) a.id: a};
-      final chosen = <String, String>{};
-      for (final item in j?['questions'] as List? ?? const []) {
-        if (item is! Map) continue;
-        final ask = byId['${item['id']}'.trim()];
-        if (ask == null || chosen.containsKey(ask.id)) continue;
-        chosen[ask.id] = _tailored(
-          item['question'],
-          ask,
-          facts,
-          english,
-          relation: patient.isSelf ? null : _relation(patient) ?? 'patient',
+      final written = _writtenAsks(
+        _json(reply)?['questions'],
+        patient,
+        language,
+      );
+      if (written.length < _minAsks) {
+        debugPrint(
+          'Gurtu AI questions: only ${written.length} usable, using the '
+          'built-in ones',
         );
+        return withoutAi;
       }
-      if (chosen.length < 4) return withoutAi;
-      // A must question the model left out would be untailored, and in
-      // English in another language: fine in English, not elsewhere.
-      if (!english && !must.every(chosen.containsKey)) return withoutAi;
-
-      final ids = _completeAsks(chosen.keys.toList(), pool, must);
-      final questions = _toQuestions([
-        for (final id in ids) byId[id]!,
-      ], texts: chosen);
-      return PrepSuggestion(questions: questions, byAi: true);
+      return PrepSuggestion(
+        questions: _completeWritten(written, answers, english),
+        byAi: true,
+      );
     } on Object catch (e) {
       debugPrint('Gurtu AI questions: $e');
       return withoutAi;
     }
+  }
+
+  /// The questions as the model wrote them, in its order, minus any that
+  /// don't pass the checks.
+  static List<DoctorQuestion> _writtenAsks(
+    Object? raw,
+    PatientProfile patient,
+    AppLanguage language,
+  ) {
+    final english = language == AppLanguage.english;
+    final relation = patient.isSelf ? null : _relation(patient) ?? 'patient';
+    final topics = {
+      for (final t in QuestionTopic.values) t.name.toLowerCase(): t,
+    };
+    final stamp = DateTime.now().microsecondsSinceEpoch;
+    final seen = <String>{};
+    final out = <DoctorQuestion>[];
+    for (final item in raw is List ? raw : const []) {
+      if (item is! Map) continue;
+      final text = english
+          ? _clean(item['question'], max: 200)
+          : _translation(item['question'], max: 300);
+      if (text.length < 12 || !_inLanguage(text, language)) continue;
+      // A caregiver's question must not speak as the patient.
+      if (english && relation != null && _speaksAsPatient(text, relation)) {
+        debugPrint('Gurtu AI question dropped (wrong voice): $text');
+        continue;
+      }
+      if (!seen.add(_key(text))) continue;
+      final topic =
+          topics['${item['topic']}'.toLowerCase().replaceAll(
+            RegExp('[^a-z]'),
+            '',
+          )] ??
+          QuestionTopic.understand;
+      out.add(
+        DoctorQuestion(
+          id: 'dq_${stamp}_ai${out.length}',
+          kind: QuestionKind.ai,
+          text: text,
+          topic: topic,
+        ),
+      );
+      if (out.length == _maxAsks) break;
+    }
+    return out;
+  }
+
+  static final _warning = RegExp(
+    r'warning|danger|hospital|emergency|straight away|right away|immediately'
+    r'|urgent',
+    caseSensitive: false,
+  );
+
+  /// The model's questions with every topic covered and the warning signs
+  /// always asked, in consultation order.
+  static List<DoctorQuestion> _completeWritten(
+    List<DoctorQuestion> written,
+    PrepAnswers answers,
+    bool english,
+  ) {
+    final questions = [...written];
+    final byId = {
+      for (final a in [...generalAsks, ...contextAsks.values]) a.id: a,
+    };
+    // Worst first, for the app's own translated templates.
+    final symptoms = [...answers.symptoms]
+      ..sort((a, b) => (b.severity?.index ?? 0) - (a.severity?.index ?? 0));
+    final symptom = symptoms.firstOrNull?.symptom;
+    final stamp = DateTime.now().microsecondsSinceEpoch;
+
+    DoctorQuestion? extra(QuestionTopic topic) {
+      if (english) {
+        return _toQuestions([byId[essentialAsks[topic]]!]).single;
+      }
+      // Other languages: the app's own translated question, when there is a
+      // problem to name.
+      if (symptom == null && topic != QuestionTopic.treatment) return null;
+      return DoctorQuestion(
+        id: 'dq_${stamp}_${topic.name}',
+        kind: switch (topic) {
+          QuestionTopic.understand => QuestionKind.cause,
+          QuestionTopic.tests => QuestionKind.tests,
+          QuestionTopic.treatment => QuestionKind.medicinesStillRight,
+          QuestionTopic.home => QuestionKind.homeCare,
+          QuestionTopic.followUp => QuestionKind.warningSigns,
+        },
+        symptom: symptom,
+        topic: topic,
+      );
+    }
+
+    for (final t in QuestionTopic.values) {
+      if (questions.any((q) => q.topic == t)) continue;
+      if (extra(t) case final q?) questions.add(q);
+    }
+    if (english && !questions.any((q) => _warning.hasMatch(q.text))) {
+      questions.add(extra(QuestionTopic.followUp)!);
+    }
+    // Too many: drop the model's last of a topic that has others.
+    while (questions.length > _maxAsks) {
+      final i = questions.lastIndexWhere(
+        (q) =>
+            written.contains(q) &&
+            questions.where((x) => x.topic == q.topic).length > 1,
+      );
+      if (i < 0) break;
+      questions.removeAt(i);
+    }
+    return [
+      for (final t in QuestionTopic.values)
+        ...questions.where((q) => q.topic == t),
+    ];
   }
 
   /// Every question that could fit: what the answers point to first, then
@@ -477,41 +707,65 @@ Also say whether they clearly said a medicine was started, stopped or changed re
 Reply with only this JSON and nothing else: {"symptoms": ["id", "id"], "medicineChanged": false}
 Use "symptoms": [] if none match.''';
 
-  static String _intakeSystem(AppLanguage language) {
+  static String _intakeSystem(AppLanguage language, PatientProfile p) {
     final english = language == AppLanguage.english;
     return '''
-You help a family get ready for a doctor's appointment. Below is a list of follow-up questions about their health problem. Choose which ones to ask this family.
+You help a family get ready for a doctor's appointment. Like a caring doctor, ask them a few short follow-up questions to understand this particular problem better before the visit.
 
 Rules:
-- Choose only from the list, by id. Never write a new question.
-- Choose up to $_maxFollowUps, the most useful first.
-- Always include every id marked [must].
-- Prefer the questions about this particular problem over the general ones.
-- Skip any question that what they said already answers. For example, if they said when it started, skip the question about when it started.
-${english ? '''
-Reply with only this JSON and nothing else:
-{"ids": ["id", "id"]}''' : '''- Translate each chosen question and all of its options into ${language.englishName}, in simple everyday words. Keep the same number and order of options. Do not add the English in brackets. Do not add the English in brackets.
+- Write up to $_maxOwnFollowUps questions of your own about exactly what they described: where it is, how it feels, when it comes, what makes it better or worse, what else comes with it. Use their own details and the patient's age and long-term conditions.
+- Never ask what they already told you. If they did not say when it started, or whether anything has helped so far, ask that.
+- Include every safety check listed, with its id and its options in the same number and order. You may reword a safety check to fit this patient, but keep its meaning exactly.
+- ${_intakeVoice(p)}
+- Each question: one idea, short, everyday words. Give it 2 to 4 short answers to tap that cover the likely replies.
+- Only ask. Never give advice, a diagnosis, a medicine or a dose.
+- Write every question and answer in ${language.englishName}${english ? '' : ', in simple everyday words, without adding the English in brackets'}.
 
 Reply with only this JSON and nothing else:
-{"followUps": [{"id": "...", "question": "...", "options": ["...", "..."]}]}'''}''';
+{"followUps": [{"id": "new", "question": "...", "options": ["...", "..."]}]}
+Use "id": "new" for your own questions, and the listed id for a safety check or an idea you reuse.''';
   }
 
-  static String _askSystem(AppLanguage language, PatientProfile p) {
+  /// How the chat speaks to the person using the app.
+  static String _intakeVoice(PatientProfile p) {
+    if (p.isSelf) {
+      return 'You are talking to the patient: say "you" and "your", for '
+          'example "Where exactly is your headache?".';
+    }
+    final who = _relation(p);
+    if (who == null) {
+      return 'You are talking to a family member about the patient: say '
+          '"the patient", never "you" for the patient.';
+    }
+    final she = p.gender == Gender.female.name ? 'she' : 'he';
+    return 'You are talking to a family member about their $who: say "your '
+        '$who" or "$she", never "you" for the patient, for example "Where '
+        'exactly is your $who\'s headache?".';
+  }
+
+  static String _askSystem(
+    AppLanguage language,
+    PatientProfile p,
+    List<String> contexts,
+  ) {
     final english = language == AppLanguage.english;
     return '''
-You help a family get the most out of a doctor's appointment. Below are the facts, and a list of questions they could ask the doctor during the consultation. Choose the $_pickAsks questions that will best help this patient and family understand the problem and what to do.
+You help a family get the most out of a doctor's appointment. Using the facts below, write the questions this family should ask the doctor, so they leave understanding the problem and exactly what to do.
 
 Rules:
-- Choose only from the list, by id. Never write a new question.
-- Always include every id marked [must], then add the questions that fit this patient best. Prefer the ones about this particular problem and these conditions (listed first) over general ones. Skip ones that don't fit.
-- Tailor each chosen question so it is about this patient: replace vague words like "this" or "it" with the actual problem. For example "What do you think is causing this?" becomes "What do you think is causing my headache?".
-- Keep each question short, simple and one idea. Keep its meaning exactly.
-- Do not add any medical word, cause, test, medicine or advice that is not already in the question or the facts.
+- Write $_pickAsks questions, the most important first.
+- Make every question about this patient. Name the actual problem and use their details: how long it has been, how bad it is, their answers, their age, long-term conditions and regular medicines. For example, not "What is causing this?" but "What could be causing my mother's dizziness when she stands up?".
+- Cover all five topics: understand (what it is and why), tests, treatment (medicines and other treatment), home (care, food and activity at home), followUp (warning signs and the next visit).
+- Always include one question asking which warning signs mean going to the hospital straight away.
+${[if (p.conditions.isNotEmpty) '- Ask how the problem could be linked to their long-term conditions.\n', for (final c in contexts) '- Be sure to ask, in your own words for this patient: "${contextAsks[c]!.text}"\n'].join()}- Each question: short, simple, one idea, everyday words. Never repeat a question.
+- Only ask questions. Never answer them, never say what the problem is, and never name a medicine or a dose that is not in the facts.
 - ${_voice(p)}
 - Write each question in ${language.englishName}${english ? '' : ', in simple everyday words, without adding the English in brackets'}.
 
+The example questions show the kind of questions doctors find useful. Use them as ideas only.
+
 Reply with only this JSON and nothing else:
-{"questions": [{"id": "...", "question": "..."}]}''';
+{"questions": [{"topic": "understand", "question": "..."}]}''';
   }
 
   static String _symptomList() {
@@ -689,38 +943,6 @@ Reply with only this JSON and nothing else:
     return s.length > max || _dose.hasMatch(s) ? '' : s;
   }
 
-  /// The model's tailored wording when it stays true to the bank question;
-  /// otherwise the bank question itself. In English it must add no new
-  /// words, keep the question's key words, and — when a caregiver asks
-  /// ([relation]) — never speak as the patient ("I", "my headache").
-  static String _tailored(
-    Object? raw,
-    DoctorAsk ask,
-    String facts,
-    bool english, {
-    String? relation,
-  }) {
-    final text = english
-        ? _clean(raw, max: ask.text.length + 80)
-        : _translation(raw, max: 300);
-    if (text.length < 8) return ask.text;
-    if (!english) return text;
-    String? problem;
-    final novel = _novelWords(text, '${ask.text}\n$facts');
-    final kept = _keyWords(ask.text);
-    final lost = kept.difference(_words(text).toSet());
-    if (novel.length > 2) {
-      problem = 'new words $novel';
-    } else if (lost.length > kept.length * 0.3) {
-      problem = 'lost $lost';
-    } else if (relation != null && _speaksAsPatient(text, relation)) {
-      problem = 'wrong voice';
-    }
-    if (problem == null) return text;
-    debugPrint('Gurtu AI kept bank wording for ${ask.id} ($problem): $text');
-    return ask.text;
-  }
-
   /// "I", "me", or "my" not followed by the patient's relation.
   static bool _speaksAsPatient(String text, String relation) =>
       RegExp(r"\b(I|me)\b").hasMatch(text) ||
@@ -728,12 +950,6 @@ Reply with only this JSON and nothing else:
         r"\bmy\b(?!\s+" + RegExp.escape(relation) + r")",
         caseSensitive: false,
       ).hasMatch(text);
-
-  /// Words in [text] found in neither [source] nor everyday glue words.
-  static Set<String> _novelWords(String text, String source) {
-    final known = {..._words(source), ..._words(_glueWords)};
-    return _words(text).where((w) => !known.contains(w)).toSet();
-  }
 
   /// The words that carry a question's meaning.
   static Set<String> _keyWords(String text) {

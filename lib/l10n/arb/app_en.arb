@@ -966,5 +966,19 @@
   "topicOwn": "Your own questions",
   "urgentAnswer": "This can be serious. Don't wait for the appointment — get medical help now, or call 108 for an ambulance.",
   "urgentSelfHarm": "You don't have to face this alone. Please talk to someone now: call Tele-MANAS on 14416 (free, any time), or go to the nearest hospital.",
-  "prepInTheirWords": "In your words"
+  "prepInTheirWords": "In your words",
+  "addPhoto": "Add photo",
+  "recordVoiceNote": "Record voice note",
+  "voiceNote": "Voice note",
+  "recordingNow": "Recording…",
+  "stopAndSave": "Stop and save",
+  "removeAttachmentTitle": "Remove this?",
+  "removeAttachmentBody": "It will be deleted from this phone.",
+  "attachFailed": "Couldn't add that. Please try again.",
+  "attachHintMedicines": "Add a photo of the prescription, or record what the doctor said about the medicines.",
+  "attachHintTests": "Add a photo of the test slip or report, or record what the doctor said.",
+  "attachHintNextVisit": "Add a photo of the appointment card, or record what the doctor said about the next visit.",
+  "play": "Play",
+  "pause": "Pause",
+  "viewPhoto": "View photo"
 }

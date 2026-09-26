@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ai/on_device_ai.dart';
+import 'data/attachment_store.dart';
 import 'data/care_repository.dart';
 import 'l10n/language.dart';
 import 'onboarding/onboarding_flow.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
     ),
   );
   final prefs = await SharedPreferences.getInstance();
+  await AttachmentStore.instance.init();
   final ai = GurtuAi(prefs);
   runApp(GurtuApp(prefs: prefs, ai: ai));
   // Not awaited: the app opens straight away and the AI reports its state
@@ -44,6 +46,13 @@ class GurtuApp extends StatefulWidget {
 class _GurtuAppState extends State<GurtuApp> {
   late final _language = LanguageController(widget.prefs);
   late final _care = CareRepository(widget.prefs);
+
+  @override
+  void initState() {
+    super.initState();
+    // Photos or voice notes from a visit that was never saved.
+    AttachmentStore.instance.prune(_care.attachmentFiles);
+  }
 
   // Builds from before patient data was saved have no patient: onboard again.
   late bool _onboarded =

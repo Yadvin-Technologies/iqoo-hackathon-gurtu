@@ -92,7 +92,8 @@ class IntakeAnswer {
   final String question;
   final String answer;
 
-  /// The question's id in the question bank (`visit_knowledge.dart`).
+  /// The question's id in the question bank (`visit_knowledge.dart`), or
+  /// `ai_…` for one Gurtu AI wrote itself.
   final String? id;
 
   /// Index of the tapped option; null when the answer was typed or spoken.
@@ -256,7 +257,8 @@ class DoctorVisit {
     this.nextVisit,
     this.prepId,
     this.sample,
-  });
+    List<VisitAttachment>? attachments,
+  }) : attachments = attachments ?? [];
 
   final String id;
   final String patientId;
@@ -277,7 +279,15 @@ class DoctorVisit {
   final String? prepId;
   final SampleVisit? sample;
 
+  /// Photos and voice notes, added while recording or later.
+  final List<VisitAttachment> attachments;
+
   bool get isSample => sample != null;
+
+  List<VisitAttachment> attachmentsFor(VisitSection section) => [
+    for (final a in attachments)
+      if (a.section == section) a,
+  ];
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -292,6 +302,7 @@ class DoctorVisit {
     'nextVisit': nextVisit?.toIso8601String(),
     'prepId': prepId,
     'sample': sample?.name,
+    'attachments': [for (final a in attachments) a.toJson()],
   };
 
   factory DoctorVisit.fromJson(Map<String, dynamic> j) => DoctorVisit(
@@ -311,5 +322,60 @@ class DoctorVisit {
     sample: j['sample'] == null
         ? null
         : SampleVisit.values.byName(j['sample'] as String),
+    attachments: [
+      for (final a in j['attachments'] as List? ?? const [])
+        VisitAttachment.fromJson(a as Map<String, dynamic>),
+    ],
+  );
+}
+
+/// The part of a visit a photo or voice note belongs to.
+enum VisitSection { medicines, tests, nextVisit }
+
+enum AttachmentKind { photo, audio }
+
+/// A photo (prescription, test slip, appointment card) or a voice note kept
+/// with a visit. The file lives in the app's own storage on this phone
+/// (`AttachmentStore`); only its name is saved here, so the record survives
+/// the app's folder moving.
+class VisitAttachment {
+  const VisitAttachment({
+    required this.id,
+    required this.kind,
+    required this.section,
+    required this.file,
+    required this.createdAt,
+    this.duration,
+  });
+
+  final String id;
+  final AttachmentKind kind;
+  final VisitSection section;
+
+  /// File name inside the attachment folder.
+  final String file;
+  final DateTime createdAt;
+
+  /// How long a voice note is.
+  final Duration? duration;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'kind': kind.name,
+    'section': section.name,
+    'file': file,
+    'createdAt': createdAt.toIso8601String(),
+    'durationMs': duration?.inMilliseconds,
+  };
+
+  factory VisitAttachment.fromJson(Map<String, dynamic> j) => VisitAttachment(
+    id: j['id'] as String,
+    kind: AttachmentKind.values.byName(j['kind'] as String),
+    section: VisitSection.values.byName(j['section'] as String),
+    file: j['file'] as String,
+    createdAt: DateTime.parse(j['createdAt'] as String),
+    duration: j['durationMs'] == null
+        ? null
+        : Duration(milliseconds: j['durationMs'] as int),
   );
 }

@@ -1832,4 +1832,50 @@ class AppLocalizationsAs extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'ফটো যোগ কৰক';
+
+  @override
+  String get recordVoiceNote => 'ভইচ নোট ৰেকৰ্ড কৰক';
+
+  @override
+  String get voiceNote => 'ভইচ নোট';
+
+  @override
+  String get recordingNow => 'ৰেকৰ্ড হৈ আছে…';
+
+  @override
+  String get stopAndSave => 'বন্ধ কৰি ছেভ কৰক';
+
+  @override
+  String get removeAttachmentTitle => 'এইটো আঁতৰাবনে?';
+
+  @override
+  String get removeAttachmentBody => 'এইটো এই ফোনৰ পৰা মচি পেলোৱা হ\'ব।';
+
+  @override
+  String get attachFailed =>
+      'এইটো যোগ কৰিব পৰা নগ\'ল। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।';
+
+  @override
+  String get attachHintMedicines =>
+      'প্ৰেছক্ৰিপচনৰ ফটো যোগ কৰক, বা ঔষধৰ বিষয়ে ডাক্তৰে যি ক\'লে সেয়া ৰেকৰ্ড কৰক।';
+
+  @override
+  String get attachHintTests =>
+      'পৰীক্ষাৰ স্লিপ বা ৰিপৰ্টৰ ফটো যোগ কৰক, বা ডাক্তৰে যি ক\'লে সেয়া ৰেকৰ্ড কৰক।';
+
+  @override
+  String get attachHintNextVisit =>
+      'এপইণ্টমেণ্ট কাৰ্ডৰ ফটো যোগ কৰক, বা পৰৱৰ্তী সাক্ষাতৰ বিষয়ে ডাক্তৰে যি ক\'লে সেয়া ৰেকৰ্ড কৰক।';
+
+  @override
+  String get play => 'চলাওক';
+
+  @override
+  String get pause => 'ৰখাওক';
+
+  @override
+  String get viewPhoto => 'ফটো চাওক';
 }

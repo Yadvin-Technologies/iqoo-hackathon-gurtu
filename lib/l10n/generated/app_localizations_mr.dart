@@ -1838,4 +1838,49 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'फोटो जोडा';
+
+  @override
+  String get recordVoiceNote => 'व्हॉइस नोट रेकॉर्ड करा';
+
+  @override
+  String get voiceNote => 'व्हॉइस नोट';
+
+  @override
+  String get recordingNow => 'रेकॉर्ड होत आहे…';
+
+  @override
+  String get stopAndSave => 'थांबवा आणि सेव्ह करा';
+
+  @override
+  String get removeAttachmentTitle => 'हे काढायचे?';
+
+  @override
+  String get removeAttachmentBody => 'हे या फोनमधून हटवले जाईल.';
+
+  @override
+  String get attachFailed => 'हे जोडता आले नाही. कृपया पुन्हा प्रयत्न करा.';
+
+  @override
+  String get attachHintMedicines =>
+      'प्रिस्क्रिप्शनचा फोटो जोडा, किंवा औषधांबद्दल डॉक्टर जे बोलले ते रेकॉर्ड करा.';
+
+  @override
+  String get attachHintTests =>
+      'तपासणीची चिठ्ठी किंवा रिपोर्टचा फोटो जोडा, किंवा डॉक्टर जे बोलले ते रेकॉर्ड करा.';
+
+  @override
+  String get attachHintNextVisit =>
+      'अपॉइंटमेंट कार्डचा फोटो जोडा, किंवा पुढच्या भेटीबद्दल डॉक्टर जे बोलले ते रेकॉर्ड करा.';
+
+  @override
+  String get play => 'प्ले करा';
+
+  @override
+  String get pause => 'पॉज करा';
+
+  @override
+  String get viewPhoto => 'फोटो पाहा';
 }

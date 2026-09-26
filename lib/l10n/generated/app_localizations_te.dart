@@ -1849,4 +1849,50 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'ఫోటో జోడించండి';
+
+  @override
+  String get recordVoiceNote => 'వాయిస్ నోట్ రికార్డ్ చేయండి';
+
+  @override
+  String get voiceNote => 'వాయిస్ నోట్';
+
+  @override
+  String get recordingNow => 'రికార్డ్ అవుతోంది…';
+
+  @override
+  String get stopAndSave => 'ఆపి సేవ్ చేయండి';
+
+  @override
+  String get removeAttachmentTitle => 'దీన్ని తీసివేయాలా?';
+
+  @override
+  String get removeAttachmentBody => 'ఇది ఈ ఫోన్ నుండి తొలగించబడుతుంది.';
+
+  @override
+  String get attachFailed =>
+      'దీన్ని జోడించలేకపోయాం. దయచేసి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String get attachHintMedicines =>
+      'ప్రిస్క్రిప్షన్ ఫోటో జోడించండి, లేదా మందుల గురించి డాక్టర్ చెప్పింది రికార్డ్ చేయండి.';
+
+  @override
+  String get attachHintTests =>
+      'టెస్ట్ చీటీ లేదా రిపోర్ట్ ఫోటో జోడించండి, లేదా డాక్టర్ చెప్పింది రికార్డ్ చేయండి.';
+
+  @override
+  String get attachHintNextVisit =>
+      'అపాయింట్‌మెంట్ కార్డ్ ఫోటో జోడించండి, లేదా తదుపరి సందర్శన గురించి డాక్టర్ చెప్పింది రికార్డ్ చేయండి.';
+
+  @override
+  String get play => 'ప్లే చేయండి';
+
+  @override
+  String get pause => 'పాజ్ చేయండి';
+
+  @override
+  String get viewPhoto => 'ఫోటో చూడండి';
 }

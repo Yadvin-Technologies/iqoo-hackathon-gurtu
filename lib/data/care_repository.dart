@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../onboarding/onboarding_state.dart';
+import 'attachment_store.dart';
 import 'care_models.dart';
 import 'medicine_models.dart';
 import 'visit_models.dart';
@@ -278,6 +279,7 @@ class CareRepository extends ChangeNotifier {
     String tests = '',
     DateTime? nextVisit,
     VisitPrep? prep,
+    List<VisitAttachment> attachments = const [],
   }) {
     final patient = selectedPatient;
     if (patient == null) return null;
@@ -293,6 +295,7 @@ class CareRepository extends ChangeNotifier {
       tests: tests.trim(),
       nextVisit: nextVisit,
       prepId: prep?.id,
+      attachments: [...attachments],
     );
     visits.add(visit);
     prep?.visitId = visit.id;
@@ -300,7 +303,34 @@ class CareRepository extends ChangeNotifier {
     return visit;
   }
 
+  void addAttachment(DoctorVisit visit, VisitAttachment attachment) {
+    visit.attachments.add(attachment);
+    _save();
+  }
+
+  /// Removes it from the visit and deletes the file from the phone.
+  void removeAttachment(DoctorVisit visit, VisitAttachment attachment) {
+    visit.attachments.remove(attachment);
+    AttachmentStore.instance.delete(attachment.file);
+    _save();
+  }
+
+  /// Every photo and voice note still in use, for clearing out the rest.
+  Set<String> get attachmentFiles => {
+    for (final v in visits)
+      for (final a in v.attachments) a.file,
+  };
+
+  void _deleteFiles(Iterable<DoctorVisit> gone) {
+    for (final v in gone) {
+      for (final a in v.attachments) {
+        AttachmentStore.instance.delete(a.file);
+      }
+    }
+  }
+
   void deleteVisit(DoctorVisit visit) {
+    _deleteFiles([visit]);
     visits.remove(visit);
     // Its questions go with it; they belong to that appointment.
     preps.removeWhere((p) => p.visitId == visit.id);
@@ -456,9 +486,10 @@ class CareRepository extends ChangeNotifier {
     tasks.removeWhere(
       (t) => t.isSample || samplePatients.contains(t.patientId),
     );
-    visits.removeWhere(
-      (v) => v.isSample || samplePatients.contains(v.patientId),
-    );
+    bool sampleVisit(DoctorVisit v) =>
+        v.isSample || samplePatients.contains(v.patientId);
+    _deleteFiles(visits.where(sampleVisit));
+    visits.removeWhere(sampleVisit);
     preps.removeWhere((p) => samplePatients.contains(p.patientId));
     final sampleMeds = {
       for (final m in medicines)
@@ -665,6 +696,7 @@ class CareRepository extends ChangeNotifier {
 
   /// Wipes everything (used by "Restart onboarding").
   void clear() {
+    AttachmentStore.instance.prune({});
     patients.clear();
     members.clear();
     moments.clear();

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../data/attachment_store.dart';
 import '../data/care_repository.dart';
+import '../data/visit_models.dart';
 import '../l10n/language.dart';
 import '../theme/gurtu_theme.dart';
 import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
 import '../widgets/voice_input.dart';
 import 'visit_text.dart';
+import 'widgets/attachment_tray.dart';
 
 /// Used during the appointment: keep listening while the doctor talks, tick
 /// off the prepared questions, then note medicines, tests and the next date.
@@ -32,6 +35,10 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
   DateTime? _next;
   bool _leaving = false;
 
+  /// Photos and voice notes, already kept on the phone; deleted again if the
+  /// visit is discarded.
+  final _attachments = <VisitAttachment>[];
+
   List<TextEditingController> get _fields => [
     _doctor,
     _reason,
@@ -41,7 +48,9 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
   ];
 
   bool get _hasContent =>
-      _fields.any((c) => c.text.trim().isNotEmpty) || _next != null;
+      _fields.any((c) => c.text.trim().isNotEmpty) ||
+      _next != null ||
+      _attachments.isNotEmpty;
 
   @override
   void initState() {
@@ -99,6 +108,7 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
       tests: _tests.text,
       nextVisit: _next,
       prep: repo.prepById(widget.prepId),
+      attachments: _attachments,
     );
     HapticFeedback.mediumImpact();
     setState(() => _leaving = true);
@@ -117,6 +127,9 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     );
     if (!ok || !mounted) return;
     await _listening.stop();
+    for (final a in _attachments) {
+      AttachmentStore.instance.delete(a.file);
+    }
     setState(() => _leaving = true);
     if (mounted) Navigator.pop(context);
   }
@@ -232,6 +245,7 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
             icon: Icons.medication_rounded,
           ),
           DictationField(controller: _medicines, hint: l.medicinesHint),
+          _tray(VisitSection.medicines),
           const SizedBox(height: 20),
           FieldLabel(
             l.testsSection,
@@ -239,6 +253,7 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
             icon: Icons.biotech_rounded,
           ),
           DictationField(controller: _tests, hint: l.testsHint),
+          _tray(VisitSection.tests),
           const SizedBox(height: 20),
           FieldLabel(l.nextVisit, optional: true, icon: Icons.event_rounded),
           Wrap(
@@ -266,10 +281,34 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
                 ),
             ],
           ),
+          _tray(VisitSection.nextVisit),
         ],
       ),
     );
   }
+
+  Widget _tray(VisitSection section) => Padding(
+    padding: const EdgeInsets.only(top: 12),
+    child: AttachmentTray(
+      section: section,
+      attachments: [
+        for (final a in _attachments)
+          if (a.section == section) a,
+      ],
+      onAdd: (a) {
+        // Picked after the page closed: nothing to keep it with.
+        if (!mounted || _leaving) {
+          AttachmentStore.instance.delete(a.file);
+          return;
+        }
+        setState(() => _attachments.add(a));
+      },
+      onRemove: (a) {
+        setState(() => _attachments.remove(a));
+        AttachmentStore.instance.delete(a.file);
+      },
+    ),
+  );
 }
 
 class _DateButton extends StatelessWidget {

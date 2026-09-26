@@ -1835,4 +1835,49 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'ছবি যোগ করুন';
+
+  @override
+  String get recordVoiceNote => 'ভয়েস নোট রেকর্ড করুন';
+
+  @override
+  String get voiceNote => 'ভয়েস নোট';
+
+  @override
+  String get recordingNow => 'রেকর্ড হচ্ছে…';
+
+  @override
+  String get stopAndSave => 'থামান ও সেভ করুন';
+
+  @override
+  String get removeAttachmentTitle => 'এটি সরাবেন?';
+
+  @override
+  String get removeAttachmentBody => 'এটি এই ফোন থেকে মুছে যাবে।';
+
+  @override
+  String get attachFailed => 'এটি যোগ করা যায়নি। আবার চেষ্টা করুন।';
+
+  @override
+  String get attachHintMedicines =>
+      'প্রেসক্রিপশনের ছবি যোগ করুন, বা ওষুধ নিয়ে ডাক্তার যা বলেছেন তা রেকর্ড করুন।';
+
+  @override
+  String get attachHintTests =>
+      'পরীক্ষার স্লিপ বা রিপোর্টের ছবি যোগ করুন, বা ডাক্তার যা বলেছেন তা রেকর্ড করুন।';
+
+  @override
+  String get attachHintNextVisit =>
+      'অ্যাপয়েন্টমেন্ট কার্ডের ছবি যোগ করুন, বা পরের ভিজিট নিয়ে ডাক্তার যা বলেছেন তা রেকর্ড করুন।';
+
+  @override
+  String get play => 'চালান';
+
+  @override
+  String get pause => 'বিরতি';
+
+  @override
+  String get viewPhoto => 'ছবি দেখুন';
 }

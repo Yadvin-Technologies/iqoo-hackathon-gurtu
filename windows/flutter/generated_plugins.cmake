@@ -3,11 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audioplayers_windows
   connectivity_plus
   file_selector_windows
   firebase_core
   flutter_gemma
   permission_handler_windows
+  record_windows
   speech_to_text_windows
 )
 

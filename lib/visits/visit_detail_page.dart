@@ -7,6 +7,7 @@ import '../theme/gurtu_theme.dart';
 import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
 import 'visit_text.dart';
+import 'widgets/attachment_tray.dart';
 
 /// Everything noted at one appointment, section by section.
 class VisitDetailPage extends StatefulWidget {
@@ -55,27 +56,43 @@ class _VisitDetailPageState extends State<VisitDetailPage> {
             title: l.doctorSaid,
             child: Text(notes, style: t.bodyLarge),
           ),
-        if (medicines.isNotEmpty)
-          _Section(
-            icon: Icons.medication_rounded,
-            title: l.medicinesSection,
-            child: Text(medicines, style: t.bodyLarge),
+        // Always shown, so a prescription photo or voice note can be added
+        // after the visit (at the pharmacy, at home).
+        _Section(
+          icon: Icons.medication_rounded,
+          title: l.medicinesSection,
+          child: _withTray(
+            repo,
+            visit,
+            VisitSection.medicines,
+            medicines.isEmpty ? null : Text(medicines, style: t.bodyLarge),
           ),
-        if (tests.isNotEmpty)
-          _Section(
-            icon: Icons.biotech_rounded,
-            title: l.testsSection,
-            child: Text(tests, style: t.bodyLarge),
+        ),
+        _Section(
+          icon: Icons.biotech_rounded,
+          title: l.testsSection,
+          child: _withTray(
+            repo,
+            visit,
+            VisitSection.tests,
+            tests.isEmpty ? null : Text(tests, style: t.bodyLarge),
           ),
-        if (visit.nextVisit != null)
-          _Section(
-            icon: Icons.event_rounded,
-            title: l.nextVisit,
-            child: Text(
-              dateLabel(context, visit.nextVisit!),
-              style: t.titleMedium?.copyWith(color: GurtuColors.leaf),
-            ),
+        ),
+        _Section(
+          icon: Icons.event_rounded,
+          title: l.nextVisit,
+          child: _withTray(
+            repo,
+            visit,
+            VisitSection.nextVisit,
+            visit.nextVisit == null
+                ? null
+                : Text(
+                    dateLabel(context, visit.nextVisit!),
+                    style: t.titleMedium?.copyWith(color: GurtuColors.leaf),
+                  ),
           ),
+        ),
         if (prep != null && prep.questions.isNotEmpty)
           _Section(
             icon: Icons.help_outline_rounded,
@@ -129,6 +146,24 @@ class _VisitDetailPageState extends State<VisitDetailPage> {
     );
   }
 }
+
+Widget _withTray(
+  CareRepository repo,
+  DoctorVisit visit,
+  VisitSection section,
+  Widget? text,
+) => Column(
+  crossAxisAlignment: CrossAxisAlignment.stretch,
+  children: [
+    if (text != null) ...[text, const SizedBox(height: 12)],
+    AttachmentTray(
+      section: section,
+      attachments: visit.attachmentsFor(section),
+      onAdd: (a) => repo.addAttachment(visit, a),
+      onRemove: (a) => repo.removeAttachment(visit, a),
+    ),
+  ],
+);
 
 class _Section extends StatelessWidget {
   const _Section({

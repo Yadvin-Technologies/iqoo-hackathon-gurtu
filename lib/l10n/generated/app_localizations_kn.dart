@@ -1849,4 +1849,49 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'ಫೋಟೋ ಸೇರಿಸಿ';
+
+  @override
+  String get recordVoiceNote => 'ಧ್ವನಿ ಟಿಪ್ಪಣಿ ರೆಕಾರ್ಡ್ ಮಾಡಿ';
+
+  @override
+  String get voiceNote => 'ಧ್ವನಿ ಟಿಪ್ಪಣಿ';
+
+  @override
+  String get recordingNow => 'ರೆಕಾರ್ಡ್ ಆಗುತ್ತಿದೆ…';
+
+  @override
+  String get stopAndSave => 'ನಿಲ್ಲಿಸಿ ಉಳಿಸಿ';
+
+  @override
+  String get removeAttachmentTitle => 'ಇದನ್ನು ತೆಗೆದುಹಾಕಬೇಕೆ?';
+
+  @override
+  String get removeAttachmentBody => 'ಇದು ಈ ಫೋನ್‌ನಿಂದ ಅಳಿಸಲ್ಪಡುತ್ತದೆ.';
+
+  @override
+  String get attachFailed => 'ಇದನ್ನು ಸೇರಿಸಲಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.';
+
+  @override
+  String get attachHintMedicines =>
+      'ಪ್ರಿಸ್ಕ್ರಿಪ್ಷನ್‌ನ ಫೋಟೋ ಸೇರಿಸಿ, ಅಥವಾ ಔಷಧಿಗಳ ಬಗ್ಗೆ ವೈದ್ಯರು ಹೇಳಿದ್ದನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ.';
+
+  @override
+  String get attachHintTests =>
+      'ಪರೀಕ್ಷೆಯ ಚೀಟಿ ಅಥವಾ ವರದಿಯ ಫೋಟೋ ಸೇರಿಸಿ, ಅಥವಾ ವೈದ್ಯರು ಹೇಳಿದ್ದನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ.';
+
+  @override
+  String get attachHintNextVisit =>
+      'ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್ ಕಾರ್ಡ್‌ನ ಫೋಟೋ ಸೇರಿಸಿ, ಅಥವಾ ಮುಂದಿನ ಭೇಟಿಯ ಬಗ್ಗೆ ವೈದ್ಯರು ಹೇಳಿದ್ದನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ.';
+
+  @override
+  String get play => 'ಪ್ಲೇ ಮಾಡಿ';
+
+  @override
+  String get pause => 'ವಿರಾಮ';
+
+  @override
+  String get viewPhoto => 'ಫೋಟೋ ನೋಡಿ';
 }

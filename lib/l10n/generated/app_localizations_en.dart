@@ -1847,4 +1847,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'Add photo';
+
+  @override
+  String get recordVoiceNote => 'Record voice note';
+
+  @override
+  String get voiceNote => 'Voice note';
+
+  @override
+  String get recordingNow => 'Recording…';
+
+  @override
+  String get stopAndSave => 'Stop and save';
+
+  @override
+  String get removeAttachmentTitle => 'Remove this?';
+
+  @override
+  String get removeAttachmentBody => 'It will be deleted from this phone.';
+
+  @override
+  String get attachFailed => 'Couldn\'t add that. Please try again.';
+
+  @override
+  String get attachHintMedicines =>
+      'Add a photo of the prescription, or record what the doctor said about the medicines.';
+
+  @override
+  String get attachHintTests =>
+      'Add a photo of the test slip or report, or record what the doctor said.';
+
+  @override
+  String get attachHintNextVisit =>
+      'Add a photo of the appointment card, or record what the doctor said about the next visit.';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get viewPhoto => 'View photo';
 }

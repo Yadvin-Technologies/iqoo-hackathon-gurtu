@@ -1866,4 +1866,50 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'புகைப்படம் சேர்க்கவும்';
+
+  @override
+  String get recordVoiceNote => 'குரல் குறிப்பைப் பதிவுசெய்யவும்';
+
+  @override
+  String get voiceNote => 'குரல் குறிப்பு';
+
+  @override
+  String get recordingNow => 'பதிவாகிறது…';
+
+  @override
+  String get stopAndSave => 'நிறுத்திச் சேமிக்கவும்';
+
+  @override
+  String get removeAttachmentTitle => 'இதை நீக்கவா?';
+
+  @override
+  String get removeAttachmentBody => 'இது இந்த ஃபோனிலிருந்து அழிக்கப்படும்.';
+
+  @override
+  String get attachFailed =>
+      'இதைச் சேர்க்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get attachHintMedicines =>
+      'மருந்துச் சீட்டின் புகைப்படத்தைச் சேர்க்கவும், அல்லது மருந்துகள் பற்றி மருத்துவர் சொன்னதைப் பதிவுசெய்யவும்.';
+
+  @override
+  String get attachHintTests =>
+      'பரிசோதனைச் சீட்டு அல்லது அறிக்கையின் புகைப்படத்தைச் சேர்க்கவும், அல்லது மருத்துவர் சொன்னதைப் பதிவுசெய்யவும்.';
+
+  @override
+  String get attachHintNextVisit =>
+      'சந்திப்பு அட்டையின் புகைப்படத்தைச் சேர்க்கவும், அல்லது அடுத்த வருகை பற்றி மருத்துவர் சொன்னதைப் பதிவுசெய்யவும்.';
+
+  @override
+  String get play => 'இயக்கு';
+
+  @override
+  String get pause => 'இடைநிறுத்து';
+
+  @override
+  String get viewPhoto => 'புகைப்படத்தைப் பார்க்கவும்';
 }

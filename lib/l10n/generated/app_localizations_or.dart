@@ -1836,4 +1836,50 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'ଫଟୋ ଯୋଗ କରନ୍ତୁ';
+
+  @override
+  String get recordVoiceNote => 'ଭଏସ୍ ନୋଟ୍ ରେକର୍ଡ କରନ୍ତୁ';
+
+  @override
+  String get voiceNote => 'ଭଏସ୍ ନୋଟ୍';
+
+  @override
+  String get recordingNow => 'ରେକର୍ଡ ହେଉଛି…';
+
+  @override
+  String get stopAndSave => 'ବନ୍ଦ କରି ସେଭ୍ କରନ୍ତୁ';
+
+  @override
+  String get removeAttachmentTitle => 'ଏହାକୁ ହଟାଇବେ?';
+
+  @override
+  String get removeAttachmentBody => 'ଏହା ଏହି ଫୋନରୁ ଡିଲିଟ୍ ହୋଇଯିବ।';
+
+  @override
+  String get attachFailed =>
+      'ଏହା ଯୋଗ କରାଯାଇପାରିଲା ନାହିଁ। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।';
+
+  @override
+  String get attachHintMedicines =>
+      'ପ୍ରେସକ୍ରିପସନର ଫଟୋ ଯୋଗ କରନ୍ତୁ, କିମ୍ବା ଔଷଧ ବିଷୟରେ ଡାକ୍ତର ଯାହା କହିଲେ ତାହା ରେକର୍ଡ କରନ୍ତୁ।';
+
+  @override
+  String get attachHintTests =>
+      'ପରୀକ୍ଷା ସ୍ଲିପ୍ କିମ୍ବା ରିପୋର୍ଟର ଫଟୋ ଯୋଗ କରନ୍ତୁ, କିମ୍ବା ଡାକ୍ତର ଯାହା କହିଲେ ତାହା ରେକର୍ଡ କରନ୍ତୁ।';
+
+  @override
+  String get attachHintNextVisit =>
+      'ଆପଏଣ୍ଟମେଣ୍ଟ କାର୍ଡର ଫଟୋ ଯୋଗ କରନ୍ତୁ, କିମ୍ବା ପରବର୍ତ୍ତୀ ସାକ୍ଷାତ ବିଷୟରେ ଡାକ୍ତର ଯାହା କହିଲେ ତାହା ରେକର୍ଡ କରନ୍ତୁ।';
+
+  @override
+  String get play => 'ଚଲାନ୍ତୁ';
+
+  @override
+  String get pause => 'ବିରତି';
+
+  @override
+  String get viewPhoto => 'ଫଟୋ ଦେଖନ୍ତୁ';
 }

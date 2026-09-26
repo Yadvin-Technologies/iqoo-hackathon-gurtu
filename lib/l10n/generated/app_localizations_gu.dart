@@ -1832,4 +1832,49 @@ class AppLocalizationsGu extends AppLocalizations {
 
   @override
   String get prepInTheirWords => 'In your words';
+
+  @override
+  String get addPhoto => 'ફોટો ઉમેરો';
+
+  @override
+  String get recordVoiceNote => 'વૉઇસ નોંધ રેકોર્ડ કરો';
+
+  @override
+  String get voiceNote => 'વૉઇસ નોંધ';
+
+  @override
+  String get recordingNow => 'રેકોર્ડ થઈ રહ્યું છે…';
+
+  @override
+  String get stopAndSave => 'રોકો અને સાચવો';
+
+  @override
+  String get removeAttachmentTitle => 'આ દૂર કરવું છે?';
+
+  @override
+  String get removeAttachmentBody => 'તે આ ફોનમાંથી કાઢી નાખવામાં આવશે.';
+
+  @override
+  String get attachFailed => 'આ ઉમેરી શકાયું નહીં. કૃપા કરીને ફરી પ્રયાસ કરો.';
+
+  @override
+  String get attachHintMedicines =>
+      'પ્રિસ્ક્રિપ્શનનો ફોટો ઉમેરો, અથવા દવાઓ વિશે ડૉક્ટરે જે કહ્યું તે રેકોર્ડ કરો.';
+
+  @override
+  String get attachHintTests =>
+      'તપાસની ચિઠ્ઠી અથવા રિપોર્ટનો ફોટો ઉમેરો, અથવા ડૉક્ટરે જે કહ્યું તે રેકોર્ડ કરો.';
+
+  @override
+  String get attachHintNextVisit =>
+      'એપોઇન્ટમેન્ટ કાર્ડનો ફોટો ઉમેરો, અથવા આગામી મુલાકાત વિશે ડૉક્ટરે જે કહ્યું તે રેકોર્ડ કરો.';
+
+  @override
+  String get play => 'ચલાવો';
+
+  @override
+  String get pause => 'થોભો';
+
+  @override
+  String get viewPhoto => 'ફોટો જુઓ';
 }

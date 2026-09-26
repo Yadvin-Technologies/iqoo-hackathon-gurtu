@@ -49,8 +49,9 @@ class _Msg {
 /// or speak), Gurtu asks a few follow-ups, then suggests what to ask the
 /// doctor so they leave understanding the problem and the plan.
 ///
-/// With Gurtu AI installed the on-device model chooses the follow-ups and
-/// writes the questions; otherwise fixed follow-ups and built-in rules do.
+/// With Gurtu AI installed the on-device model writes both the follow-ups
+/// and the questions for this patient; otherwise fixed follow-ups and
+/// built-in rules do.
 class PrepChatPage extends StatefulWidget {
   const PrepChatPage({super.key, this.assistant});
 
