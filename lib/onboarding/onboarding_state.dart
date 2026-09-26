@@ -130,28 +130,11 @@ enum Mobility {
   };
 }
 
-/// Size tier for the on-device care model.
-enum ModelTier {
-  lite,
-  balanced,
-  pro;
-
-  String label(AppLocalizations l) => switch (this) {
-    lite => l.tierLite,
-    balanced => l.tierBalanced,
-    pro => l.tierPro,
-  };
-
-  String note(AppLocalizations l) => switch (this) {
-    lite => l.tierLiteNote,
-    balanced => l.tierBalancedNote,
-    pro => l.tierProNote,
-  };
-}
-
-/// Everything collected during onboarding. Kept in memory for now; later
-/// sections (Care Circle, Care Plan) read from this. The app language lives
-/// in [LanguageController] because it applies outside onboarding too.
+/// Everything collected during onboarding. Saved as a draft after every
+/// answer (see [toJson]) so closing the app mid-way resumes where it left
+/// off; on finish it becomes the patient's profile. The app language lives
+/// in [LanguageController] and AI settings in `GurtuAi`, because both apply
+/// outside onboarding too.
 class OnboardingState extends ChangeNotifier {
   CareFor? careFor;
   String patientName = '';
@@ -168,9 +151,6 @@ class OnboardingState extends ChangeNotifier {
 
   final Map<String, bool> permissions = {};
 
-  ModelTier modelTier = ModelTier.balanced;
-  bool wifiOnly = true;
-
   bool get isForSelf => careFor == CareFor.myself;
 
   String get patientLabel => patientName.trim();
@@ -178,6 +158,48 @@ class OnboardingState extends ChangeNotifier {
   void update(VoidCallback change) {
     change();
     notifyListeners();
+  }
+
+  Map<String, dynamic> toJson() => {
+    'careFor': careFor?.name,
+    'patientName': patientName,
+    'yourName': yourName,
+    'age': age,
+    'gender': gender?.name,
+    'conditions': [for (final c in conditions) c.name],
+    'takesMedicines': takesMedicines?.name,
+    'medicineCount': medicineCount?.name,
+    'allergies': [for (final a in allergies) a.name],
+    'mobility': mobility?.name,
+    'recentHospitalVisit': recentHospitalVisit?.name,
+    'permissions': permissions,
+  };
+
+  /// Restores a saved draft. Unknown values (from another app version) are
+  /// skipped rather than failing the whole draft.
+  void restore(Map<String, dynamic> j) {
+    T? pick<T extends Enum>(List<T> values, Object? name) =>
+        values.asNameMap()[name];
+    careFor = pick(CareFor.values, j['careFor']);
+    patientName = j['patientName'] as String? ?? '';
+    yourName = j['yourName'] as String? ?? '';
+    age = j['age'] as int?;
+    gender = pick(Gender.values, j['gender']);
+    conditions.addAll([
+      for (final n in j['conditions'] as List? ?? const [])
+        ?pick(HealthCondition.values, n),
+    ]);
+    takesMedicines = pick(YesNoUnsure.values, j['takesMedicines']);
+    medicineCount = pick(MedicineCount.values, j['medicineCount']);
+    allergies.addAll([
+      for (final n in j['allergies'] as List? ?? const [])
+        ?pick(Allergy.values, n),
+    ]);
+    mobility = pick(Mobility.values, j['mobility']);
+    recentHospitalVisit = pick(YesNoUnsure.values, j['recentHospitalVisit']);
+    permissions.addAll(
+      Map<String, bool>.from(j['permissions'] as Map? ?? const {}),
+    );
   }
 
   /// Toggles [value]; [exclusive] (e.g. "None of these") clears the others.

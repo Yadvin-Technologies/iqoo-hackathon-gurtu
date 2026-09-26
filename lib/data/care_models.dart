@@ -27,6 +27,11 @@ class PatientProfile {
     this.gender,
     this.conditions = const [],
     this.allergies = const [],
+    this.careFor,
+    this.takesMedicines,
+    this.medicineCount,
+    this.mobility,
+    this.recentHospitalVisit,
     this.isSelf = false,
     this.isSample = false,
     required this.createdAt,
@@ -41,6 +46,15 @@ class PatientProfile {
   final List<String> conditions;
   final List<String> allergies;
 
+  /// The rest of the onboarding answers, as enum names: `CareFor`,
+  /// `YesNoUnsure`, `MedicineCount`, `Mobility`, `YesNoUnsure`. Null when the
+  /// question was skipped.
+  final String? careFor;
+  final String? takesMedicines;
+  final String? medicineCount;
+  final String? mobility;
+  final String? recentHospitalVisit;
+
   /// The app user is caring for themself.
   final bool isSelf;
   final bool isSample;
@@ -53,6 +67,11 @@ class PatientProfile {
     'gender': gender,
     'conditions': conditions,
     'allergies': allergies,
+    'careFor': careFor,
+    'takesMedicines': takesMedicines,
+    'medicineCount': medicineCount,
+    'mobility': mobility,
+    'recentHospitalVisit': recentHospitalVisit,
     'isSelf': isSelf,
     'isSample': isSample,
     'createdAt': createdAt.toIso8601String(),
@@ -65,6 +84,11 @@ class PatientProfile {
     gender: j['gender'] as String?,
     conditions: List<String>.from(j['conditions'] as List? ?? const []),
     allergies: List<String>.from(j['allergies'] as List? ?? const []),
+    careFor: j['careFor'] as String?,
+    takesMedicines: j['takesMedicines'] as String?,
+    medicineCount: j['medicineCount'] as String?,
+    mobility: j['mobility'] as String?,
+    recentHospitalVisit: j['recentHospitalVisit'] as String?,
     isSelf: j['isSelf'] as bool? ?? false,
     isSample: j['isSample'] as bool? ?? false,
     createdAt: DateTime.parse(j['createdAt'] as String),

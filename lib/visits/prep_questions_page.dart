@@ -10,6 +10,7 @@ import 'prep_chat_page.dart';
 import 'visit_recorder_page.dart';
 import 'visit_text.dart';
 import 'widgets/question_list.dart';
+import 'widgets/tell_doctor_card.dart';
 
 /// Saved questions for the next appointment. Open it at the doctor's and
 /// tick each one off, or start recording the visit from here.
@@ -55,6 +56,15 @@ class _PrepQuestionsPageState extends State<PrepQuestionsPage> {
             spacing: 8,
             runSpacing: 8,
             children: [for (final s in prep.symptoms) _SymptomPill(answer: s)],
+          ),
+          const SizedBox(height: 24),
+        ],
+        if (prep.intake.isNotEmpty) ...[
+          TellDoctorCard(
+            symptoms: [for (final a in prep.symptoms) a.symptom],
+            said: prep.description,
+            intake: prep.intake,
+            note: prep.extraNote,
           ),
           const SizedBox(height: 24),
         ],

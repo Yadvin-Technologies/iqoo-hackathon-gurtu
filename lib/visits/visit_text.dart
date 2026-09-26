@@ -88,7 +88,7 @@ extension VisitText on AppLocalizations {
       QuestionKind.medicinesStillRight => qMedicinesStillRight,
       QuestionKind.nextCheckup => qNextCheckup,
       QuestionKind.tellDoctor => qTellDoctor(q.text),
-      QuestionKind.custom => q.text,
+      QuestionKind.custom || QuestionKind.ai => q.text,
     };
   }
 

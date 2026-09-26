@@ -57,8 +57,8 @@ class SymptomAnswer {
 }
 
 /// Question templates. The text is resolved from l10n at display time, so a
-/// saved list follows the app language; only [custom] and [tellDoctor] keep
-/// the words the user typed or spoke.
+/// saved list follows the app language; only [custom], [tellDoctor] and [ai]
+/// keep their words as written.
 enum QuestionKind {
   cause,
   tests,
@@ -70,6 +70,47 @@ enum QuestionKind {
   nextCheckup,
   tellDoctor,
   custom,
+
+  /// Written by the on-device model, in the language used at the time.
+  ai,
+}
+
+/// What a question helps the family understand, so the list reads in the
+/// order a consultation goes.
+enum QuestionTopic { understand, tests, treatment, home, followUp }
+
+/// One follow-up the assistant asked while preparing, with the answer given.
+class IntakeAnswer {
+  const IntakeAnswer({
+    required this.question,
+    required this.answer,
+    this.id,
+    this.choice,
+  });
+
+  /// As shown, in the language used at the time.
+  final String question;
+  final String answer;
+
+  /// The question's id in the question bank (`visit_knowledge.dart`).
+  final String? id;
+
+  /// Index of the tapped option; null when the answer was typed or spoken.
+  final int? choice;
+
+  Map<String, dynamic> toJson() => {
+    'question': question,
+    'answer': answer,
+    'id': id,
+    'choice': choice,
+  };
+
+  factory IntakeAnswer.fromJson(Map<String, dynamic> j) => IntakeAnswer(
+    question: j['question'] as String? ?? '',
+    answer: j['answer'] as String? ?? '',
+    id: j['id'] as String?,
+    choice: j['choice'] as int?,
+  );
 }
 
 class DoctorQuestion {
@@ -79,6 +120,7 @@ class DoctorQuestion {
     this.symptom,
     this.conditions = const [],
     this.text = '',
+    this.topic,
     this.asked = false,
   });
 
@@ -86,10 +128,14 @@ class DoctorQuestion {
   final QuestionKind kind;
   final Symptom? symptom;
 
+  /// Set on questions written by the model; null on template questions.
+  final QuestionTopic? topic;
+
   /// `HealthCondition` names, for [QuestionKind.conditionLink].
   final List<String> conditions;
 
-  /// User's own words, for [QuestionKind.custom] and [QuestionKind.tellDoctor].
+  /// Words as written, for [QuestionKind.custom], [QuestionKind.tellDoctor]
+  /// and [QuestionKind.ai].
   final String text;
 
   /// Ticked off during the visit.
@@ -101,6 +147,7 @@ class DoctorQuestion {
     'symptom': symptom?.name,
     'conditions': conditions,
     'text': text,
+    'topic': topic?.name,
     'asked': asked,
   };
 
@@ -112,6 +159,7 @@ class DoctorQuestion {
         : Symptom.values.byName(j['symptom'] as String),
     conditions: List<String>.from(j['conditions'] as List? ?? const []),
     text: j['text'] as String? ?? '',
+    topic: QuestionTopic.values.asNameMap()[j['topic']],
     asked: j['asked'] as bool? ?? false,
   );
 }
@@ -127,6 +175,7 @@ class VisitPrep {
     this.description = '',
     this.newMedicine,
     this.extraNote = '',
+    this.intake = const [],
     List<DoctorQuestion>? questions,
     this.visitId,
   }) : questions = questions ?? [];
@@ -142,6 +191,9 @@ class VisitPrep {
   /// Was a medicine started or changed recently? Null when not sure.
   final bool? newMedicine;
   final String extraNote;
+
+  /// The follow-up questions Gurtu AI asked, with the answers given.
+  final List<IntakeAnswer> intake;
   final List<DoctorQuestion> questions;
 
   /// Set once these questions were taken to a recorded visit.
@@ -158,6 +210,7 @@ class VisitPrep {
     'description': description,
     'newMedicine': newMedicine,
     'extraNote': extraNote,
+    'intake': [for (final a in intake) a.toJson()],
     'questions': [for (final q in questions) q.toJson()],
     'visitId': visitId,
   };
@@ -173,6 +226,10 @@ class VisitPrep {
     description: j['description'] as String? ?? '',
     newMedicine: j['newMedicine'] as bool?,
     extraNote: j['extraNote'] as String? ?? '',
+    intake: [
+      for (final a in (j['intake'] as List? ?? const []))
+        IntakeAnswer.fromJson(a as Map<String, dynamic>),
+    ],
     questions: [
       for (final q in (j['questions'] as List? ?? const []))
         DoctorQuestion.fromJson(q as Map<String, dynamic>),

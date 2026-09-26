@@ -634,7 +634,7 @@
   "kwStomach": "stomach,acidity,gas,vomit,loose motion,diarrhoea,constipation,nausea",
   "kwPoorSleep": "sleep,insomnia",
   "kwPoorAppetite": "appetite,not eating,no hunger",
-  "kwLowMood": "sad,worried,anxious,anxiety,depressed,stress,tension",
+  "kwLowMood": "sad,worried,anxious,anxiety,depressed,stress,tension,feeling low,feel low,hopeless",
   "sinceToday": "Since today",
   "sinceFewDays": "A few days",
   "sinceWeek": "About a week",
@@ -882,5 +882,89 @@
         "type": "String"
       }
     }
-  }
+  },
+  "aiPerkPrivate": "Private: what you say stays on this phone",
+  "aiPerkOffline": "Works without internet once set up",
+  "aiPerkQuestions": "Writes doctor questions for your situation",
+  "aiRunsOnNpu": "Runs on your phone's AI chip (NPU)",
+  "aiRunsOnGpu": "Runs on your phone's graphics chip (GPU)",
+  "aiRunsOnCpu": "Runs on your phone's processor",
+  "aiStepCheck": "Checking your phone",
+  "aiStepDownload": "Downloading Gurtu AI",
+  "aiStepReady": "Ready to help",
+  "aiInstall": "Set up Gurtu AI · {size}",
+  "@aiInstall": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "aiContinueInBackground": "Continue, finish in background",
+  "aiProgress": "{done} of {total}",
+  "@aiProgress": {
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "aiWaitingWifi": "Waiting for Wi-Fi. The download starts as soon as you connect.",
+  "aiUseMobileData": "Use mobile data now",
+  "aiFailedNetwork": "The download stopped. Check your internet and try again.",
+  "aiFailedSpace": "Not enough space on the phone. Free up {size} and try again.",
+  "@aiFailedSpace": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "aiRetry": "Try again",
+  "aiUnsupported": "This phone can't run Gurtu AI. Gurtu still helps using its built-in guidance.",
+  "aiDetails": "Technical details",
+  "aiDetailModel": "Model",
+  "aiDetailSize": "Size",
+  "aiDetailChip": "Runs on",
+  "aiDetailPhone": "Phone",
+  "aiStatusReady": "Ready · runs on this phone",
+  "aiStatusOff": "Not set up. Gurtu uses its built-in guidance.",
+  "aiStatusDownloading": "Setting up · {percent}%",
+  "@aiStatusDownloading": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "aiStatusChecking": "Checking…",
+  "aiRemoveTitle": "Remove Gurtu AI from this phone?",
+  "aiRemoveBody": "This frees {size}. You can set it up again any time.",
+  "@aiRemoveBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "aiSetUpForPrep": "Set up Gurtu AI to get questions written for your situation.",
+  "prepUnderstanding": "Understanding what you said…",
+  "prepByAi": "Written by Gurtu AI on this phone. Check anything unclear with your doctor.",
+  "prepByRules": "From Gurtu's built-in guidance.",
+  "prepSummaryTitle": "Tell the doctor",
+  "prepSummaryHint": "Show or read this to the doctor at the start of the visit.",
+  "prepReplyHint": "Or type or say your answer",
+  "prepResultIntroAi": "Ask these during the visit, so you both leave knowing what the problem is and what to do. Remove any you don't need, or add your own.",
+  "topicUnderstand": "Understand the problem",
+  "topicTests": "Tests",
+  "topicTreatment": "Treatment and medicines",
+  "topicHome": "Care at home",
+  "topicFollowUp": "Warning signs and next visit",
+  "topicOwn": "Your own questions",
+  "urgentAnswer": "This can be serious. Don't wait for the appointment — get medical help now, or call 108 for an ambulance.",
+  "urgentSelfHarm": "You don't have to face this alone. Please talk to someone now: call Tele-MANAS on 14416 (free, any time), or go to the nearest hospital.",
+  "prepInTheirWords": "In your words"
 }

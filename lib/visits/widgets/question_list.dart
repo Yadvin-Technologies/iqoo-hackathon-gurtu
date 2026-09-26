@@ -9,7 +9,8 @@ import '../../widgets/voice_input.dart';
 import '../visit_text.dart';
 
 /// Questions to take to the doctor. With [onToggle] each one can be ticked
-/// off at the visit; with [onRemove] unwanted ones can be dropped.
+/// off at the visit; with [onRemove] unwanted ones can be dropped. Questions
+/// written by Gurtu AI carry a topic and are shown under topic headings.
 class QuestionList extends StatelessWidget {
   const QuestionList({
     super.key,
@@ -31,7 +32,9 @@ class QuestionList extends StatelessWidget {
       child: Column(
         children: [
           for (final (i, q) in questions.indexed) ...[
-            if (i > 0)
+            if (_heading(i) case final heading?)
+              _TopicHeading(heading, first: i == 0)
+            else if (i > 0)
               const Divider(height: 1, indent: 56, color: GurtuColors.outline),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
@@ -90,6 +93,55 @@ class QuestionList extends StatelessWidget {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+extension on QuestionList {
+  /// The heading to show above question [i], when a new topic starts.
+  String? _heading(int i) {
+    if (!questions.any((q) => q.topic != null)) return null;
+    final topic = questions[i].topic;
+    if (i > 0 && questions[i - 1].topic == topic) return null;
+    return topic?.name ?? '';
+  }
+}
+
+class _TopicHeading extends StatelessWidget {
+  const _TopicHeading(this.topic, {required this.first});
+
+  /// A [QuestionTopic] name, or '' for questions the family added.
+  final String topic;
+  final bool first;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final (label, icon) = switch (QuestionTopic.values.asNameMap()[topic]) {
+      QuestionTopic.understand => (l.topicUnderstand, Icons.lightbulb_rounded),
+      QuestionTopic.tests => (l.topicTests, Icons.biotech_rounded),
+      QuestionTopic.treatment => (l.topicTreatment, Icons.medication_rounded),
+      QuestionTopic.home => (l.topicHome, Icons.home_rounded),
+      QuestionTopic.followUp => (l.topicFollowUp, Icons.event_rounded),
+      null => (l.topicOwn, Icons.edit_rounded),
+    };
+    return Padding(
+      padding: EdgeInsets.fromLTRB(14, first ? 10 : 18, 14, 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: GurtuColors.primary),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              label,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: GurtuColors.primary,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
         ],
       ),
     );

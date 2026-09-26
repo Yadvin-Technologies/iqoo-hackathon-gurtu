@@ -2485,7 +2485,7 @@ abstract class AppLocalizations {
   /// No description provided for @kwLowMood.
   ///
   /// In en, this message translates to:
-  /// **'sad,worried,anxious,anxiety,depressed,stress,tension'**
+  /// **'sad,worried,anxious,anxiety,depressed,stress,tension,feeling low,feel low,hopeless'**
   String get kwLowMood;
 
   /// No description provided for @sinceToday.
@@ -3063,6 +3063,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check the strip says {strength}'**
   String rowStrengthCheck(String strength);
+
+  /// No description provided for @aiPerkPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Private: what you say stays on this phone'**
+  String get aiPerkPrivate;
+
+  /// No description provided for @aiPerkOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Works without internet once set up'**
+  String get aiPerkOffline;
+
+  /// No description provided for @aiPerkQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Writes doctor questions for your situation'**
+  String get aiPerkQuestions;
+
+  /// No description provided for @aiRunsOnNpu.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs on your phone\'s AI chip (NPU)'**
+  String get aiRunsOnNpu;
+
+  /// No description provided for @aiRunsOnGpu.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs on your phone\'s graphics chip (GPU)'**
+  String get aiRunsOnGpu;
+
+  /// No description provided for @aiRunsOnCpu.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs on your phone\'s processor'**
+  String get aiRunsOnCpu;
+
+  /// No description provided for @aiStepCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking your phone'**
+  String get aiStepCheck;
+
+  /// No description provided for @aiStepDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading Gurtu AI'**
+  String get aiStepDownload;
+
+  /// No description provided for @aiStepReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to help'**
+  String get aiStepReady;
+
+  /// No description provided for @aiInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Gurtu AI · {size}'**
+  String aiInstall(String size);
+
+  /// No description provided for @aiContinueInBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue, finish in background'**
+  String get aiContinueInBackground;
+
+  /// No description provided for @aiProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String aiProgress(String done, String total);
+
+  /// No description provided for @aiWaitingWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for Wi-Fi. The download starts as soon as you connect.'**
+  String get aiWaitingWifi;
+
+  /// No description provided for @aiUseMobileData.
+  ///
+  /// In en, this message translates to:
+  /// **'Use mobile data now'**
+  String get aiUseMobileData;
+
+  /// No description provided for @aiFailedNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'The download stopped. Check your internet and try again.'**
+  String get aiFailedNetwork;
+
+  /// No description provided for @aiFailedSpace.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough space on the phone. Free up {size} and try again.'**
+  String aiFailedSpace(String size);
+
+  /// No description provided for @aiRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get aiRetry;
+
+  /// No description provided for @aiUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone can\'t run Gurtu AI. Gurtu still helps using its built-in guidance.'**
+  String get aiUnsupported;
+
+  /// No description provided for @aiDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Technical details'**
+  String get aiDetails;
+
+  /// No description provided for @aiDetailModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get aiDetailModel;
+
+  /// No description provided for @aiDetailSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get aiDetailSize;
+
+  /// No description provided for @aiDetailChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs on'**
+  String get aiDetailChip;
+
+  /// No description provided for @aiDetailPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get aiDetailPhone;
+
+  /// No description provided for @aiStatusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready · runs on this phone'**
+  String get aiStatusReady;
+
+  /// No description provided for @aiStatusOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set up. Gurtu uses its built-in guidance.'**
+  String get aiStatusOff;
+
+  /// No description provided for @aiStatusDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Setting up · {percent}%'**
+  String aiStatusDownloading(int percent);
+
+  /// No description provided for @aiStatusChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking…'**
+  String get aiStatusChecking;
+
+  /// No description provided for @aiRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Gurtu AI from this phone?'**
+  String get aiRemoveTitle;
+
+  /// No description provided for @aiRemoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This frees {size}. You can set it up again any time.'**
+  String aiRemoveBody(String size);
+
+  /// No description provided for @aiSetUpForPrep.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up Gurtu AI to get questions written for your situation.'**
+  String get aiSetUpForPrep;
+
+  /// No description provided for @prepUnderstanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding what you said…'**
+  String get prepUnderstanding;
+
+  /// No description provided for @prepByAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Written by Gurtu AI on this phone. Check anything unclear with your doctor.'**
+  String get prepByAi;
+
+  /// No description provided for @prepByRules.
+  ///
+  /// In en, this message translates to:
+  /// **'From Gurtu\'s built-in guidance.'**
+  String get prepByRules;
+
+  /// No description provided for @prepSummaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell the doctor'**
+  String get prepSummaryTitle;
+
+  /// No description provided for @prepSummaryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show or read this to the doctor at the start of the visit.'**
+  String get prepSummaryHint;
+
+  /// No description provided for @prepReplyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Or type or say your answer'**
+  String get prepReplyHint;
+
+  /// No description provided for @prepResultIntroAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask these during the visit, so you both leave knowing what the problem is and what to do. Remove any you don\'t need, or add your own.'**
+  String get prepResultIntroAi;
+
+  /// No description provided for @topicUnderstand.
+  ///
+  /// In en, this message translates to:
+  /// **'Understand the problem'**
+  String get topicUnderstand;
+
+  /// No description provided for @topicTests.
+  ///
+  /// In en, this message translates to:
+  /// **'Tests'**
+  String get topicTests;
+
+  /// No description provided for @topicTreatment.
+  ///
+  /// In en, this message translates to:
+  /// **'Treatment and medicines'**
+  String get topicTreatment;
+
+  /// No description provided for @topicHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Care at home'**
+  String get topicHome;
+
+  /// No description provided for @topicFollowUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning signs and next visit'**
+  String get topicFollowUp;
+
+  /// No description provided for @topicOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own questions'**
+  String get topicOwn;
+
+  /// No description provided for @urgentAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'This can be serious. Don\'t wait for the appointment — get medical help now, or call 108 for an ambulance.'**
+  String get urgentAnswer;
+
+  /// No description provided for @urgentSelfHarm.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have to face this alone. Please talk to someone now: call Tele-MANAS on 14416 (free, any time), or go to the nearest hospital.'**
+  String get urgentSelfHarm;
+
+  /// No description provided for @prepInTheirWords.
+  ///
+  /// In en, this message translates to:
+  /// **'In your words'**
+  String get prepInTheirWords;
 }
 
 class _AppLocalizationsDelegate

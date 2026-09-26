@@ -112,10 +112,7 @@ void main() {
   ) async {
     await openHome(tester);
     await openPage(tester, const VerifyPage(clock: at830));
-    expect(
-      find.textContaining('Add Amma\'s medicines first'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Add Amma\'s medicines first'), findsOneWidget);
 
     await tapText(tester, 'Add medicine');
     await tester.enterText(find.byType(TextField).first, 'Thyronorm');
@@ -134,9 +131,7 @@ void main() {
     expect(find.text('Before food'), findsOneWidget);
   });
 
-  testWidgets('medicines are added from a prescription photo', (
-    tester,
-  ) async {
+  testWidgets('medicines are added from a prescription photo', (tester) async {
     MedicineScanner.instance = FakeScanner('''
 Rx
 1) Tab. Metformin 500 mg 1-0-1 after food
@@ -162,9 +157,7 @@ Rx
 
   // Small 360dp phone, every language: overflow anywhere fails the test.
   for (final lang in AppLanguage.values) {
-    testWidgets('medicine screens fit in ${lang.englishName}', (
-      tester,
-    ) async {
+    testWidgets('medicine screens fit in ${lang.englishName}', (tester) async {
       MedicineScanner.instance = FakeScanner('GLYCOMET 1000 mg');
       await openHome(
         tester,

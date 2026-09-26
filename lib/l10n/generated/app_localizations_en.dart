@@ -1325,7 +1325,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kwLowMood =>
-      'sad,worried,anxious,anxiety,depressed,stress,tension';
+      'sad,worried,anxious,anxiety,depressed,stress,tension,feeling low,feel low,hopeless';
 
   @override
   String get sinceToday => 'Since today';
@@ -1690,4 +1690,161 @@ class AppLocalizationsEn extends AppLocalizations {
   String rowStrengthCheck(String strength) {
     return 'Check the strip says $strength';
   }
+
+  @override
+  String get aiPerkPrivate => 'Private: what you say stays on this phone';
+
+  @override
+  String get aiPerkOffline => 'Works without internet once set up';
+
+  @override
+  String get aiPerkQuestions => 'Writes doctor questions for your situation';
+
+  @override
+  String get aiRunsOnNpu => 'Runs on your phone\'s AI chip (NPU)';
+
+  @override
+  String get aiRunsOnGpu => 'Runs on your phone\'s graphics chip (GPU)';
+
+  @override
+  String get aiRunsOnCpu => 'Runs on your phone\'s processor';
+
+  @override
+  String get aiStepCheck => 'Checking your phone';
+
+  @override
+  String get aiStepDownload => 'Downloading Gurtu AI';
+
+  @override
+  String get aiStepReady => 'Ready to help';
+
+  @override
+  String aiInstall(String size) {
+    return 'Set up Gurtu AI · $size';
+  }
+
+  @override
+  String get aiContinueInBackground => 'Continue, finish in background';
+
+  @override
+  String aiProgress(String done, String total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get aiWaitingWifi =>
+      'Waiting for Wi-Fi. The download starts as soon as you connect.';
+
+  @override
+  String get aiUseMobileData => 'Use mobile data now';
+
+  @override
+  String get aiFailedNetwork =>
+      'The download stopped. Check your internet and try again.';
+
+  @override
+  String aiFailedSpace(String size) {
+    return 'Not enough space on the phone. Free up $size and try again.';
+  }
+
+  @override
+  String get aiRetry => 'Try again';
+
+  @override
+  String get aiUnsupported =>
+      'This phone can\'t run Gurtu AI. Gurtu still helps using its built-in guidance.';
+
+  @override
+  String get aiDetails => 'Technical details';
+
+  @override
+  String get aiDetailModel => 'Model';
+
+  @override
+  String get aiDetailSize => 'Size';
+
+  @override
+  String get aiDetailChip => 'Runs on';
+
+  @override
+  String get aiDetailPhone => 'Phone';
+
+  @override
+  String get aiStatusReady => 'Ready · runs on this phone';
+
+  @override
+  String get aiStatusOff => 'Not set up. Gurtu uses its built-in guidance.';
+
+  @override
+  String aiStatusDownloading(int percent) {
+    return 'Setting up · $percent%';
+  }
+
+  @override
+  String get aiStatusChecking => 'Checking…';
+
+  @override
+  String get aiRemoveTitle => 'Remove Gurtu AI from this phone?';
+
+  @override
+  String aiRemoveBody(String size) {
+    return 'This frees $size. You can set it up again any time.';
+  }
+
+  @override
+  String get aiSetUpForPrep =>
+      'Set up Gurtu AI to get questions written for your situation.';
+
+  @override
+  String get prepUnderstanding => 'Understanding what you said…';
+
+  @override
+  String get prepByAi =>
+      'Written by Gurtu AI on this phone. Check anything unclear with your doctor.';
+
+  @override
+  String get prepByRules => 'From Gurtu\'s built-in guidance.';
+
+  @override
+  String get prepSummaryTitle => 'Tell the doctor';
+
+  @override
+  String get prepSummaryHint =>
+      'Show or read this to the doctor at the start of the visit.';
+
+  @override
+  String get prepReplyHint => 'Or type or say your answer';
+
+  @override
+  String get prepResultIntroAi =>
+      'Ask these during the visit, so you both leave knowing what the problem is and what to do. Remove any you don\'t need, or add your own.';
+
+  @override
+  String get topicUnderstand => 'Understand the problem';
+
+  @override
+  String get topicTests => 'Tests';
+
+  @override
+  String get topicTreatment => 'Treatment and medicines';
+
+  @override
+  String get topicHome => 'Care at home';
+
+  @override
+  String get topicFollowUp => 'Warning signs and next visit';
+
+  @override
+  String get topicOwn => 'Your own questions';
+
+  @override
+  String get urgentAnswer =>
+      'This can be serious. Don\'t wait for the appointment — get medical help now, or call 108 for an ambulance.';
+
+  @override
+  String get urgentSelfHarm =>
+      'You don\'t have to face this alone. Please talk to someone now: call Tele-MANAS on 14416 (free, any time), or go to the nearest hospital.';
+
+  @override
+  String get prepInTheirWords => 'In your words';
 }

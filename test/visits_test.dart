@@ -85,16 +85,28 @@ void main() {
     expect(find.text('Anything else the doctor should know?'), findsWidgets);
     await tapText(tester, 'Skip');
 
-    expect(find.text('What could be causing the fever?'), findsOneWidget);
-    expect(find.text('Does the fever need any tests?'), findsOneWidget);
-    expect(find.text('When should we come back for a check-up?'), findsOne);
+    // Without Gurtu AI, English uses the reviewed question bank.
+    const spread =
+        'Can this spread to others at home? How can that be prevented?';
+    expect(find.text(spread), findsOneWidget);
+    expect(find.text('What do you think is causing this?'), findsOneWidget);
+    expect(
+      find.text('Are any tests needed? What will they tell us?'),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        'Which warning signs mean going to the hospital straight away?',
+      ),
+      findsOne,
+    );
 
     // Drop one, add one of our own.
     await tester.ensureVisible(find.byTooltip('Remove question').first);
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Remove question').first);
     await tester.pumpAndSettle();
-    expect(find.text('What could be causing the fever?'), findsNothing);
+    expect(find.text(spread), findsNothing);
     await tester.enterText(find.byType(TextField).last, 'Can she travel?');
     await tester.pumpAndSettle();
     await tapText(tester, 'Add');
@@ -129,9 +141,7 @@ void main() {
     expect(find.textContaining('can be an emergency'), findsOneWidget);
   });
 
-  testWidgets('a visit is recorded with what the doctor said', (
-    tester,
-  ) async {
+  testWidgets('a visit is recorded with what the doctor said', (tester) async {
     SpeechService.instance = FakeSpeech('Take the tablet after food.');
     final prefs = await openHome(tester);
 

@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../ai/gemma_visit_assistant.dart';
+import '../ai/on_device_ai.dart';
 import '../ai/visit_assistant.dart';
+import '../ai/visit_knowledge.dart';
 import '../data/care_repository.dart';
 import '../data/visit_models.dart';
 import '../l10n/language.dart';
 import '../onboarding/onboarding_state.dart';
 import '../theme/gurtu_theme.dart';
+import '../widgets/ai_status.dart';
 import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
 import '../widgets/voice_input.dart';
 import 'prep_questions_page.dart';
 import 'visit_text.dart';
 import 'widgets/question_list.dart';
+import 'widgets/tell_doctor_card.dart';
 
-enum _Stage { symptoms, since, severity, medicine, extra, thinking, result }
+enum _Stage {
+  symptoms,
+  understanding,
+
+  /// Gurtu AI's own follow-up questions.
+  followUp,
+
+  // The fixed questions, used when Gurtu AI isn't available.
+  since,
+  severity,
+  medicine,
+  extra,
+  thinking,
+  result,
+}
 
 /// A chat line. Text is built from l10n on every frame so the conversation
 /// follows a language change.
@@ -26,12 +45,17 @@ class _Msg {
   final bool urgent;
 }
 
-/// "Questions for the doctor": Gurtu asks about the symptoms (tap, type or
-/// speak), then suggests what to ask at the appointment.
+/// "Questions for the doctor": the family describes the problem (tap, type
+/// or speak), Gurtu asks a few follow-ups, then suggests what to ask the
+/// doctor so they leave understanding the problem and the plan.
+///
+/// With Gurtu AI installed the on-device model chooses the follow-ups and
+/// writes the questions; otherwise fixed follow-ups and built-in rules do.
 class PrepChatPage extends StatefulWidget {
-  const PrepChatPage({super.key, this.assistant = const LocalVisitAssistant()});
+  const PrepChatPage({super.key, this.assistant});
 
-  final VisitAssistant assistant;
+  /// Defaults to [GemmaVisitAssistant] on the app's [GurtuAi].
+  final VisitAssistant? assistant;
 
   @override
   State<PrepChatPage> createState() => _PrepChatPageState();
@@ -41,6 +65,7 @@ class _PrepChatPageState extends State<PrepChatPage> {
   final _scroll = ScrollController();
   final _describe = TextEditingController();
   final _extra = TextEditingController();
+  final _reply = TextEditingController();
 
   final _msgs = <_Msg>[];
   var _stage = _Stage.symptoms;
@@ -49,6 +74,16 @@ class _PrepChatPageState extends State<PrepChatPage> {
   var _current = 0;
   bool? _newMedicine;
   var _questions = <DoctorQuestion>[];
+  var _byAi = false;
+  var _followUps = <FollowUp>[];
+  var _intake = <IntakeAnswer>[];
+
+  /// Bumped by "Start again" so a slow AI answer for the old conversation
+  /// is dropped.
+  var _run = 0;
+
+  late final VisitAssistant _assistant =
+      widget.assistant ?? GemmaVisitAssistant(AiScope.read(context));
 
   SymptomAnswer get _now => _answers[_current];
 
@@ -56,6 +91,11 @@ class _PrepChatPageState extends State<PrepChatPage> {
   void initState() {
     super.initState();
     _start();
+    // Load the model while the person is still answering, so the questions
+    // at the end come quickly.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) AiScope.read(context).warmUp();
+    });
   }
 
   @override
@@ -63,6 +103,7 @@ class _PrepChatPageState extends State<PrepChatPage> {
     _scroll.dispose();
     _describe.dispose();
     _extra.dispose();
+    _reply.dispose();
     super.dispose();
   }
 
@@ -76,8 +117,13 @@ class _PrepChatPageState extends State<PrepChatPage> {
     _current = 0;
     _newMedicine = null;
     _questions = [];
+    _byAi = false;
+    _followUps = [];
+    _intake = [];
+    _run++;
     _describe.clear();
     _extra.clear();
+    _reply.clear();
   }
 
   void _say(
@@ -99,15 +145,31 @@ class _PrepChatPageState extends State<PrepChatPage> {
     });
   }
 
-  void _submitSymptoms() {
+  Future<void> _submitSymptoms() async {
     FocusScope.of(context).unfocus();
     final l = context.l10n;
     final description = _describe.text.trim();
-    final heard = widget.assistant.detectSymptoms(
-      description,
-      l.symptomKeywords,
-    );
-    final newlyHeard = heard.difference(_picked).toList();
+    final keywords = l.symptomKeywords;
+    var heard = _assistant.detectSymptoms(description, keywords);
+    final patient = CareScope.of(context).selectedPatient;
+    IntakePlan? plan;
+    if (patient != null && AiScope.read(context).isReady) {
+      final run = _run;
+      _go(_Stage.understanding);
+      plan = await _assistant.planIntake(
+        patient: patient,
+        picked: {..._picked},
+        description: description,
+        keywords: keywords,
+        language: LanguageScope.of(context).value,
+      );
+      if (!mounted || run != _run) return;
+      if (plan != null) heard = plan.symptoms;
+    }
+    final newlyHeard = [
+      for (final s in Symptom.values)
+        if (heard.contains(s) && !_picked.contains(s)) s,
+    ];
     _picked.addAll(heard);
     final picked = [
       for (final s in Symptom.values)
@@ -126,7 +188,51 @@ class _PrepChatPageState extends State<PrepChatPage> {
     }
     _answers = [for (final s in picked) SymptomAnswer(s)];
     _current = 0;
-    _answers.isEmpty ? _askMedicine() : _askSince();
+    if (plan != null) {
+      if (plan.medicineChanged) _newMedicine = true;
+      _followUps = plan.followUps;
+      _askFollowUp();
+    } else {
+      _answers.isEmpty ? _askMedicine() : _askSince();
+    }
+  }
+
+  void _askFollowUp() {
+    final question = _followUps[_current].question;
+    _say((_) => question);
+    _reply.clear();
+    _go(_Stage.followUp);
+  }
+
+  /// [choice] is a tapped option; null takes what was typed or spoken.
+  void _answerFollowUp([int? choice]) {
+    FocusScope.of(context).unfocus();
+    final followUp = _followUps[_current];
+    final option = choice == null ? null : followUp.options[choice];
+    final text = (option?.text ?? _reply.text).trim();
+    if (text.isNotEmpty) {
+      _intake.add(
+        IntakeAnswer(
+          question: followUp.question,
+          answer: text,
+          id: followUp.id,
+          choice: choice,
+        ),
+      );
+      _say((_) => text, ai: false);
+    }
+    switch (option?.urgency) {
+      case Urgency.emergency:
+        _say((l) => l.urgentAnswer, urgent: true);
+      case Urgency.selfHarm:
+        _say((l) => l.urgentSelfHarm, urgent: true);
+      case Urgency.none || null:
+        break;
+    }
+    _current++;
+    if (_current < _followUps.length) return _askFollowUp();
+    _say((l) => l.askAnythingElse);
+    _go(_Stage.extra);
   }
 
   void _askSince() {
@@ -175,18 +281,22 @@ class _PrepChatPageState extends State<PrepChatPage> {
 
     final patient = CareScope.of(context).selectedPatient;
     if (patient == null) return;
-    final questions = await widget.assistant.suggestQuestions(
+    final run = _run;
+    final suggestion = await _assistant.suggestQuestions(
       patient: patient,
       answers: PrepAnswers(
         symptoms: _answers,
         description: _describe.text.trim(),
         newMedicine: _newMedicine,
         extraNote: extra,
+        intake: _intake,
       ),
+      language: LanguageScope.of(context).value,
     );
-    if (!mounted) return;
-    _questions = questions;
-    _say((l) => l.prepResultIntro);
+    if (!mounted || run != _run) return;
+    _questions = suggestion.questions;
+    _byAi = suggestion.byAi;
+    _say((l) => _byAi ? l.prepResultIntroAi : l.prepResultIntro);
     _go(_Stage.result);
   }
 
@@ -203,6 +313,7 @@ class _PrepChatPageState extends State<PrepChatPage> {
         description: _describe.text.trim(),
         newMedicine: _newMedicine,
         extraNote: _extra.text.trim(),
+        intake: _intake,
         questions: _questions,
       ),
     );
@@ -239,6 +350,11 @@ class _PrepChatPageState extends State<PrepChatPage> {
           onPressed: _picked.isEmpty && _describe.text.trim().isEmpty
               ? null
               : _submitSymptoms,
+        ),
+        _Stage.followUp => GurtuButton(
+          label: _reply.text.trim().isEmpty ? l.skip : l.continueLabel,
+          icon: Icons.arrow_forward_rounded,
+          onPressed: _answerFollowUp,
         ),
         _Stage.extra => GurtuButton(
           label: _extra.text.trim().isEmpty ? l.skip : l.done,
@@ -296,6 +412,24 @@ class _PrepChatPageState extends State<PrepChatPage> {
           ),
         ],
       ),
+      _Stage.followUp => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _Options(
+            options: [
+              for (final (i, o) in _followUps[_current].options.indexed)
+                (o.text, () => _answerFollowUp(i)),
+            ],
+          ),
+          DictationField(
+            controller: _reply,
+            hint: l.prepReplyHint,
+            minLines: 1,
+            maxLines: 3,
+            onChanged: (_) => setState(() {}),
+          ),
+        ],
+      ),
       _Stage.since => _Options(
         options: [
           for (final v in SymptomSince.values)
@@ -319,10 +453,22 @@ class _PrepChatPageState extends State<PrepChatPage> {
         hint: l.noteHint,
         onChanged: (_) => setState(() {}),
       ),
-      _Stage.thinking => const _Typing(),
+      _Stage.understanding => _Typing(text: l.prepUnderstanding),
+      _Stage.thinking => _Typing(text: l.prepThinking),
       _Stage.result => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (_intake.isNotEmpty) ...[
+            TellDoctorCard(
+              symptoms: [for (final a in _answers) a.symptom],
+              said: _describe.text.trim(),
+              intake: _intake,
+              note: _extra.text.trim(),
+            ),
+            const SizedBox(height: 16),
+          ],
+          _SourceNote(byAi: _byAi),
+          const SizedBox(height: 10),
           QuestionList(
             questions: _questions,
             onRemove: (q) => setState(() => _questions.remove(q)),
@@ -331,9 +477,50 @@ class _PrepChatPageState extends State<PrepChatPage> {
           AddQuestionField(onAdd: (q) => setState(() => _questions.add(q))),
           const SizedBox(height: 16),
           InfoBanner(text: l.prepNotDoctor, icon: Icons.verified_user_rounded),
+          if (!_byAi && _offerAi) ...[
+            const SizedBox(height: 16),
+            Text(l.aiSetUpForPrep, style: t.bodyMedium),
+            const SizedBox(height: 10),
+            const AiStatusCard(showRemove: false),
+          ],
         ],
       ),
     };
+  }
+
+  /// Worth suggesting Gurtu AI: this phone can run it and it isn't ready yet.
+  bool get _offerAi {
+    final status = AiScope.of(context).status;
+    return status != AiStatus.unsupported && status != AiStatus.installed;
+  }
+}
+
+/// Where the questions came from, so nobody mistakes them for a doctor's.
+class _SourceNote extends StatelessWidget {
+  const _SourceNote({required this.byAi});
+
+  final bool byAi;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          byAi ? Icons.auto_awesome_rounded : Icons.menu_book_rounded,
+          size: 16,
+          color: byAi ? GurtuColors.amber : GurtuColors.textMuted,
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            byAi ? l.prepByAi : l.prepByRules,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -454,7 +641,9 @@ class _Options extends StatelessWidget {
 }
 
 class _Typing extends StatelessWidget {
-  const _Typing();
+  const _Typing({required this.text});
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -470,10 +659,7 @@ class _Typing extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: Text(
-            context.l10n.prepThinking,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
         ),
       ],
     );

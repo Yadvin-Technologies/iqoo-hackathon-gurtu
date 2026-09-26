@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "351350932056",
+    "project_id": "gurtu-f6687",
+    "storage_bucket": "gurtu-f6687.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351350932056:android:c24826a309a5f07506402d",
+        "android_client_info": {
+          "package_name": "com.example.gurtutest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcu1XPVYqMUIuZuh0hXsH5dlsgrLX-N5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

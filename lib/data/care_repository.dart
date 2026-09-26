@@ -170,6 +170,14 @@ class CareRepository extends ChangeNotifier {
           for (final a in d.allergies)
             if (a != Allergy.none && a != Allergy.unsure) a.name,
         ],
+        careFor: d.careFor?.name,
+        takesMedicines: d.takesMedicines?.name,
+        // Only meaningful when they said they take medicines.
+        medicineCount: d.takesMedicines == YesNoUnsure.yes
+            ? d.medicineCount?.name
+            : null,
+        mobility: d.mobility?.name,
+        recentHospitalVisit: d.recentHospitalVisit?.name,
         isSelf: d.isForSelf,
         createdAt: now,
       ),

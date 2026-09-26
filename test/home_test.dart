@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gurtutest/ai/on_device_ai.dart';
 import 'package:gurtutest/data/care_repository.dart';
 import 'package:gurtutest/l10n/language.dart';
 import 'package:gurtutest/main.dart';
@@ -33,7 +34,9 @@ Future<SharedPreferences> openHome(
     );
   if (sample) repo.addSampleData(secondPatientName: 'Nanna');
 
-  await tester.pumpWidget(GurtuApp(key: UniqueKey(), prefs: prefs));
+  await tester.pumpWidget(
+    GurtuApp(key: UniqueKey(), prefs: prefs, ai: GurtuAi(prefs)..init()),
+  );
   await tester.pumpAndSettle();
   return prefs;
 }

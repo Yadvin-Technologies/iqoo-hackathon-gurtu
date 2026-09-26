@@ -1,5 +1,7 @@
 import '../data/care_models.dart';
 import '../data/visit_models.dart';
+import '../l10n/language.dart';
+import 'visit_knowledge.dart';
 
 /// What the patient told Gurtu while preparing for a visit.
 class PrepAnswers {
@@ -8,34 +10,94 @@ class PrepAnswers {
     this.description = '',
     this.newMedicine,
     this.extraNote = '',
+    this.intake = const [],
   });
 
   final List<SymptomAnswer> symptoms;
   final String description;
   final bool? newMedicine;
   final String extraNote;
+
+  /// Answers to the follow-ups Gurtu AI chose to ask.
+  final List<IntakeAnswer> intake;
+}
+
+/// A follow-up question for the family, with one-tap answers, as shown.
+class FollowUp {
+  const FollowUp({
+    required this.id,
+    required this.question,
+    this.options = const [],
+  });
+
+  /// The question's id in the question bank.
+  final String id;
+  final String question;
+
+  /// Same order as the bank's, so a tap maps back to the bank's option.
+  final List<AnswerOption> options;
+}
+
+/// How the conversation continues after the patient's first description.
+class IntakePlan {
+  const IntakePlan({
+    required this.symptoms,
+    required this.followUps,
+    this.medicineChanged = false,
+  });
+
+  /// Symptoms understood from the description (keywords included).
+  final Set<Symptom> symptoms;
+  final List<FollowUp> followUps;
+
+  /// They said a medicine was started, stopped or changed recently.
+  final bool medicineChanged;
+}
+
+/// What to take to the appointment.
+class PrepSuggestion {
+  const PrepSuggestion({required this.questions, this.byAi = false});
+
+  final List<DoctorQuestion> questions;
+
+  /// Written by the on-device model rather than the offline rules.
+  final bool byAi;
 }
 
 /// The AI behind "Questions for the doctor".
 ///
-/// The UI only talks to this interface, so the on-device model or a cloud
-/// model (Firebase) can replace [LocalVisitAssistant] without screen changes.
-/// Questions are returned as [DoctorQuestion] templates, not text, so they
-/// stay readable when the app language changes.
+/// The UI only talks to this interface: [GemmaVisitAssistant] uses the
+/// on-device model and falls back to [LocalVisitAssistant] whenever the model
+/// isn't installed or its answer doesn't pass checks.
 abstract class VisitAssistant {
-  /// Symptoms mentioned in the patient's own words.
+  const VisitAssistant();
+
+  /// Symptoms mentioned in the patient's own words, matched by keyword.
   Set<Symptom> detectSymptoms(String text, Map<Symptom, List<String>> keywords);
 
-  Future<List<DoctorQuestion>> suggestQuestions({
+  /// Reads the first description and decides what to ask next. Null means
+  /// the assistant can't plan a conversation, and the fixed questions (since
+  /// when, how bad…) are asked instead.
+  Future<IntakePlan?> planIntake({
+    required PatientProfile patient,
+    required Set<Symptom> picked,
+    required String description,
+    required Map<Symptom, List<String>> keywords,
+    required AppLanguage language,
+  }) async => null;
+
+  Future<PrepSuggestion> suggestQuestions({
     required PatientProfile patient,
     required PrepAnswers answers,
+    required AppLanguage language,
   });
 }
 
-/// Rule-based stand-in used until a real model is connected. Deterministic
-/// and offline: it picks from a fixed set of safe, general questions based
-/// on duration and severity, and never gives medical advice itself.
-class LocalVisitAssistant implements VisitAssistant {
+/// Rule-based assistant, used when the on-device model isn't available.
+/// Deterministic and offline: it picks from a fixed set of safe, general
+/// questions based on duration and severity, and never gives medical advice
+/// itself.
+class LocalVisitAssistant extends VisitAssistant {
   const LocalVisitAssistant();
 
   @override
@@ -53,10 +115,17 @@ class LocalVisitAssistant implements VisitAssistant {
   }
 
   @override
-  Future<List<DoctorQuestion>> suggestQuestions({
+  Future<PrepSuggestion> suggestQuestions({
     required PatientProfile patient,
     required PrepAnswers answers,
-  }) async {
+    required AppLanguage language,
+  }) async => PrepSuggestion(questions: questionsFor(patient, answers));
+
+  /// Template questions, in order of importance.
+  List<DoctorQuestion> questionsFor(
+    PatientProfile patient,
+    PrepAnswers answers,
+  ) {
     var n = 0;
     DoctorQuestion q(
       QuestionKind kind, {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gurtutest/ai/on_device_ai.dart';
 import 'package:gurtutest/l10n/language.dart';
 import 'package:gurtutest/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +26,10 @@ void main() {
     SharedPreferences.setMockInitialValues(saved);
     final prefs = await SharedPreferences.getInstance();
     // A fresh key makes each launch a real cold start, like reopening the app.
-    await tester.pumpWidget(GurtuApp(key: UniqueKey(), prefs: prefs));
+    // Tests don't run on a phone, so Gurtu AI reports itself unsupported.
+    await tester.pumpWidget(
+      GurtuApp(key: UniqueKey(), prefs: prefs, ai: GurtuAi(prefs)..init()),
+    );
     await tester.pump();
     return prefs;
   }
@@ -88,8 +92,14 @@ void main() {
     await tap('Continue');
 
     expect(find.text("Set up Gurtu's on-device AI"), findsOneWidget);
-    expect(find.text('Speech · English'), findsOneWidget);
-    await tap('Later');
+    expect(
+      find.text(
+        "This phone can't run Gurtu AI. Gurtu still helps using its "
+        'built-in guidance.',
+      ),
+      findsOneWidget,
+    );
+    await tap('Continue');
 
     expect(find.text('All set, Priya!'), findsOneWidget);
     expect(find.text('Amma · 64 years'), findsOneWidget);
@@ -100,7 +110,33 @@ void main() {
     expect(find.text('Welcome to Gurtu, Priya'), findsOneWidget);
     expect(find.text('Amma'), findsWidgets);
     expect(prefs.getBool('onboarding_complete'), isTrue);
-    expect(prefs.getString('care_data_v1'), contains('"highBp"'));
+    final saved = prefs.getString('care_data_v1')!;
+    expect(saved, contains('"highBp"'));
+    // Every onboarding answer is kept, not only the ones Home shows.
+    expect(saved, contains('"careFor":"parent"'));
+    expect(saved, contains('"takesMedicines":"yes"'));
+    expect(saved, contains('"mobility":"someHelp"'));
+    expect(saved, contains('"recentHospitalVisit":"yes"'));
+    expect(prefs.getString('onboarding_draft_v1'), isNull);
+  });
+
+  testWidgets('closing the app mid-onboarding resumes where it left off', (
+    tester,
+  ) async {
+    final prefs = await launch(tester, {
+      'onboarding_draft_v1':
+          '{"step":4,"answers":{"careFor":"parent","patientName":"Amma",'
+          '"age":64,"conditions":["diabetes","notARealCondition"]}}',
+    });
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(find.text('Tell us about them'), findsOneWidget);
+    expect(find.text('Amma'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField).at(2), 'Priya');
+    await tester.pump();
+    expect(prefs.getString('onboarding_draft_v1'), contains('"Priya"'));
+    expect(prefs.getString('onboarding_draft_v1'), contains('"diabetes"'));
   });
 
   testWidgets('picking a language switches the app and is remembered', (

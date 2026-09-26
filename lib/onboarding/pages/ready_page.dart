@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../ai/on_device_ai.dart';
 import '../../l10n/language.dart';
 import '../../theme/gurtu_theme.dart';
+import '../../widgets/ai_status.dart';
 import '../../widgets/gurtu_widgets.dart';
 import '../onboarding_flow.dart';
 import '../onboarding_state.dart';
@@ -42,7 +44,11 @@ class ReadyPage extends StatelessWidget {
         join(d.allergies.map((a) => a.label(l))),
       ),
       (Icons.translate_rounded, l.rowLanguage, language.nativeName),
-      (Icons.auto_awesome_rounded, l.rowAi, d.modelTier.label(l)),
+      (
+        Icons.auto_awesome_rounded,
+        l.rowAi,
+        aiStatusLine(l, AiScope.of(context)),
+      ),
     ];
 
     return SafeArea(

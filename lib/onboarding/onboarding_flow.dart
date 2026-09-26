@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/language.dart';
 import '../widgets/gurtu_widgets.dart';
@@ -37,7 +40,14 @@ class _Step {
 /// Hosts the onboarding pages and handles forward / back navigation.
 /// Swiping is disabled so each question is answered before moving on.
 class OnboardingFlow extends StatefulWidget {
-  const OnboardingFlow({super.key, required this.onFinished});
+  const OnboardingFlow({
+    super.key,
+    required this.prefs,
+    required this.onFinished,
+  });
+
+  /// Where the unfinished answers are kept between launches.
+  final SharedPreferences prefs;
 
   /// Called with everything collected, so the app can save it.
   final ValueChanged<OnboardingState> onFinished;
@@ -51,12 +61,45 @@ class OnboardingFlow extends StatefulWidget {
 
   @override
   State<OnboardingFlow> createState() => OnboardingFlowState();
+
+  static const _draftKey = 'onboarding_draft_v1';
+
+  /// Forgets unfinished answers (after finishing, or on restart).
+  static Future<void> clearDraft(SharedPreferences prefs) =>
+      prefs.remove(_draftKey);
 }
 
 class OnboardingFlowState extends State<OnboardingFlow> {
   final _data = OnboardingState();
-  final _pages = PageController();
+  late final PageController _pages;
   int _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _restoreDraft();
+    _pages = PageController(initialPage: _index);
+    _data.addListener(_saveDraft);
+  }
+
+  void _restoreDraft() {
+    final raw = widget.prefs.getString(OnboardingFlow._draftKey);
+    if (raw == null) return;
+    try {
+      final j = jsonDecode(raw) as Map<String, dynamic>;
+      _data.restore(j['answers'] as Map<String, dynamic>);
+      // Never land back on the last page: it finishes onboarding.
+      _index = ((j['step'] as int?) ?? 0).clamp(0, _steps.length - 2);
+    } on Object {
+      // A draft from an older build: start over rather than fail.
+      _index = 0;
+    }
+  }
+
+  void _saveDraft() => widget.prefs.setString(
+    OnboardingFlow._draftKey,
+    jsonEncode({'step': _index, 'answers': _data.toJson()}),
+  );
 
   late final List<_Step> _steps = [
     // Language comes first so every screen after it is in that language.
@@ -106,6 +149,7 @@ class OnboardingFlowState extends State<OnboardingFlow> {
     if (index < 0 || index >= _steps.length) return;
     FocusScope.of(context).unfocus();
     setState(() => _index = index);
+    _saveDraft();
     _pages.animateToPage(
       index,
       duration: const Duration(milliseconds: 380),
@@ -116,7 +160,9 @@ class OnboardingFlowState extends State<OnboardingFlow> {
   @override
   void dispose() {
     _pages.dispose();
-    _data.dispose();
+    _data
+      ..removeListener(_saveDraft)
+      ..dispose();
     super.dispose();
   }
 

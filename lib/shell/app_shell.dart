@@ -4,6 +4,7 @@ import '../data/care_repository.dart';
 import '../home/home_page.dart';
 import '../l10n/language.dart';
 import '../theme/gurtu_theme.dart';
+import '../widgets/ai_status.dart';
 import '../widgets/gurtu_widgets.dart';
 import '../widgets/language_grid.dart';
 
@@ -171,7 +172,7 @@ class _ComingTab extends StatelessWidget {
   }
 }
 
-/// Minimal Profile for now: language, sample data and restart. The full
+/// Minimal Profile for now: language, Gurtu AI, sample data and restart. The full
 /// profile (patients, SOS settings, privacy…) comes in later phases.
 class _ProfileTab extends StatelessWidget {
   const _ProfileTab({required this.onRestartOnboarding});
@@ -197,6 +198,10 @@ class _ProfileTab extends StatelessWidget {
           SectionHeader(title: l.rowLanguage),
           const LanguageGrid(),
           const SizedBox(height: 28),
+          SectionHeader(title: l.rowAi),
+          const AiStatusCard(),
+          const AiTechDetails(),
+          const SizedBox(height: 20),
           if (repo.hasSampleData) ...[
             Text(l.sampleDataOn, style: t.bodyMedium),
             const SizedBox(height: 8),
