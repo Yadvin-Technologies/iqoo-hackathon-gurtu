@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../circle/circle_page.dart';
+
 import '../data/care_repository.dart';
 import '../home/home_page.dart';
 import '../l10n/language.dart';
@@ -50,10 +52,7 @@ class _AppShellState extends State<AppShell> {
                 }),
               ),
               _ComingTab(title: l.navMemory, icon: Icons.auto_stories_rounded),
-              _ComingTab(
-                title: l.yourCareCircle,
-                icon: Icons.diversity_1_rounded,
-              ),
+              const CirclePage(),
               _ComingTab(
                 title: l.askGurtuTitle,
                 icon: Icons.auto_awesome_rounded,

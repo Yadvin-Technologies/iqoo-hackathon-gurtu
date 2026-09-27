@@ -4,6 +4,7 @@ import 'package:gurtutest/ai/on_device_ai.dart';
 import 'package:gurtutest/data/care_repository.dart';
 import 'package:gurtutest/l10n/language.dart';
 import 'package:gurtutest/main.dart';
+import 'package:gurtutest/medicines/prescription_import_page.dart';
 import 'package:gurtutest/onboarding/onboarding_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,7 @@ Future<SharedPreferences> openHome(
   WidgetTester tester, {
   String language = 'en',
   bool sample = false,
+  bool self = false,
   Size size = const Size(1080, 2400),
 }) async {
   tester.view.physicalSize = size;
@@ -27,7 +29,7 @@ Future<SharedPreferences> openHome(
   final repo = CareRepository(prefs)
     ..createFromOnboarding(
       OnboardingState()
-        ..careFor = CareFor.parent
+        ..careFor = self ? CareFor.myself : CareFor.parent
         ..patientName = 'Amma'
         ..yourName = 'Sai'
         ..age = 64,
@@ -48,14 +50,30 @@ void main() {
     await openHome(tester);
 
     expect(find.text('Welcome to Gurtu, Sai'), findsOneWidget);
-    expect(find.text('CARING FOR'), findsOneWidget);
+    expect(find.text('Caring for'), findsOneWidget);
     expect(find.text('Amma'), findsWidgets);
     expect(find.text('64 years'), findsOneWidget);
     expect(find.text('SOS'), findsOneWidget);
+    expect(find.text('Gurtu'), findsOneWidget);
+
+    // Live numbers from the records, nothing made up.
+    expect(find.bySemanticsLabel('Medicines: 0'), findsOneWidget);
+    expect(find.bySemanticsLabel('Taken today: —'), findsOneWidget);
+    expect(find.bySemanticsLabel('Next visit: —'), findsOneWidget);
+
+    // No setup card, no sample data offer, no scan tile.
+    expect(find.text('GETTING GURTU READY'), findsNothing);
+    expect(find.text('Scan & verify medicine'), findsNothing);
     expect(find.text('Nothing urgent right now.'), findsOneWidget);
+    // Caring for Amma: the people strip, with a way to add someone.
+    expect(find.text('People you care for'), findsOneWidget);
+    expect(find.bySemanticsLabel('Add someone to care for'), findsOneWidget);
     expect(find.text('Capture Care'), findsOneWidget);
-    expect(find.text('Doctor visit'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('GETTING GURTU READY'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Doctor visit'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     for (final tab in ['Home', 'Memory', 'Circle', 'AI', 'Profile']) {
       expect(find.text(tab), findsOneWidget);
     }
@@ -63,8 +81,13 @@ void main() {
     await tester.scrollUntilVisible(
       find.text('Your care story starts here.'),
       200,
+      scrollable: find.byType(Scrollable).first,
     );
-    await tester.scrollUntilVisible(find.text('Care is easier together.'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Care is easier together.'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
   });
 
   testWidgets('sample data fills Home and patients never mix', (tester) async {
@@ -76,13 +99,23 @@ void main() {
 
     // Ticking a task updates progress.
     final semantics = tester.ensureSemantics();
+    await tester.ensureVisible(find.bySemanticsLabel('Mark as done').first);
+    await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel('Mark as done').first);
     semantics.dispose();
     await tester.pumpAndSettle();
     expect(find.text('3 of 4 done'), findsOneWidget);
 
-    await tester.scrollUntilVisible(find.text('Doctor conversation'), 200);
-    await tester.scrollUntilVisible(find.text('Anu'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Doctor conversation'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.scrollUntilVisible(
+      find.text('Anu'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
 
     // Switch to the second person: none of Amma's care shows.
     await tester.fling(
@@ -91,7 +124,7 @@ void main() {
       3000,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('CARING FOR'));
+    await tester.tap(find.text('Caring for'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nanna').last);
     await tester.pumpAndSettle();
@@ -107,6 +140,8 @@ void main() {
   ) async {
     final prefs = await openHome(tester);
 
+    await tester.ensureVisible(find.text('Capture Care'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Capture Care'));
     await tester.pumpAndSettle();
     expect(find.text('What happened?'), findsOneWidget);
@@ -118,9 +153,50 @@ void main() {
     await tester.tap(find.text('Save note'));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Felt dizzy after walking'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Felt dizzy after walking'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Open · Written note'), findsOneWidget);
     expect(prefs.getString('care_data_v1'), contains('Felt dizzy'));
+  });
+
+  testWidgets('Capture Care offers a prescription scan and a note only', (
+    tester,
+  ) async {
+    await openHome(tester);
+    await tester.ensureVisible(find.text('Capture Care'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Capture Care'));
+    await tester.pumpAndSettle();
+    expect(find.text('Scan'), findsOneWidget);
+    expect(find.text('Note'), findsOneWidget);
+    for (final gone in ['Voice', 'Vital', 'Document', 'Coming soon']) {
+      expect(find.text(gone), findsNothing);
+    }
+    await tester.tap(find.text('Scan'));
+    await tester.pumpAndSettle();
+    expect(find.byType(PrescriptionImportPage), findsOneWidget);
+  });
+
+  testWidgets('pulling down on Home shows what is saved', (tester) async {
+    final prefs = await openHome(tester);
+    expect(find.text('Felt better today'), findsNothing);
+
+    // Saved by another part of the app (or another screen) meanwhile.
+    CareRepository(prefs).addNote('Felt better today');
+    await tester.fling(
+      find.byType(Scrollable).first,
+      const Offset(0, 400),
+      1000,
+    );
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Felt better today'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
   });
 
   testWidgets('SOS needs a 2-second hold and says nothing was sent', (
@@ -164,6 +240,33 @@ void main() {
         await tester.pump();
       }
       // Any overflow is reported by the test framework and fails the test.
+    });
+  }
+
+  // The person cared for, on their own phone: no people strip, "Looking
+  // after you" instead of the circle preview.
+  for (final lang in AppLanguage.values) {
+    testWidgets('your own Home fits in ${lang.englishName}', (tester) async {
+      await openHome(
+        tester,
+        language: lang.code,
+        self: true,
+        size: const Size(990, 2145),
+      );
+      final l = lookupAppLocalizations(lang.locale);
+      expect(find.text(l.yourCare), findsOneWidget);
+      expect(find.text(l.peopleYouCareFor), findsNothing);
+      final list = find.byType(Scrollable).first;
+      await tester.scrollUntilVisible(
+        find.text(l.lookingAfterYou),
+        200,
+        scrollable: list,
+      );
+      expect(find.text(l.inviteFamily), findsOneWidget);
+      for (var i = 0; i < 12; i++) {
+        await tester.drag(list, const Offset(0, -300));
+        await tester.pump();
+      }
     });
   }
 }

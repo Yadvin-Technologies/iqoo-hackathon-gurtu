@@ -3423,6 +3423,594 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View photo'**
   String get viewPhoto;
+
+  /// No description provided for @doctorSpeaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor speaks in'**
+  String get doctorSpeaks;
+
+  /// No description provided for @listeningIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening · {language}'**
+  String listeningIn(String language);
+
+  /// No description provided for @liveCaptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening… the doctor\'s words appear here.'**
+  String get liveCaptionHint;
+
+  /// No description provided for @transcriptHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Each sentence is added here as it is heard. You can correct any word.'**
+  String get transcriptHelp;
+
+  /// No description provided for @voiceLanguageMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice typing in {language} isn\'t set up on this phone. Choose another language, or add it in the phone\'s voice typing settings.'**
+  String voiceLanguageMissing(String language);
+
+  /// No description provided for @voiceNeedsInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice typing needs the internet. You can type instead.'**
+  String get voiceNeedsInternet;
+
+  /// No description provided for @voiceWaitingInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet. Still trying — nothing heard so far is lost.'**
+  String get voiceWaitingInternet;
+
+  /// No description provided for @medicineNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine {number}'**
+  String medicineNumber(int number);
+
+  /// No description provided for @addAnotherMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add another medicine'**
+  String get addAnotherMedicine;
+
+  /// No description provided for @medicinesVisitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add each medicine the doctor gives. Take a photo of the strip or prescription, record what the doctor said about it, or type it.'**
+  String get medicinesVisitHint;
+
+  /// No description provided for @removeMedicineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Its photos and voice notes will be deleted from this phone too.'**
+  String get removeMedicineBody;
+
+  /// No description provided for @questionRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Question removed'**
+  String get questionRemoved;
+
+  /// No description provided for @recordDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Record the doctor\'s voice'**
+  String get recordDoctor;
+
+  /// No description provided for @doctorRecordings.
+  ///
+  /// In en, this message translates to:
+  /// **'Recordings'**
+  String get doctorRecordings;
+
+  /// No description provided for @recordingNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Recording {number}'**
+  String recordingNumber(int number);
+
+  /// No description provided for @recordOrListenHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen writes the doctor\'s words as text. Record keeps their voice to play later. The phone\'s microphone does one at a time.'**
+  String get recordOrListenHint;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// No description provided for @inDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{In 1 day} other{In {count} days}}'**
+  String inDays(int count);
+
+  /// No description provided for @withDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'With {doctor}'**
+  String withDoctor(String doctor);
+
+  /// No description provided for @recordingsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 recording} other{{count} recordings}}'**
+  String recordingsCount(int count);
+
+  /// No description provided for @photosCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 photo} other{{count} photos}}'**
+  String photosCount(int count);
+
+  /// No description provided for @noNextVisitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When the doctor gives a date to come back, add it while recording the visit. It will show here.'**
+  String get noNextVisitHint;
+
+  /// No description provided for @circleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone caring for {name}, together.'**
+  String circleSubtitle(String name);
+
+  /// No description provided for @familyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Family code'**
+  String get familyCode;
+
+  /// No description provided for @familyCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this code. Family and helpers type it into Gurtu to join {name}\'s circle.'**
+  String familyCodeHint(String name);
+
+  /// No description provided for @copyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get copyCode;
+
+  /// No description provided for @codeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied'**
+  String get codeCopied;
+
+  /// No description provided for @newCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a new code'**
+  String get newCode;
+
+  /// No description provided for @newCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a new code?'**
+  String get newCodeTitle;
+
+  /// No description provided for @newCodeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The old code will stop working. People already in the circle stay in.'**
+  String get newCodeBody;
+
+  /// No description provided for @circleMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'People in the circle'**
+  String get circleMembers;
+
+  /// No description provided for @circleOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Started the circle'**
+  String get circleOwner;
+
+  /// No description provided for @getsReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Gets reminders'**
+  String get getsReminders;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications off'**
+  String get noNotifications;
+
+  /// No description provided for @notOnApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on the app'**
+  String get notOnApp;
+
+  /// No description provided for @sendTestNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a test notification'**
+  String get sendTestNotification;
+
+  /// No description provided for @testSent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No phones could be reached yet} =1{Sent to 1 phone} other{Sent to {count} phones}}'**
+  String testSent(int count);
+
+  /// No description provided for @testTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Test from Gurtu'**
+  String get testTitle;
+
+  /// No description provided for @testBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are working for {name}\'s care circle.'**
+  String testBody(String name);
+
+  /// No description provided for @settingUpCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Setting up your family code…'**
+  String get settingUpCode;
+
+  /// No description provided for @offlineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t reach the Gurtu server'**
+  String get offlineTitle;
+
+  /// No description provided for @offlineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is saved on this phone. The family code will appear once you\'re online.'**
+  String get offlineBody;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// No description provided for @haveFamilyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'I have a family code'**
+  String get haveFamilyCode;
+
+  /// No description provided for @joinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a care circle'**
+  String get joinTitle;
+
+  /// No description provided for @joinSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code someone in your family shared with you.'**
+  String get joinSubtitle;
+
+  /// No description provided for @howHelping.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you helping?'**
+  String get howHelping;
+
+  /// No description provided for @joinButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Join the circle'**
+  String get joinButton;
+
+  /// No description provided for @invalidCode.
+  ///
+  /// In en, this message translates to:
+  /// **'That code doesn\'t match any family. Check the digits and try again.'**
+  String get invalidCode;
+
+  /// No description provided for @tooManyTries.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Please wait a few minutes and try again.'**
+  String get tooManyTries;
+
+  /// No description provided for @connectionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t connect. Check the internet and try again.'**
+  String get connectionFailed;
+
+  /// No description provided for @somethingWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get somethingWrong;
+
+  /// No description provided for @joinedCircle.
+  ///
+  /// In en, this message translates to:
+  /// **'You joined {name}\'s care circle'**
+  String joinedCircle(String name);
+
+  /// No description provided for @peopleYouCareFor.
+  ///
+  /// In en, this message translates to:
+  /// **'People you care for'**
+  String get peopleYouCareFor;
+
+  /// No description provided for @addPersonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add someone to care for'**
+  String get addPersonTitle;
+
+  /// No description provided for @setUpNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up for someone new'**
+  String get setUpNew;
+
+  /// No description provided for @setUpNewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer a few questions about them. They get their own family code.'**
+  String get setUpNewHint;
+
+  /// No description provided for @joinWithCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Join with a family code'**
+  String get joinWithCode;
+
+  /// No description provided for @joinWithCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone in the family already set Gurtu up for them.'**
+  String get joinWithCodeHint;
+
+  /// No description provided for @yourCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Your care'**
+  String get yourCare;
+
+  /// No description provided for @lookingAfterYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking after you'**
+  String get lookingAfterYou;
+
+  /// No description provided for @lookingAfterCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No one yet} =1{1 person looks after you} other{{count} people look after you}}'**
+  String lookingAfterCount(int count);
+
+  /// No description provided for @inviteFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite your family'**
+  String get inviteFamily;
+
+  /// No description provided for @inviteFamilyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your family code. They\'ll see your care and get your reminders.'**
+  String get inviteFamilyHint;
+
+  /// No description provided for @askForHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask family for help'**
+  String get askForHelp;
+
+  /// No description provided for @askForHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a message to your family?'**
+  String get askForHelpTitle;
+
+  /// No description provided for @askForHelpBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone in your care circle gets a notification to call or check on you.'**
+  String get askForHelpBody;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @helpSent.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No one could be reached yet} =1{Sent to 1 person} other{Sent to {count} people}}'**
+  String helpSent(int count);
+
+  /// No description provided for @circleSubtitleSelf.
+  ///
+  /// In en, this message translates to:
+  /// **'The people who look after you.'**
+  String get circleSubtitleSelf;
+
+  /// No description provided for @iAmPatient.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m the one being cared for'**
+  String get iAmPatient;
+
+  /// No description provided for @patientTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone has already joined as the person being cared for. Choose another role.'**
+  String get patientTaken;
+
+  /// No description provided for @medRemindersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine reminders'**
+  String get medRemindersTitle;
+
+  /// No description provided for @medRemindersIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu read the doctor\'s notes for {name}. Check each time, then turn the reminders on.'**
+  String medRemindersIntro(String name);
+
+  /// No description provided for @readingMedicines.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the medicines…'**
+  String get readingMedicines;
+
+  /// No description provided for @readByAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Read by Gurtu AI'**
+  String get readByAi;
+
+  /// No description provided for @readByRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Read from your notes'**
+  String get readByRules;
+
+  /// No description provided for @pickTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose when to take it'**
+  String get pickTimes;
+
+  /// No description provided for @everyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get everyDay;
+
+  /// No description provided for @forDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{For 1 day} other{For {count} days}}'**
+  String forDays(int count);
+
+  /// No description provided for @howLong.
+  ///
+  /// In en, this message translates to:
+  /// **'How long'**
+  String get howLong;
+
+  /// No description provided for @turnOnReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on reminders'**
+  String get turnOnReminders;
+
+  /// No description provided for @remindersSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 reminder is on} other{{count} reminders are on}}'**
+  String remindersSaved(int count);
+
+  /// No description provided for @remindersGoToPatient.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders go to {name}\'s phone. If one isn\'t marked as taken, Gurtu reminds again twice, then alerts the family.'**
+  String remindersGoToPatient(String name);
+
+  /// No description provided for @remindersGoToFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} doesn\'t use Gurtu, so reminders go to the family\'s phones. If one isn\'t marked as taken, Gurtu reminds again twice, then alerts everyone.'**
+  String remindersGoToFamily(String name);
+
+  /// No description provided for @remindersPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved on this phone. Reminders switch on as soon as it\'s online.'**
+  String get remindersPending;
+
+  /// No description provided for @setUpReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up reminders'**
+  String get setUpReminders;
+
+  /// No description provided for @changeReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Change reminders'**
+  String get changeReminders;
+
+  /// No description provided for @takenIt.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve taken it'**
+  String get takenIt;
+
+  /// No description provided for @skipDose.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip this time'**
+  String get skipDose;
+
+  /// No description provided for @dueAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Due at {time}'**
+  String dueAt(String time);
+
+  /// No description provided for @readAloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Read aloud'**
+  String get readAloud;
+
+  /// No description provided for @missedDoseEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'MISSED DOSE'**
+  String get missedDoseEyebrow;
+
+  /// No description provided for @markTakenForThem.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as taken'**
+  String get markTakenForThem;
+
+  /// No description provided for @illCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll check on them'**
+  String get illCheck;
+
+  /// No description provided for @doseTakenThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as taken. Well done!'**
+  String get doseTakenThanks;
+
+  /// No description provided for @noReminderForThis.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminder'**
+  String get noReminderForThis;
+
+  /// No description provided for @reminderEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'MEDICINE REMINDER'**
+  String get reminderEyebrow;
 }
 
 class _AppLocalizationsDelegate

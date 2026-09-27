@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reminder_channel_id" translatable="false">gurtu_reminders</string>
+    <string name="reminder_channel_name">Reminders</string>
+    <string name="reminder_channel_description">Medicine times, doctor visits and messages from the care circle.</string>
+    <string name="alert_channel_id" translatable="false">gurtu_alerts</string>
+    <string name="alert_channel_name">Care alerts</string>
+    <string name="alert_channel_description">Missed medicines and help requests from the people you look after.</string>
+</resources>

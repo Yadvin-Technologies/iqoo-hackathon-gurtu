@@ -107,11 +107,24 @@ extension VisitText on AppLocalizations {
     null => v.notes,
   };
 
-  String medicinesOf(DoctorVisit v) => switch (v.sample) {
-    SampleVisit.diabetesReview => sampleVisitDiabetesMeds,
-    SampleVisit.kneePain => sampleVisitKneeMeds,
-    null => v.medicines,
-  };
+  /// The medicines in one line: what was written for each, or how many
+  /// there are when they were only photographed or recorded.
+  String medicinesOf(DoctorVisit v) {
+    switch (v.sample) {
+      case SampleVisit.diabetesReview:
+        return sampleVisitDiabetesMeds;
+      case SampleVisit.kneePain:
+        return sampleVisitKneeMeds;
+      case null:
+        final written = [
+          for (final m in v.medicines)
+            if (m.note.trim().isNotEmpty)
+              m.note.trim().replaceAll(RegExp(r'\s*\n\s*'), ' '),
+        ].join(', ');
+        if (written.isNotEmpty || v.medicines.isEmpty) return written;
+        return medicinesCount(v.medicines.length);
+    }
+  }
 
   String testsOf(DoctorVisit v) => switch (v.sample) {
     SampleVisit.diabetesReview => sampleVisitDiabetesTests,

@@ -18,16 +18,19 @@ class CareForPage extends StatelessWidget {
       subtitle: l.careForSubtitle,
       body: Column(
         children: [
-          for (final c in CareFor.values) ...[
-            ChoiceTile(
-              title: c.label(l),
-              hint: c.hint(l),
-              icon: c.icon,
-              selected: data.careFor == c,
-              onTap: () => data.update(() => data.careFor = c),
-            ),
-            const SizedBox(height: 12),
-          ],
+          for (final c in CareFor.values)
+            // Already on this phone as yourself: add someone else.
+            if (c != CareFor.myself ||
+                OnboardingFlow.of(context).widget.allowSelf) ...[
+              ChoiceTile(
+                title: c.label(l),
+                hint: c.hint(l),
+                icon: c.icon,
+                selected: data.careFor == c,
+                onTap: () => data.update(() => data.careFor = c),
+              ),
+              const SizedBox(height: 12),
+            ],
         ],
       ),
       bottom: GurtuButton(

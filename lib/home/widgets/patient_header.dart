@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../data/care_models.dart';
 import '../../data/care_repository.dart';
 import '../../l10n/language.dart';
+import '../../medicines/medicine_list_page.dart';
+import '../../onboarding/onboarding_state.dart';
+import '../../people/add_person.dart';
 import '../../theme/gurtu_theme.dart';
+import '../../visits/visits_page.dart';
+import '../../widgets/gurtu_page.dart';
 import '../../widgets/gurtu_widgets.dart';
 
-/// Who is being cared for, and whether today is on track. The one dark,
-/// "iQOO" surface on Home; everything below it stays light and calm.
+/// Who is being cared for, how today is going, and three live numbers from
+/// their records: medicines, doses taken today, next doctor visit. Tap the
+/// name to switch person; tap a number to open it.
 class PatientHeader extends StatelessWidget {
   const PatientHeader({super.key});
 
@@ -17,113 +24,279 @@ class PatientHeader extends StatelessWidget {
     final patient = repo.selectedPatient!;
     final l = context.l10n;
     final attention = repo.needsAttention();
+    final medicines = repo.medicineList.length;
+    final doses = repo.dosesToday();
+    final next = repo.nextPlannedVisit();
+    final conditions = [
+      for (final c in patient.conditions)
+        if (HealthCondition.values.asNameMap()[c] case final cond?)
+          cond.label(l),
+    ];
+    final about = [
+      if (patient.age != null) l.ageYears(patient.age!),
+      ...conditions,
+    ].join(' · ');
 
-    return Semantics(
-      button: true,
-      label: '${l.caringFor}: ${patient.name}',
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(GurtuSpace.radiusLg),
-          onTap: () => showGurtuSheet(context, (_) => const _PatientSwitcher()),
-          child: Ink(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(GurtuSpace.radiusLg),
-              gradient: const LinearGradient(
-                colors: [Color(0xFF1B1733), Color(0xFF2B2358)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: GurtuColors.primaryDeep.withValues(alpha: 0.25),
-                  blurRadius: 24,
-                  offset: const Offset(0, 10),
-                ),
-              ],
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(GurtuSpace.radiusLg),
+        boxShadow: [
+          BoxShadow(
+            color: GurtuColors.primary.withValues(alpha: 0.32),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(GurtuSpace.radiusLg),
+        child: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF7B5CFF), Color(0xFF4F36C9)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            child: Stack(
-              // Keep the glow inside the rounded corners.
-              clipBehavior: Clip.hardEdge,
-              children: [
-                // Soft iQOO amber glow in the corner — the only accent here.
-                // Sits fully inside the card: the radial fade is transparent at
-                // its box corners, so nothing shows past the rounded edge.
-                Positioned(
-                  right: 8,
-                  top: -20,
-                  child: Container(
-                    width: 170,
-                    height: 170,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          GurtuColors.amberBright.withValues(alpha: 0.28),
-                          GurtuColors.amberBright.withValues(alpha: 0),
+          ),
+          child: Stack(
+            children: [
+              // Soft rings in the corner, echoing the splash screen.
+              Positioned(
+                right: -40,
+                top: -50,
+                child: _Ring(size: 170, alpha: 0.10),
+              ),
+              Positioned(
+                right: 30,
+                top: -80,
+                child: _Ring(size: 120, alpha: 0.07),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Semantics(
+                      button: true,
+                      label:
+                          '${patient.isSelf ? l.yourCare : l.caringFor}: '
+                          '${patient.name}',
+                      excludeSemantics: true,
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(18),
+                          onTap: () => showGurtuSheet(
+                            context,
+                            (_) => _PatientSwitcher(host: context),
+                          ),
+                          child: Row(
+                            children: [
+                              _PatientAvatar(patient: patient, size: 60),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      patient.isSelf ? l.yourCare : l.caringFor,
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.75,
+                                        ),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            patient.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24,
+                                              height: 1.2,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Container(
+                                          width: 26,
+                                          height: 26,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.18,
+                                            ),
+                                          ),
+                                          child: const Icon(
+                                            Icons.keyboard_arrow_down_rounded,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    if (about.isNotEmpty)
+                                      Text(
+                                        about,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.8,
+                                          ),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: _StatusChip(attention: attention),
+                    ),
+                    const SizedBox(height: 14),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: _Stat(
+                              icon: Icons.medication_rounded,
+                              value: '$medicines',
+                              label: l.medicinesSection,
+                              onTap: () =>
+                                  pushPage(context, const MedicineListPage()),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _Stat(
+                              icon: Icons.task_alt_rounded,
+                              value: doses.total == 0
+                                  ? '—'
+                                  : '${doses.taken}/${doses.total}',
+                              label: l.takenToday,
+                              onTap: () =>
+                                  pushPage(context, const MedicineListPage()),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _Stat(
+                              icon: Icons.event_rounded,
+                              value: next == null
+                                  ? '—'
+                                  : MaterialLocalizations.of(context)
+                                        .formatShortMonthDay(next),
+                              label: l.nextVisit,
+                              onTap: () =>
+                                  pushPage(context, const VisitsPage()),
+                            ),
+                          ),
                         ],
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Ring extends StatelessWidget {
+  const _Ring({required this.size, required this.alpha});
+
+  final double size;
+  final double alpha;
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+    child: Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withValues(alpha: alpha),
+      ),
+    ),
+  );
+}
+
+/// One number from the records on the patient card.
+class _Stat extends StatelessWidget {
+  const _Stat({
+    required this.icon,
+    required this.value,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String value;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: '$label: $value',
+      excludeSemantics: true,
+      child: Material(
+        color: Colors.white.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 10, 8, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, size: 18, color: GurtuColors.amberBright),
+                const SizedBox(height: 6),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    height: 1.1,
+                    fontWeight: FontWeight.w800,
+                    fontFeatures: [FontFeature.tabularFigures()],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      _PatientAvatar(patient: patient, size: 68),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l.caringFor.toUpperCase(),
-                              style: const TextStyle(
-                                color: GurtuColors.amberBright,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 1.1,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    patient.name,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26,
-                                      height: 1.15,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: Colors.white70,
-                                  size: 26,
-                                ),
-                              ],
-                            ),
-                            if (patient.age != null)
-                              Text(
-                                l.ageYears(patient.age!),
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            const SizedBox(height: 10),
-                            _StatusChip(attention: attention),
-                          ],
-                        ),
-                      ),
-                    ],
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    fontSize: 12,
+                    height: 1.25,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -144,11 +317,11 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final color = attention ? GurtuColors.amberBright : const Color(0xFF6FE3A1);
+    final color = attention ? GurtuColors.amber : GurtuColors.leaf;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.14),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -205,7 +378,10 @@ class _PatientAvatar extends StatelessWidget {
 /// Switches the whole Home context to another person. Nothing is shared
 /// between patients: every section reads from the selected one only.
 class _PatientSwitcher extends StatelessWidget {
-  const _PatientSwitcher();
+  const _PatientSwitcher({required this.host});
+
+  /// Home, which outlives this sheet: "Add" opens its own sheet from it.
+  final BuildContext host;
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +404,7 @@ class _PatientSwitcher extends StatelessWidget {
             const SizedBox(height: 16),
             for (final p in repo.patients) ...[
               ChoiceTile(
-                title: p.name,
+                title: p.isSelf ? '${p.name} (${l.rowYou})' : p.name,
                 hint: p.age == null ? null : l.ageYears(p.age!),
                 leading: _PatientAvatar(patient: p, size: 48),
                 selected: p.id == selected,
@@ -241,12 +417,13 @@ class _PatientSwitcher extends StatelessWidget {
             ],
             ChoiceTile(
               title: l.addAnotherPerson,
-              hint: l.comingSoon,
               icon: Icons.person_add_alt_1_rounded,
               selected: false,
-              trailing: const SizedBox.shrink(),
-              // TODO(phase 3): open the patient setup flow.
-              onTap: () {},
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () {
+                Navigator.pop(context);
+                showAddPersonSheet(host);
+              },
             ),
           ],
         ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../cloud/cloud_models.dart';
 import '../onboarding/onboarding_state.dart';
 import 'attachment_store.dart';
 import 'care_models.dart';
@@ -75,8 +76,10 @@ class CareRepository extends ChangeNotifier {
       ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
   }
 
-  List<CareTask> todaysTasks([DateTime? now]) {
-    final id = selectedPatient?.id;
+  List<CareTask> todaysTasks([DateTime? now]) =>
+      todaysTasksFor(selectedPatient?.id, now);
+
+  List<CareTask> todaysTasksFor(String? id, [DateTime? now]) {
     final today = DateUtils.dateOnly(now ?? DateTime.now());
     return tasks
         .where(
@@ -87,10 +90,19 @@ class CareRepository extends ChangeNotifier {
   }
 
   /// Pending tasks for today whose time has already passed.
-  bool needsAttention([DateTime? now]) {
+  bool needsAttention([DateTime? now]) =>
+      needsAttentionFor(selectedPatient?.id, now);
+
+  bool needsAttentionFor(String? patientId, [DateTime? now]) {
     final t = now ?? DateTime.now();
-    return todaysTasks(t).any((x) => !x.isDone && x.dueDate.isBefore(t));
+    return todaysTasksFor(
+      patientId,
+      t,
+    ).any((x) => !x.isDone && x.dueDate.isBefore(t));
   }
+
+  /// You are one of the people on this phone (not only a caregiver).
+  bool get hasSelf => patients.any((p) => p.isSelf && !p.isSample);
 
   /// Doctor visits, newest first.
   List<DoctorVisit> get doctorVisits {
@@ -141,6 +153,20 @@ class CareRepository extends ChangeNotifier {
               d.day.isAtSameMomentAs(day),
         )
         .firstOrNull;
+  }
+
+  /// Today's doses for the selected patient: how many are due, how many
+  /// taken.
+  ({int taken, int total}) dosesToday([DateTime? now]) {
+    var taken = 0;
+    var total = 0;
+    for (final m in medicineList) {
+      for (final slot in m.times) {
+        total++;
+        if (doseTaken(m, slot, now) != null) taken++;
+      }
+    }
+    return (taken: taken, total: total);
   }
 
   /// "Getting Gurtu ready" steps.
@@ -204,6 +230,74 @@ class CareRepository extends ChangeNotifier {
       );
     }
     _selectedId = patientId;
+    _save();
+  }
+
+  /// Joined a family's circle by code: the person they care for becomes this
+  /// phone's patient, and everyone in the circle its members. Returns the
+  /// local patient id.
+  String createFromCircle(CircleInfo circle, {required String myName}) {
+    final existing = patients
+        .where((p) => p.id == 'p_${circle.id}')
+        .firstOrNull;
+    if (existing != null) {
+      _selectedId = existing.id;
+      applyCircle(existing.id, circle);
+      return existing.id;
+    }
+    final j = circle.patient;
+    final patientId = 'p_${circle.id}';
+    // Joined as the person cared for: this is their own care.
+    final self = circle.iAmPatient;
+    final name = self ? circle.patientName : myName.trim();
+    if (userName.isEmpty || self) userName = name;
+    patients.add(
+      PatientProfile(
+        id: patientId,
+        name: circle.patientName,
+        age: j['age'] as int?,
+        gender: j['gender'] as String?,
+        conditions: List<String>.from(j['conditions'] as List? ?? const []),
+        allergies: List<String>.from(j['allergies'] as List? ?? const []),
+        careFor: j['careFor'] as String?,
+        takesMedicines: j['takesMedicines'] as String?,
+        medicineCount: j['medicineCount'] as String?,
+        mobility: j['mobility'] as String?,
+        recentHospitalVisit: j['recentHospitalVisit'] as String?,
+        isSelf: self,
+        createdAt: DateTime.now(),
+      ),
+    );
+    _selectedId = patientId;
+    applyCircle(patientId, circle);
+    return patientId;
+  }
+
+  /// Shows the circle's members (from the server) for [patientId]. Your own
+  /// entry and the patient's keep their local ids, so "added by" on older
+  /// records still finds them.
+  void applyCircle(String patientId, CircleInfo circle) {
+    final old = members.where((m) => m.patientId == patientId && !m.isSample);
+    final oldYou = old.where((m) => m.isYou).firstOrNull;
+    final oldPatient = old.where((m) => m.role == CareRole.patient).firstOrNull;
+    final next = <CareMember>[
+      for (final m in circle.members)
+        CareMember(
+          id: m.isYou && oldYou != null
+              ? oldYou.id
+              : m.role == CareRole.patient.name && oldPatient != null
+              ? oldPatient.id
+              : 'cm_${m.id}',
+          patientId: patientId,
+          name: m.name,
+          role: CareRole.values.asNameMap()[m.role] ?? CareRole.family,
+          isYou: m.isYou,
+        ),
+    ];
+    if (next.isEmpty) return;
+    members
+      ..removeWhere((m) => m.patientId == patientId && !m.isSample)
+      ..addAll(next);
     _save();
   }
 
@@ -275,7 +369,7 @@ class CareRepository extends ChangeNotifier {
     String doctorName = '',
     String reason = '',
     String notes = '',
-    String medicines = '',
+    List<VisitMedicine> medicines = const [],
     String tests = '',
     DateTime? nextVisit,
     VisitPrep? prep,
@@ -291,7 +385,7 @@ class CareRepository extends ChangeNotifier {
       doctorName: doctorName.trim(),
       reason: reason.trim(),
       notes: notes.trim(),
-      medicines: medicines.trim(),
+      medicines: [for (final m in medicines) m.withNote(m.note.trim())],
       tests: tests.trim(),
       nextVisit: nextVisit,
       prepId: prep?.id,
@@ -312,6 +406,29 @@ class CareRepository extends ChangeNotifier {
   void removeAttachment(DoctorVisit visit, VisitAttachment attachment) {
     visit.attachments.remove(attachment);
     AttachmentStore.instance.delete(attachment.file);
+    _save();
+  }
+
+  /// A medicine added after the visit (at the pharmacy, at home).
+  void addVisitMedicine(DoctorVisit visit, VisitMedicine medicine) {
+    visit.medicines.add(medicine.withNote(medicine.note.trim()));
+    _save();
+  }
+
+  void updateVisitMedicine(DoctorVisit visit, VisitMedicine medicine) {
+    final i = visit.medicines.indexWhere((m) => m.id == medicine.id);
+    if (i < 0) return;
+    visit.medicines[i] = medicine.withNote(medicine.note.trim());
+    _save();
+  }
+
+  /// Removes it with its photos and voice notes, deleting their files.
+  void removeVisitMedicine(DoctorVisit visit, VisitMedicine medicine) {
+    for (final a in visit.attachmentsOf(medicine)) {
+      AttachmentStore.instance.delete(a.file);
+    }
+    visit.attachments.removeWhere((a) => a.itemId == medicine.id);
+    visit.medicines.removeWhere((m) => m.id == medicine.id);
     _save();
   }
 
@@ -403,6 +520,109 @@ class CareRepository extends ChangeNotifier {
     if (record == null) return;
     doses.remove(record);
     _save();
+  }
+
+  /// [patientId]'s medicine called [name] (as written, or as printed on
+  /// the strip), ignoring case and spacing.
+  Medicine? medicineNamed(String patientId, String name) {
+    String norm(String s) =>
+        s.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
+    final want = norm(name);
+    if (want.isEmpty) return null;
+    return medicines
+        .where(
+          (m) =>
+              m.patientId == patientId &&
+              (norm(m.name) == want ||
+                  norm(m.label) == want ||
+                  (m.alsoCalled.isNotEmpty && norm(m.alsoCalled) == want)),
+        )
+        .firstOrNull;
+  }
+
+  /// Medicines whose reminders the family turned on after a visit: added
+  /// to [patientId]'s list, or the one already there (same name) updated
+  /// to the new times.
+  void saveFromReminders(
+    String patientId,
+    List<
+      ({String name, String strength, List<DoseTime> times, FoodTiming food})
+    >
+    list,
+  ) {
+    if (patientById(patientId) == null) return;
+    final now = DateTime.now();
+    for (final (i, m) in list.indexed) {
+      if (m.name.trim().isEmpty) continue;
+      final times = [
+        for (final t in DoseTime.values)
+          if (m.times.contains(t)) t,
+      ];
+      final known = medicineNamed(patientId, m.name);
+      if (known != null) {
+        final at = medicines.indexOf(known);
+        medicines[at] = known.copyWith(
+          strength: m.strength.trim().isEmpty ? null : m.strength.trim(),
+          times: times,
+          food: m.food,
+        );
+        continue;
+      }
+      medicines.add(
+        Medicine(
+          id: 'med_${now.microsecondsSinceEpoch}_${medicines.length}_$i',
+          patientId: patientId,
+          name: m.name.trim(),
+          strength: m.strength.trim(),
+          times: times,
+          food: m.food,
+          source: MedicineSource.prescription,
+          createdAt: now,
+        ),
+      );
+    }
+    _save();
+  }
+
+  /// Doses the family marked as taken on other phones (from the server),
+  /// ticked here too. Returns how many were new.
+  int applyRemoteDoses(String patientId, List<Map<String, dynamic>> remote) {
+    var added = 0;
+    for (final d in remote) {
+      if (d['status'] != 'taken') continue;
+      final medicine = medicineNamed(
+        patientId,
+        ((d['medicine'] as Map?)?['name'] as String?) ?? '',
+      );
+      final slot = DoseTime.values.asNameMap()[d['slot']];
+      final scheduled = DateTime.tryParse('${d['scheduledAt']}')?.toLocal();
+      if (medicine == null || slot == null || scheduled == null) continue;
+      final day = careDay(scheduled);
+      final known = doses.any(
+        (r) =>
+            r.medicineId == medicine.id &&
+            r.slot == slot &&
+            r.day.isAtSameMomentAs(day),
+      );
+      if (known) continue;
+      final takenBy = d['takenBy'] as String?;
+      doses.add(
+        DoseRecord(
+          medicineId: medicine.id,
+          patientId: patientId,
+          slot: slot,
+          day: day,
+          at: DateTime.tryParse('${d['takenAt']}')?.toLocal() ?? scheduled,
+          by: members
+              .where((m) => m.patientId == patientId && m.name == takenBy)
+              .firstOrNull
+              ?.id,
+        ),
+      );
+      added++;
+    }
+    if (added > 0) _save();
+    return added;
   }
 
   void dismissSetupCard() {
@@ -642,6 +862,23 @@ class CareRepository extends ChangeNotifier {
   }
 
   // --- Persistence -----------------------------------------------------------
+
+  /// Reads everything again from the phone (pull to refresh), so Home and
+  /// Visits show exactly what is saved, and today's lists roll over to a new
+  /// day.
+  Future<void> reload() async {
+    await _prefs.reload();
+    patients.clear();
+    members.clear();
+    moments.clear();
+    tasks.clear();
+    visits.clear();
+    preps.clear();
+    medicines.clear();
+    doses.clear();
+    _load();
+    notifyListeners();
+  }
 
   void _load() {
     final raw = _prefs.getString(_key);

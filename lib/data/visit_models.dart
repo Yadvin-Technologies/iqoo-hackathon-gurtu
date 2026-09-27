@@ -252,13 +252,14 @@ class DoctorVisit {
     this.doctorName = '',
     this.reason = '',
     this.notes = '',
-    this.medicines = '',
+    List<VisitMedicine>? medicines,
     this.tests = '',
     this.nextVisit,
     this.prepId,
     this.sample,
     List<VisitAttachment>? attachments,
-  }) : attachments = attachments ?? [];
+  }) : medicines = medicines ?? [],
+       attachments = attachments ?? [];
 
   final String id;
   final String patientId;
@@ -271,7 +272,11 @@ class DoctorVisit {
 
   /// What the doctor said, spoken into the phone or typed.
   final String notes;
-  final String medicines;
+
+  /// Each medicine the doctor gave, with its photos and voice notes.
+  final List<VisitMedicine> medicines;
+
+  /// No longer asked for when recording; kept for visits that have it.
   final String tests;
   final DateTime? nextVisit;
 
@@ -289,6 +294,12 @@ class DoctorVisit {
       if (a.section == section) a,
   ];
 
+  /// Photos and voice notes of one of [medicines].
+  List<VisitAttachment> attachmentsOf(VisitMedicine medicine) => [
+    for (final a in attachments)
+      if (a.itemId == medicine.id) a,
+  ];
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'patientId': patientId,
@@ -297,7 +308,7 @@ class DoctorVisit {
     'doctorName': doctorName,
     'reason': reason,
     'notes': notes,
-    'medicines': medicines,
+    'medicineList': [for (final m in medicines) m.toJson()],
     'tests': tests,
     'nextVisit': nextVisit?.toIso8601String(),
     'prepId': prepId,
@@ -305,32 +316,76 @@ class DoctorVisit {
     'attachments': [for (final a in attachments) a.toJson()],
   };
 
-  factory DoctorVisit.fromJson(Map<String, dynamic> j) => DoctorVisit(
-    id: j['id'] as String,
-    patientId: j['patientId'] as String,
-    date: DateTime.parse(j['date'] as String),
-    createdBy: j['createdBy'] as String? ?? '',
-    doctorName: j['doctorName'] as String? ?? '',
-    reason: j['reason'] as String? ?? '',
-    notes: j['notes'] as String? ?? '',
-    medicines: j['medicines'] as String? ?? '',
-    tests: j['tests'] as String? ?? '',
-    nextVisit: j['nextVisit'] == null
-        ? null
-        : DateTime.parse(j['nextVisit'] as String),
-    prepId: j['prepId'] as String?,
-    sample: j['sample'] == null
-        ? null
-        : SampleVisit.values.byName(j['sample'] as String),
-    attachments: [
+  factory DoctorVisit.fromJson(Map<String, dynamic> j) {
+    final id = j['id'] as String;
+    var attachments = [
       for (final a in j['attachments'] as List? ?? const [])
         VisitAttachment.fromJson(a as Map<String, dynamic>),
-    ],
-  );
+    ];
+    final List<VisitMedicine> medicines;
+    if (j['medicineList'] case final List list) {
+      medicines = [
+        for (final m in list) VisitMedicine.fromJson(m as Map<String, dynamic>),
+      ];
+    } else {
+      // Saved before medicines were a list: one text and loose photos
+      // become the first medicine.
+      final text = (j['medicines'] as String? ?? '').trim();
+      final loose = attachments.any(
+        (a) => a.section == VisitSection.medicines && a.itemId == null,
+      );
+      final first = VisitMedicine(id: 'vm_${id}_0', note: text);
+      medicines = [if (text.isNotEmpty || loose) first];
+      attachments = [
+        for (final a in attachments)
+          a.section == VisitSection.medicines && a.itemId == null
+              ? a.forItem(first.id)
+              : a,
+      ];
+    }
+    return DoctorVisit(
+      id: id,
+      patientId: j['patientId'] as String,
+      date: DateTime.parse(j['date'] as String),
+      createdBy: j['createdBy'] as String? ?? '',
+      doctorName: j['doctorName'] as String? ?? '',
+      reason: j['reason'] as String? ?? '',
+      notes: j['notes'] as String? ?? '',
+      medicines: medicines,
+      tests: j['tests'] as String? ?? '',
+      nextVisit: j['nextVisit'] == null
+          ? null
+          : DateTime.parse(j['nextVisit'] as String),
+      prepId: j['prepId'] as String?,
+      sample: j['sample'] == null
+          ? null
+          : SampleVisit.values.byName(j['sample'] as String),
+      attachments: attachments,
+    );
+  }
 }
 
-/// The part of a visit a photo or voice note belongs to.
-enum VisitSection { medicines, tests, nextVisit }
+/// One medicine the doctor gave: its name and how to take it, as typed or
+/// spoken. Photos of the strip or prescription and a voice note of what the
+/// doctor said about it are [VisitAttachment]s with this [id].
+class VisitMedicine {
+  const VisitMedicine({required this.id, this.note = ''});
+
+  final String id;
+  final String note;
+
+  VisitMedicine withNote(String note) => VisitMedicine(id: id, note: note);
+
+  Map<String, dynamic> toJson() => {'id': id, 'note': note};
+
+  factory VisitMedicine.fromJson(Map<String, dynamic> j) =>
+      VisitMedicine(id: j['id'] as String, note: j['note'] as String? ?? '');
+}
+
+/// The part of a visit a photo or voice note belongs to. [doctor] holds
+/// recordings of the doctor talking. [tests] is no longer offered when
+/// recording; older visits may still have them.
+enum VisitSection { medicines, tests, nextVisit, doctor }
 
 enum AttachmentKind { photo, audio }
 
@@ -346,11 +401,15 @@ class VisitAttachment {
     required this.file,
     required this.createdAt,
     this.duration,
+    this.itemId,
   });
 
   final String id;
   final AttachmentKind kind;
   final VisitSection section;
+
+  /// The [VisitMedicine] it belongs to, for medicine photos and notes.
+  final String? itemId;
 
   /// File name inside the attachment folder.
   final String file;
@@ -366,7 +425,18 @@ class VisitAttachment {
     'file': file,
     'createdAt': createdAt.toIso8601String(),
     'durationMs': duration?.inMilliseconds,
+    'itemId': itemId,
   };
+
+  VisitAttachment forItem(String itemId) => VisitAttachment(
+    id: id,
+    kind: kind,
+    section: section,
+    file: file,
+    createdAt: createdAt,
+    duration: duration,
+    itemId: itemId,
+  );
 
   factory VisitAttachment.fromJson(Map<String, dynamic> j) => VisitAttachment(
     id: j['id'] as String,
@@ -377,5 +447,6 @@ class VisitAttachment {
     duration: j['durationMs'] == null
         ? null
         : Duration(milliseconds: j['durationMs'] as int),
+    itemId: j['itemId'] as String?,
   );
 }

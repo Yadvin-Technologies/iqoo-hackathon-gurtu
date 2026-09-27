@@ -15,6 +15,7 @@ class GurtuPage extends StatelessWidget {
     this.bottom,
     this.actions = const [],
     this.controller,
+    this.onRefresh,
   });
 
   final String title;
@@ -23,6 +24,9 @@ class GurtuPage extends StatelessWidget {
   final Widget? bottom;
   final List<Widget> actions;
   final ScrollController? controller;
+
+  /// When set, pulling the list down calls it (pull to refresh).
+  final RefreshCallback? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -51,23 +55,28 @@ class GurtuPage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ListView(
-                  controller: controller,
-                  padding: const EdgeInsets.fromLTRB(
-                    GurtuSpace.gutter,
-                    4,
-                    GurtuSpace.gutter,
-                    32,
-                  ),
-                  children: [
-                    Text(title, style: t.headlineMedium),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 6),
-                      Text(subtitle!, style: t.bodyLarge),
+                child: _refreshable(
+                  ListView(
+                    controller: controller,
+                    physics: onRefresh == null
+                        ? null
+                        : const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(
+                      GurtuSpace.gutter,
+                      4,
+                      GurtuSpace.gutter,
+                      32,
+                    ),
+                    children: [
+                      Text(title, style: t.headlineMedium),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 6),
+                        Text(subtitle!, style: t.bodyLarge),
+                      ],
+                      const SizedBox(height: 20),
+                      ...children,
                     ],
-                    const SizedBox(height: 20),
-                    ...children,
-                  ],
+                  ),
                 ),
               ),
               if (bottom != null)
@@ -92,6 +101,17 @@ class GurtuPage extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on GurtuPage {
+  Widget _refreshable(Widget list) => onRefresh == null
+      ? list
+      : RefreshIndicator(
+          color: GurtuColors.primary,
+          backgroundColor: GurtuColors.surface,
+          onRefresh: onRefresh!,
+          child: list,
+        );
 }
 
 /// Small bold label above a form field or detail section.

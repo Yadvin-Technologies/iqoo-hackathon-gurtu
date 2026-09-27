@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/attachment_store.dart';
 import '../data/care_repository.dart';
 import '../data/visit_models.dart';
 import '../l10n/language.dart';
 import '../theme/gurtu_theme.dart';
+import '../reminders/reminder_review_page.dart';
 import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
 import '../widgets/voice_input.dart';
 import 'visit_text.dart';
 import 'widgets/attachment_tray.dart';
+import 'widgets/doctor_listener.dart';
+import 'widgets/question_list.dart';
+import 'widgets/visit_medicine_card.dart';
 
 /// Used during the appointment: keep listening while the doctor talks, tick
-/// off the prepared questions, then note medicines, tests and the next date.
+/// off the prepared questions, then note each medicine and the next date.
 class VisitRecorderPage extends StatefulWidget {
   const VisitRecorderPage({super.key, this.prepId});
 
@@ -24,31 +29,54 @@ class VisitRecorderPage extends StatefulWidget {
   State<VisitRecorderPage> createState() => _VisitRecorderPageState();
 }
 
+/// A medicine being noted: its words, and an id its photos and voice notes
+/// point to.
+class _MedicineDraft {
+  _MedicineDraft() : id = 'vm_${DateTime.now().microsecondsSinceEpoch}_${_n++}';
+
+  static int _n = 0;
+
+  final String id;
+  final note = TextEditingController();
+}
+
 class _VisitRecorderPageState extends State<VisitRecorderPage> {
+  /// The language last used for listening to a doctor.
+  static const _languageKey = 'visit_voice_language';
+
   final _doctor = TextEditingController();
   final _reason = TextEditingController();
   final _notes = TextEditingController();
-  final _medicines = TextEditingController();
-  final _tests = TextEditingController();
-  late final _listening = DictationController(_notes, continuous: true);
+  late final _listening = DictationController(
+    _notes,
+    continuous: true,
+    live: false,
+  );
+  late final _recording = DoctorRecorder(onSaved: _addRecording);
+  final _medicines = [_MedicineDraft()];
   DateTime _date = DateTime.now();
   DateTime? _next;
+  AppLanguage? _language;
   bool _leaving = false;
+  bool _wasListening = false;
 
   /// Photos and voice notes, already kept on the phone; deleted again if the
   /// visit is discarded.
   final _attachments = <VisitAttachment>[];
 
-  List<TextEditingController> get _fields => [
-    _doctor,
-    _reason,
-    _notes,
-    _medicines,
-    _tests,
+  List<TextEditingController> get _fields => [_doctor, _reason, _notes];
+
+  bool _hasText(_MedicineDraft m) => m.note.text.trim().isNotEmpty;
+
+  List<VisitAttachment> _attachmentsOf(_MedicineDraft m) => [
+    for (final a in _attachments)
+      if (a.itemId == m.id) a,
   ];
 
   bool get _hasContent =>
+      _recording.recording ||
       _fields.any((c) => c.text.trim().isNotEmpty) ||
+      _medicines.any(_hasText) ||
       _next != null ||
       _attachments.isNotEmpty;
 
@@ -58,15 +86,54 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     for (final c in _fields) {
       c.addListener(_refresh);
     }
+    _medicines.first.note.addListener(_refresh);
+    _listening.addListener(_listeningChanged);
+    _recording.addListener(_listeningChanged);
+    _loadLanguage();
+  }
+
+  Future<void> _loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = AppLanguage.fromCode(prefs.getString(_languageKey));
+    if (saved != null && mounted && _language == null) {
+      setState(() => _language = saved);
+    }
+  }
+
+  void _pickLanguage(AppLanguage language) {
+    setState(() => _language = language);
+    SharedPreferences.getInstance().then(
+      (p) => p.setString(_languageKey, language.code),
+    );
   }
 
   void _refresh() => setState(() {});
 
+  /// Rebuilds for starting and stopping only, not for every word heard.
+  void _listeningChanged() {
+    final busy = _listening.listening || _recording.recording;
+    if (busy == _wasListening) return;
+    setState(() => _wasListening = busy);
+  }
+
+  void _addRecording(VisitAttachment a) {
+    // Finished after the page closed: nothing to keep it with.
+    if (!mounted || _leaving) {
+      AttachmentStore.instance.delete(a.file);
+      return;
+    }
+    setState(() => _attachments.add(a));
+  }
+
   @override
   void dispose() {
     _listening.dispose();
+    _recording.dispose();
     for (final c in _fields) {
       c.dispose();
+    }
+    for (final m in _medicines) {
+      m.note.dispose();
     }
     super.dispose();
   }
@@ -93,27 +160,99 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     if (picked != null) setState(() => _next = picked);
   }
 
+  void _addMedicine() {
+    HapticFeedback.selectionClick();
+    final m = _MedicineDraft();
+    m.note.addListener(_refresh);
+    setState(() => _medicines.add(m));
+  }
+
+  Future<void> _removeMedicine(_MedicineDraft m) async {
+    final files = _attachmentsOf(m);
+    if (_hasText(m) || files.isNotEmpty) {
+      final l = context.l10n;
+      final ok = await confirmAction(
+        context,
+        title: l.deleteMedicineConfirm,
+        body: files.isEmpty ? null : l.removeMedicineBody,
+        confirm: l.remove,
+      );
+      if (!ok || !mounted) return;
+    }
+    for (final a in files) {
+      AttachmentStore.instance.delete(a.file);
+    }
+    setState(() {
+      _medicines.remove(m);
+      _attachments.removeWhere((a) => a.itemId == m.id);
+    });
+    // After the frame, so its field (and any listening in it) is gone.
+    WidgetsBinding.instance.addPostFrameCallback((_) => m.note.dispose());
+  }
+
+  void _removeQuestion(VisitPrep prep, DoctorQuestion q) {
+    final repo = CareScope.of(context);
+    final at = prep.questions.indexOf(q);
+    if (at < 0) return;
+    prep.questions.removeAt(at);
+    repo.updatePrep(prep);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.questionRemoved),
+          // Goes by itself: it would otherwise sit over "Save visit".
+          persist: false,
+          action: SnackBarAction(
+            label: context.l10n.undo,
+            onPressed: () {
+              prep.questions.insert(at.clamp(0, prep.questions.length), q);
+              repo.updatePrep(prep);
+            },
+          ),
+        ),
+      );
+  }
+
   Future<void> _save() async {
+    // Keeps the words of the sentence still being heard, and the recording
+    // still going.
     await _listening.stop();
+    await _recording.stop();
     if (!mounted) return;
     final repo = CareScope.of(context);
     final l = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
-    repo.addVisit(
+    final visit = repo.addVisit(
       date: _date,
       doctorName: _doctor.text,
       reason: _reason.text,
       notes: _notes.text,
-      medicines: _medicines.text,
-      tests: _tests.text,
+      medicines: [
+        for (final m in _medicines)
+          if (_hasText(m) || _attachmentsOf(m).isNotEmpty)
+            VisitMedicine(id: m.id, note: m.note.text),
+      ],
       nextVisit: _next,
       prep: repo.prepById(widget.prepId),
       attachments: _attachments,
     );
     HapticFeedback.mediumImpact();
     setState(() => _leaving = true);
-    Navigator.pop(context);
-    messenger.showSnackBar(SnackBar(content: Text(l.visitSaved)));
+    if (visit != null && visit.medicines.isNotEmpty) {
+      // Straight on to checking what Gurtu read, and turning reminders on.
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => ReminderReviewPage(visitId: visit.id),
+        ),
+      );
+    } else {
+      Navigator.pop(context);
+    }
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(l.visitSaved)));
   }
 
   Future<void> _confirmLeave() async {
@@ -127,6 +266,7 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     );
     if (!ok || !mounted) return;
     await _listening.stop();
+    await _recording.stop(keep: false);
     for (final a in _attachments) {
       AttachmentStore.instance.delete(a.file);
     }
@@ -140,10 +280,18 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     final l = context.l10n;
     final t = Theme.of(context).textTheme;
     final prep = repo.prepById(widget.prepId);
+    final appLanguage = LanguageScope.of(context).value;
+    final languages = doctorLanguages(appLanguage);
+    final language = languages.contains(_language)
+        ? _language!
+        : languages.contains(appLanguage)
+        ? appLanguage
+        : AppLanguage.english;
+    final localeId = DictationController.localeFor(language.code);
 
     return PopScope(
       // Never lose what the doctor said to an accidental back swipe.
-      canPop: _leaving || !_hasContent,
+      canPop: _leaving || (!_hasContent && !_listening.listening),
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) _confirmLeave();
       },
@@ -185,20 +333,20 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
           ),
           const SizedBox(height: 24),
 
-          FieldLabel(l.doctorSaid, icon: Icons.record_voice_over_rounded),
-          VoiceButton(
+          DoctorListener(
             controller: _listening,
-            label: l.listenToDoctor,
-            large: true,
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _notes,
-            minLines: 5,
-            maxLines: 14,
-            textCapitalization: TextCapitalization.sentences,
-            style: const TextStyle(fontSize: 17, height: 1.4),
-            decoration: InputDecoration(hintText: l.doctorSaidHint),
+            recorder: _recording,
+            recordings: [
+              for (final a in _attachments)
+                if (a.section == VisitSection.doctor) a,
+            ],
+            onRemoveRecording: (a) {
+              setState(() => _attachments.remove(a));
+              AttachmentStore.instance.delete(a.file);
+            },
+            language: language,
+            languages: languages,
+            onLanguage: _pickLanguage,
           ),
 
           if (prep != null && prep.questions.isNotEmpty) ...[
@@ -206,35 +354,13 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
             FieldLabel(l.yourQuestions, icon: Icons.help_outline_rounded),
             Text(l.tickWhenAsked, style: t.bodyMedium),
             const SizedBox(height: 8),
-            GurtuCard(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
-              child: Column(
-                children: [
-                  for (final q in prep.questions)
-                    CheckboxListTile(
-                      value: q.asked,
-                      onChanged: (v) {
-                        HapticFeedback.selectionClick();
-                        q.asked = v ?? false;
-                        repo.updatePrep(prep);
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                      activeColor: GurtuColors.leaf,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                      title: Text(
-                        l.questionText(q),
-                        style: t.bodyLarge?.copyWith(
-                          color: q.asked
-                              ? GurtuColors.textMuted
-                              : GurtuColors.textPrimary,
-                          decoration: q.asked
-                              ? TextDecoration.lineThrough
-                              : null,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+            QuestionList(
+              questions: prep.questions,
+              onToggle: (q) {
+                q.asked = !q.asked;
+                repo.updatePrep(prep);
+              },
+              onRemove: (q) => _removeQuestion(prep, q),
             ),
           ],
 
@@ -244,17 +370,42 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
             optional: true,
             icon: Icons.medication_rounded,
           ),
-          DictationField(controller: _medicines, hint: l.medicinesHint),
-          _tray(VisitSection.medicines),
-          const SizedBox(height: 20),
-          FieldLabel(
-            l.testsSection,
-            optional: true,
-            icon: Icons.biotech_rounded,
+          Text(
+            l.medicinesVisitHint,
+            style: t.bodyMedium?.copyWith(color: GurtuColors.textMuted),
           ),
-          DictationField(controller: _tests, hint: l.testsHint),
-          _tray(VisitSection.tests),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
+          for (final (i, m) in _medicines.indexed) ...[
+            VisitMedicineCard(
+              key: ValueKey(m.id),
+              number: i + 1,
+              onDelete: () => _removeMedicine(m),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  DictationField(
+                    controller: m.note,
+                    hint: l.medicinesHint,
+                    minLines: 1,
+                    maxLines: 4,
+                    localeId: localeId,
+                    languageName: language.nativeName,
+                  ),
+                  _tray(VisitSection.medicines, itemId: m.id),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+          Align(
+            alignment: Alignment.centerLeft,
+            child: AddMedicineButton(
+              another: _medicines.isNotEmpty,
+              onPressed: _addMedicine,
+            ),
+          ),
+
+          const SizedBox(height: 24),
           FieldLabel(l.nextVisit, optional: true, icon: Icons.event_rounded),
           Wrap(
             spacing: 8,
@@ -287,17 +438,21 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     );
   }
 
-  Widget _tray(VisitSection section) => Padding(
+  Widget _tray(VisitSection section, {String? itemId}) => Padding(
     padding: const EdgeInsets.only(top: 12),
     child: AttachmentTray(
       section: section,
+      itemId: itemId,
+      showHint: itemId == null,
       attachments: [
         for (final a in _attachments)
-          if (a.section == section) a,
+          if (a.section == section && a.itemId == itemId) a,
       ],
       onAdd: (a) {
-        // Picked after the page closed: nothing to keep it with.
-        if (!mounted || _leaving) {
+        // Picked after the page closed, or for a medicine removed in the
+        // meantime: nothing to keep it with.
+        final gone = itemId != null && !_medicines.any((m) => m.id == itemId);
+        if (!mounted || _leaving || gone) {
           AttachmentStore.instance.delete(a.file);
           return;
         }

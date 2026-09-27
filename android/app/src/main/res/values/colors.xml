@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Gurtu brand: splash background and notification accent. -->
+    <color name="gurtu_background">#F6F5FB</color>
+    <color name="gurtu_primary">#6A4DF4</color>
+</resources>

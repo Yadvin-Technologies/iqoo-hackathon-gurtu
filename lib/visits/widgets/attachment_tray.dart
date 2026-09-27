@@ -14,9 +14,10 @@ import '../../l10n/language.dart';
 import '../../theme/gurtu_theme.dart';
 import '../../widgets/gurtu_page.dart';
 import '../../widgets/gurtu_widgets.dart';
+import '../../widgets/voice_input.dart';
 
-/// Photos and voice notes for one part of a visit (medicines, tests, next
-/// visit), with buttons to add more. Files are kept on this phone by
+/// Photos and voice notes for one part of a visit (a medicine, tests, the
+/// next visit), with buttons to add more. Files are kept on this phone by
 /// [AttachmentStore]; [onAdd] gets each one once it is safely stored, and
 /// [onRemove] is called after the person confirms, to delete it.
 class AttachmentTray extends StatelessWidget {
@@ -26,9 +27,17 @@ class AttachmentTray extends StatelessWidget {
     required this.attachments,
     required this.onAdd,
     required this.onRemove,
+    this.itemId,
+    this.showHint = true,
   });
 
   final VisitSection section;
+
+  /// The [VisitMedicine] these belong to.
+  final String? itemId;
+
+  /// Explains what to add while there is nothing yet.
+  final bool showHint;
   final List<VisitAttachment> attachments;
   final ValueChanged<VisitAttachment> onAdd;
   final ValueChanged<VisitAttachment> onRemove;
@@ -46,6 +55,7 @@ class AttachmentTray extends StatelessWidget {
     file: file,
     createdAt: DateTime.now(),
     duration: duration,
+    itemId: itemId,
   );
 
   Future<void> _addPhoto(BuildContext context) async {
@@ -126,11 +136,12 @@ class AttachmentTray extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (canAdd && attachments.isEmpty) ...[
+        if (canAdd && showHint && attachments.isEmpty) ...[
           Text(switch (section) {
             VisitSection.medicines => l.attachHintMedicines,
             VisitSection.tests => l.attachHintTests,
             VisitSection.nextVisit => l.attachHintNextVisit,
+            VisitSection.doctor => l.recordOrListenHint,
           }, style: t.bodyMedium?.copyWith(color: GurtuColors.textMuted)),
           const SizedBox(height: 10),
         ],
@@ -157,7 +168,7 @@ class AttachmentTray extends StatelessWidget {
           const SizedBox(height: 10),
         ],
         for (final n in notes) ...[
-          _VoiceNoteTile(attachment: n, onRemove: () => _remove(context, n)),
+          VoiceNoteTile(attachment: n, onRemove: () => _remove(context, n)),
           const SizedBox(height: 8),
         ],
         if (canAdd)
@@ -352,6 +363,7 @@ class _RecordSheetState extends State<_RecordSheet> {
 
   Future<void> _start() async {
     try {
+      await Mic.claim(this, () => _stop(keep: true));
       if (!await _recorder.hasPermission()) {
         if (mounted) setState(() => _denied = true);
         return;
@@ -376,6 +388,7 @@ class _RecordSheetState extends State<_RecordSheet> {
   Future<void> _stop({required bool keep}) async {
     if (_done) return;
     _done = true;
+    Mic.free(this);
     _tick?.cancel();
     _clockWatch.stop();
     final file = _file;
@@ -401,6 +414,7 @@ class _RecordSheetState extends State<_RecordSheet> {
 
   @override
   void dispose() {
+    Mic.free(this);
     _tick?.cancel();
     final file = _file;
     final stopped = _recorder.dispose();
@@ -506,18 +520,27 @@ class _RecordSheetState extends State<_RecordSheet> {
   }
 }
 
-/// Plays one voice note. Starting one stops any other that is playing.
-class _VoiceNoteTile extends StatefulWidget {
-  const _VoiceNoteTile({required this.attachment, required this.onRemove});
+/// Plays one voice note or recording, with a delete button. Starting one
+/// stops any other that is playing.
+class VoiceNoteTile extends StatefulWidget {
+  const VoiceNoteTile({
+    super.key,
+    required this.attachment,
+    required this.onRemove,
+    this.title,
+  });
 
   final VisitAttachment attachment;
   final VoidCallback onRemove;
 
+  /// Defaults to "Voice note".
+  final String? title;
+
   @override
-  State<_VoiceNoteTile> createState() => _VoiceNoteTileState();
+  State<VoiceNoteTile> createState() => _VoiceNoteState();
 }
 
-class _VoiceNoteTileState extends State<_VoiceNoteTile> {
+class _VoiceNoteState extends State<VoiceNoteTile> {
   static AudioPlayer? _playing;
 
   final _player = AudioPlayer();
@@ -612,7 +635,7 @@ class _VoiceNoteTileState extends State<_VoiceNoteTile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l.voiceNote, style: t.titleSmall),
+                Text(widget.title ?? l.voiceNote, style: t.titleSmall),
                 Text(
                   [
                     if (showPosition) _clock(_position),

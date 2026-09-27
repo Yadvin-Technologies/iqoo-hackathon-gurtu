@@ -1,15 +1,52 @@
 package com.example.gurtutest
 
 import android.app.ActivityManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.Bundle
+import android.view.WindowManager
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import java.util.TimeZone
 
 class MainActivity : FlutterActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        createReminderChannel()
+    }
+
+    /** Where reminder pushes land (named in the manifest as the default),
+     *  so people can find and control them under "Reminders". */
+    private fun createReminderChannel() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = NotificationChannel(
+            getString(R.string.reminder_channel_id),
+            getString(R.string.reminder_channel_name),
+            NotificationManager.IMPORTANCE_HIGH,
+        )
+        channel.description = getString(R.string.reminder_channel_description)
+        manager.createNotificationChannel(channel)
+        // Missed doses, for the family: its own channel so it stands out
+        // (and can't be silenced together with ordinary reminders).
+        val alerts = NotificationChannel(
+            getString(R.string.alert_channel_id),
+            getString(R.string.alert_channel_name),
+            NotificationManager.IMPORTANCE_HIGH,
+        )
+        alerts.description = getString(R.string.alert_channel_description)
+        alerts.enableVibration(true)
+        alerts.vibrationPattern = longArrayOf(0, 400, 200, 400, 200, 600)
+        alerts.enableLights(true)
+        alerts.lightColor = android.graphics.Color.RED
+        manager.createNotificationChannel(alerts)
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         // Facts the on-device AI needs to pick the right model build for this
@@ -19,6 +56,19 @@ class MainActivity : FlutterActivity() {
                 when (call.method) {
                     "info" -> result.success(deviceInfo())
                     "isUnmetered" -> result.success(isUnmetered())
+                    // The IANA zone (e.g. Asia/Kolkata), so reminders fire
+                    // at the family's own local time.
+                    "timeZone" -> result.success(TimeZone.getDefault().id)
+                    // While a doctor visit is being listened to, so the
+                    // phone doesn't lock and cut off the microphone.
+                    "keepScreenOn" -> {
+                        if (call.arguments == true) {
+                            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        } else {
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        }
+                        result.success(null)
+                    }
                     else -> result.notImplemented()
                 }
             }

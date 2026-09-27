@@ -1,0 +1,7 @@
+node_modules/
+.env
+# Firebase service account: a private key, never commit it.
+serviceAccountKey.json
+*.log
+# Real values for Dokploy's Environment tab (made from .env + the key).
+dokploy.env

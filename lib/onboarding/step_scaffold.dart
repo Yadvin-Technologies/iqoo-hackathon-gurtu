@@ -44,15 +44,17 @@ class StepScaffold extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(8, 8, 12, 0),
             child: Row(
               children: [
-                if (step == 0)
+                if (step == 0 && !flow.widget.addingPerson)
                   const SizedBox(width: 48, height: 48)
                 else
                   IconButton(
                     onPressed: flow.back,
-                    tooltip: l.back,
+                    tooltip: step == 0 ? l.close : l.back,
                     iconSize: 26,
-                    icon: const Icon(
-                      Icons.arrow_back_rounded,
+                    icon: Icon(
+                      step == 0
+                          ? Icons.close_rounded
+                          : Icons.arrow_back_rounded,
                       color: GurtuColors.textPrimary,
                     ),
                   ),
@@ -61,8 +63,8 @@ class StepScaffold extends StatelessWidget {
                   child: phase == null
                       ? const SizedBox.shrink()
                       : SegmentedProgress(
-                          total: OnboardingPhase.values.length,
-                          current: phase.index,
+                          total: flow.phases.length,
+                          current: flow.phases.indexOf(phase),
                         ),
                 ),
                 // Sized by its label: translations vary a lot in length.

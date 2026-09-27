@@ -1912,4 +1912,411 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get viewPhoto => 'புகைப்படத்தைப் பார்க்கவும்';
+
+  @override
+  String get doctorSpeaks => 'மருத்துவர் பேசும் மொழி';
+
+  @override
+  String listeningIn(String language) {
+    return 'கேட்கிறோம் · $language';
+  }
+
+  @override
+  String get liveCaptionHint =>
+      'கேட்கிறோம்… மருத்துவர் சொல்வது இங்கே தெரியும்.';
+
+  @override
+  String get transcriptHelp =>
+      'ஒவ்வொரு வாக்கியமும் கேட்டவுடன் இங்கே சேர்க்கப்படும். எந்தச் சொல்லையும் திருத்தலாம்.';
+
+  @override
+  String voiceLanguageMissing(String language) {
+    return 'இந்த போனில் $language குரல் தட்டச்சு அமைக்கப்படவில்லை. வேறு மொழியைத் தேர்ந்தெடுக்கவும், அல்லது போனின் குரல் தட்டச்சு அமைப்புகளில் சேர்க்கவும்.';
+  }
+
+  @override
+  String get voiceNeedsInternet =>
+      'குரல் தட்டச்சுக்கு இணையம் தேவை. நீங்கள் தட்டச்சும் செய்யலாம்.';
+
+  @override
+  String get voiceWaitingInternet =>
+      'இணையம் இல்லை. முயற்சி தொடர்கிறது — இதுவரை கேட்டது பாதுகாப்பாக உள்ளது.';
+
+  @override
+  String medicineNumber(int number) {
+    return 'மருந்து $number';
+  }
+
+  @override
+  String get addAnotherMedicine => 'இன்னொரு மருந்து சேர்க்கவும்';
+
+  @override
+  String get medicinesVisitHint =>
+      'மருத்துவர் கொடுக்கும் ஒவ்வொரு மருந்தையும் சேர்க்கவும். அட்டை அல்லது மருந்துச் சீட்டின் புகைப்படம் எடுக்கவும், அதைப் பற்றி மருத்துவர் சொன்னதைப் பதிவு செய்யவும், அல்லது தட்டச்சு செய்யவும்.';
+
+  @override
+  String get removeMedicineBody =>
+      'இதன் புகைப்படங்களும் குரல் குறிப்புகளும் இந்த போனிலிருந்து நீக்கப்படும்.';
+
+  @override
+  String get questionRemoved => 'கேள்வி நீக்கப்பட்டது';
+
+  @override
+  String get recordDoctor => 'மருத்துவரின் குரலைப் பதிவு செய்யவும்';
+
+  @override
+  String get doctorRecordings => 'பதிவுகள்';
+
+  @override
+  String recordingNumber(int number) {
+    return 'பதிவு $number';
+  }
+
+  @override
+  String get recordOrListenHint =>
+      'கேள் என்பது மருத்துவர் சொல்வதை எழுத்தாக்கும். பதிவு என்பது அவர் குரலைப் பின்னர் கேட்க வைக்கும். போனின் மைக் ஒரே நேரத்தில் ஒன்றை மட்டுமே செய்யும்.';
+
+  @override
+  String get tomorrow => 'நாளை';
+
+  @override
+  String inDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count நாட்களில்',
+      one: '1 நாளில்',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String withDoctor(String doctor) {
+    return '$doctor உடன்';
+  }
+
+  @override
+  String recordingsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count பதிவுகள்',
+      one: '1 பதிவு',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String photosCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count புகைப்படங்கள்',
+      one: '1 புகைப்படம்',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noNextVisitHint =>
+      'மருத்துவர் மீண்டும் வர ஒரு தேதி சொன்னால், வருகையைப் பதிவு செய்யும்போது அதைச் சேர்க்கவும். அது இங்கே தெரியும்.';
+
+  @override
+  String circleSubtitle(String name) {
+    return '$name-ஐக் கவனிக்கும் அனைவரும், ஒன்றாக.';
+  }
+
+  @override
+  String get familyCode => 'குடும்பக் குறியீடு';
+
+  @override
+  String familyCodeHint(String name) {
+    return 'இந்தக் குறியீட்டைப் பகிருங்கள். குடும்பத்தினரும் உதவியாளர்களும் இதை Gurtu-வில் உள்ளிட்டு $name-இன் வட்டத்தில் சேரலாம்.';
+  }
+
+  @override
+  String get copyCode => 'குறியீட்டை நகலெடு';
+
+  @override
+  String get codeCopied => 'குறியீடு நகலெடுக்கப்பட்டது';
+
+  @override
+  String get newCode => 'புதிய குறியீடு உருவாக்கு';
+
+  @override
+  String get newCodeTitle => 'புதிய குறியீடு உருவாக்கவா?';
+
+  @override
+  String get newCodeBody =>
+      'பழைய குறியீடு வேலை செய்யாது. ஏற்கனவே வட்டத்தில் இருப்பவர்கள் தொடர்வார்கள்.';
+
+  @override
+  String get circleMembers => 'வட்டத்தில் உள்ளவர்கள்';
+
+  @override
+  String get circleOwner => 'வட்டத்தைத் தொடங்கியவர்';
+
+  @override
+  String get getsReminders => 'நினைவூட்டல்கள் வரும்';
+
+  @override
+  String get noNotifications => 'அறிவிப்புகள் அணைப்பு';
+
+  @override
+  String get notOnApp => 'செயலியில் இல்லை';
+
+  @override
+  String get sendTestNotification => 'சோதனை அறிவிப்பு அனுப்பு';
+
+  @override
+  String testSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count போன்களுக்கு அனுப்பப்பட்டது',
+      one: '1 போனுக்கு அனுப்பப்பட்டது',
+      zero: 'இன்னும் எந்த போனையும் அடையவில்லை',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get testTitle => 'Gurtu சோதனை';
+
+  @override
+  String testBody(String name) {
+    return '$name-இன் கவனிப்பு வட்டத்துக்கு அறிவிப்புகள் வேலை செய்கின்றன.';
+  }
+
+  @override
+  String get settingUpCode => 'உங்கள் குடும்பக் குறியீடு தயாராகிறது…';
+
+  @override
+  String get offlineTitle => 'Gurtu சர்வரை அடைய முடியவில்லை';
+
+  @override
+  String get offlineBody =>
+      'எல்லாம் இந்த போனில் பாதுகாப்பாக உள்ளது. இணையம் கிடைத்ததும் குடும்பக் குறியீடு தெரியும்.';
+
+  @override
+  String get tryAgain => 'மீண்டும் முயலவும்';
+
+  @override
+  String get haveFamilyCode => 'என்னிடம் குடும்பக் குறியீடு உள்ளது';
+
+  @override
+  String get joinTitle => 'கவனிப்பு வட்டத்தில் சேருங்கள்';
+
+  @override
+  String get joinSubtitle =>
+      'உங்கள் குடும்பத்தில் ஒருவர் பகிர்ந்த 6 இலக்கக் குறியீட்டை உள்ளிடுங்கள்.';
+
+  @override
+  String get howHelping => 'நீங்கள் எப்படி உதவுகிறீர்கள்?';
+
+  @override
+  String get joinButton => 'வட்டத்தில் சேர்';
+
+  @override
+  String get invalidCode =>
+      'இந்தக் குறியீடு எந்தக் குடும்பத்துடனும் பொருந்தவில்லை. இலக்கங்களைச் சரிபார்த்து மீண்டும் முயலவும்.';
+
+  @override
+  String get tooManyTries =>
+      'பல முறை முயன்றீர்கள். சில நிமிடங்கள் கழித்து மீண்டும் முயலவும்.';
+
+  @override
+  String get connectionFailed =>
+      'இணைக்க முடியவில்லை. இணையத்தைச் சரிபார்த்து மீண்டும் முயலவும்.';
+
+  @override
+  String get somethingWrong => 'ஏதோ தவறு நடந்தது. மீண்டும் முயலவும்.';
+
+  @override
+  String joinedCircle(String name) {
+    return 'நீங்கள் $name-இன் கவனிப்பு வட்டத்தில் சேர்ந்தீர்கள்';
+  }
+
+  @override
+  String get peopleYouCareFor => 'நீங்கள் கவனிப்பவர்கள்';
+
+  @override
+  String get addPersonTitle => 'கவனிக்க ஒருவரைச் சேர்க்கவும்';
+
+  @override
+  String get setUpNew => 'புதியவருக்காக அமைக்கவும்';
+
+  @override
+  String get setUpNewHint =>
+      'அவரைப் பற்றிய சில கேள்விகளுக்குப் பதிலளியுங்கள். அவருக்குத் தனிக் குடும்பக் குறியீடு கிடைக்கும்.';
+
+  @override
+  String get joinWithCode => 'குடும்பக் குறியீட்டுடன் சேருங்கள்';
+
+  @override
+  String get joinWithCodeHint =>
+      'குடும்பத்தில் ஒருவர் ஏற்கனவே அவருக்காக Gurtu-வை அமைத்துள்ளார்.';
+
+  @override
+  String get yourCare => 'உங்கள் கவனிப்பு';
+
+  @override
+  String get lookingAfterYou => 'உங்களைக் கவனிப்பவர்கள்';
+
+  @override
+  String lookingAfterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count பேர் உங்களைக் கவனிக்கிறார்கள்',
+      one: '1 நபர் உங்களைக் கவனிக்கிறார்',
+      zero: 'இன்னும் யாரும் இல்லை',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inviteFamily => 'உங்கள் குடும்பத்தை அழையுங்கள்';
+
+  @override
+  String get inviteFamilyHint =>
+      'உங்கள் குடும்பக் குறியீட்டைப் பகிருங்கள். அவர்கள் உங்கள் கவனிப்பைப் பார்த்து நினைவூட்டல்களைப் பெறுவார்கள்.';
+
+  @override
+  String get askForHelp => 'குடும்பத்திடம் உதவி கேளுங்கள்';
+
+  @override
+  String get askForHelpTitle => 'உங்கள் குடும்பத்துக்குச் செய்தி அனுப்பவா?';
+
+  @override
+  String get askForHelpBody =>
+      'உங்கள் கவனிப்பு வட்டத்தில் உள்ள அனைவருக்கும் உங்களை அழைக்க அல்லது பார்க்க அறிவிப்பு வரும்.';
+
+  @override
+  String get send => 'அனுப்பு';
+
+  @override
+  String helpSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count பேருக்கு அனுப்பப்பட்டது',
+      one: '1 நபருக்கு அனுப்பப்பட்டது',
+      zero: 'இன்னும் யாரையும் அடையவில்லை',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get circleSubtitleSelf => 'உங்களைக் கவனிப்பவர்கள்.';
+
+  @override
+  String get iAmPatient => 'கவனிக்கப்படுபவர் நான்தான்';
+
+  @override
+  String get patientTaken =>
+      'கவனிக்கப்படுபவராக ஏற்கனவே ஒருவர் சேர்ந்துள்ளார். வேறு பங்கைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get medRemindersTitle => 'மருந்து நினைவூட்டல்கள்';
+
+  @override
+  String medRemindersIntro(String name) {
+    return 'Gurtu $name-க்காக மருத்துவர் சொன்னதைப் படித்தது. ஒவ்வொரு நேரத்தையும் சரிபார்த்து நினைவூட்டல்களை இயக்குங்கள்.';
+  }
+
+  @override
+  String get readingMedicines => 'மருந்துகளைப் படிக்கிறோம்…';
+
+  @override
+  String get readByAi => 'Gurtu AI படித்தது';
+
+  @override
+  String get readByRules => 'உங்கள் குறிப்புகளிலிருந்து படித்தது';
+
+  @override
+  String get pickTimes => 'எப்போது எடுக்க வேண்டும் எனத் தேர்ந்தெடுங்கள்';
+
+  @override
+  String get everyDay => 'தினமும்';
+
+  @override
+  String forDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count நாட்கள்',
+      one: '1 நாள்',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get howLong => 'எத்தனை நாள்';
+
+  @override
+  String get turnOnReminders => 'நினைவூட்டல்களை இயக்கு';
+
+  @override
+  String remindersSaved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count நினைவூட்டல்கள் இயக்கத்தில்',
+      one: '1 நினைவூட்டல் இயக்கத்தில்',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String remindersGoToPatient(String name) {
+    return 'நினைவூட்டல்கள் $name-இன் போனுக்குச் செல்லும். எடுத்ததாகக் குறிக்காவிட்டால், Gurtu இருமுறை மீண்டும் நினைவூட்டி, பின் குடும்பத்துக்குத் தெரிவிக்கும்.';
+  }
+
+  @override
+  String remindersGoToFamily(String name) {
+    return '$name Gurtu பயன்படுத்துவதில்லை, எனவே நினைவூட்டல்கள் குடும்பத்தினரின் போன்களுக்குச் செல்லும். எடுத்ததாகக் குறிக்காவிட்டால், Gurtu இருமுறை மீண்டும் நினைவூட்டி, பின் அனைவருக்கும் தெரிவிக்கும்.';
+  }
+
+  @override
+  String get remindersPending =>
+      'இந்த போனில் சேமிக்கப்பட்டது. இணையம் கிடைத்ததும் நினைவூட்டல்கள் இயங்கும்.';
+
+  @override
+  String get setUpReminders => 'நினைவூட்டல்களை அமை';
+
+  @override
+  String get changeReminders => 'நினைவூட்டல்களை மாற்று';
+
+  @override
+  String get takenIt => 'எடுத்துக்கொண்டேன்';
+
+  @override
+  String get skipDose => 'இந்த முறை தவிர்';
+
+  @override
+  String dueAt(String time) {
+    return '$time-க்கு எடுக்க வேண்டும்';
+  }
+
+  @override
+  String get readAloud => 'படித்துக் காட்டு';
+
+  @override
+  String get missedDoseEyebrow => 'தவறிய டோஸ்';
+
+  @override
+  String get markTakenForThem => 'எடுத்ததாகக் குறி';
+
+  @override
+  String get illCheck => 'நான் பார்த்துக்கொள்கிறேன்';
+
+  @override
+  String get doseTakenThanks => 'எடுத்ததாகக் குறிக்கப்பட்டது. நன்று!';
+
+  @override
+  String get noReminderForThis => 'நினைவூட்டல் இல்லை';
+
+  @override
+  String get reminderEyebrow => 'மருந்து நினைவூட்டல்';
 }

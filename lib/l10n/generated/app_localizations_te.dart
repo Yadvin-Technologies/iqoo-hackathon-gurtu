@@ -1895,4 +1895,410 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get viewPhoto => 'ఫోటో చూడండి';
+
+  @override
+  String get doctorSpeaks => 'డాక్టర్ మాట్లాడే భాష';
+
+  @override
+  String listeningIn(String language) {
+    return 'వింటున్నాం · $language';
+  }
+
+  @override
+  String get liveCaptionHint => 'వింటున్నాం… డాక్టర్ మాటలు ఇక్కడ కనిపిస్తాయి.';
+
+  @override
+  String get transcriptHelp =>
+      'ప్రతి వాక్యం వినగానే ఇక్కడ చేరుతుంది. ఏ పదాన్నైనా మీరు సరిచేయవచ్చు.';
+
+  @override
+  String voiceLanguageMissing(String language) {
+    return 'ఈ ఫోన్‌లో $language వాయిస్ టైపింగ్ సెటప్ కాలేదు. వేరే భాషను ఎంచుకోండి, లేదా ఫోన్ వాయిస్ టైపింగ్ సెట్టింగ్స్‌లో దీన్ని జోడించండి.';
+  }
+
+  @override
+  String get voiceNeedsInternet =>
+      'వాయిస్ టైపింగ్‌కు ఇంటర్నెట్ కావాలి. మీరు టైప్ కూడా చేయవచ్చు.';
+
+  @override
+  String get voiceWaitingInternet =>
+      'ఇంటర్నెట్ లేదు. ప్రయత్నిస్తూనే ఉన్నాం — ఇప్పటివరకు విన్నది పోదు.';
+
+  @override
+  String medicineNumber(int number) {
+    return 'మందు $number';
+  }
+
+  @override
+  String get addAnotherMedicine => 'మరో మందు జోడించండి';
+
+  @override
+  String get medicinesVisitHint =>
+      'డాక్టర్ ఇచ్చిన ప్రతి మందును జోడించండి. స్ట్రిప్ లేదా ప్రిస్క్రిప్షన్ ఫోటో తీయండి, దాని గురించి డాక్టర్ చెప్పింది రికార్డ్ చేయండి, లేదా టైప్ చేయండి.';
+
+  @override
+  String get removeMedicineBody =>
+      'దీని ఫోటోలు, వాయిస్ నోట్స్ కూడా ఈ ఫోన్ నుంచి తొలగిపోతాయి.';
+
+  @override
+  String get questionRemoved => 'ప్రశ్న తీసేశాం';
+
+  @override
+  String get recordDoctor => 'డాక్టర్ గొంతు రికార్డ్ చేయండి';
+
+  @override
+  String get doctorRecordings => 'రికార్డింగ్‌లు';
+
+  @override
+  String recordingNumber(int number) {
+    return 'రికార్డింగ్ $number';
+  }
+
+  @override
+  String get recordOrListenHint =>
+      'వినండి నొక్కితే డాక్టర్ మాటలు అక్షరాలుగా వస్తాయి. రికార్డ్ నొక్కితే వారి గొంతు తర్వాత వినడానికి ఉంటుంది. ఫోన్ మైక్ ఒకసారి ఒక పనే చేస్తుంది.';
+
+  @override
+  String get tomorrow => 'రేపు';
+
+  @override
+  String inDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count రోజుల్లో',
+      one: '1 రోజులో',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String withDoctor(String doctor) {
+    return '$doctor తో';
+  }
+
+  @override
+  String recordingsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count రికార్డింగ్‌లు',
+      one: '1 రికార్డింగ్',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String photosCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ఫోటోలు',
+      one: '1 ఫోటో',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noNextVisitHint =>
+      'డాక్టర్ మళ్లీ రావాల్సిన తేదీ చెబితే, సందర్శనను రికార్డ్ చేసేటప్పుడు దాన్ని జోడించండి. అది ఇక్కడ కనిపిస్తుంది.';
+
+  @override
+  String circleSubtitle(String name) {
+    return '$name ని చూసుకునే అందరూ, కలిసి.';
+  }
+
+  @override
+  String get familyCode => 'కుటుంబ కోడ్';
+
+  @override
+  String familyCodeHint(String name) {
+    return 'ఈ కోడ్‌ను పంపండి. కుటుంబ సభ్యులు, సహాయకులు దీన్ని Gurtuలో టైప్ చేసి $name వలయంలో చేరవచ్చు.';
+  }
+
+  @override
+  String get copyCode => 'కోడ్ కాపీ చేయండి';
+
+  @override
+  String get codeCopied => 'కోడ్ కాపీ అయింది';
+
+  @override
+  String get newCode => 'కొత్త కోడ్ చేయండి';
+
+  @override
+  String get newCodeTitle => 'కొత్త కోడ్ చేయాలా?';
+
+  @override
+  String get newCodeBody =>
+      'పాత కోడ్ పనిచేయదు. ఇప్పటికే వలయంలో ఉన్నవారు అలాగే ఉంటారు.';
+
+  @override
+  String get circleMembers => 'వలయంలోని వారు';
+
+  @override
+  String get circleOwner => 'వలయాన్ని ప్రారంభించారు';
+
+  @override
+  String get getsReminders => 'రిమైండర్లు వస్తాయి';
+
+  @override
+  String get noNotifications => 'నోటిఫికేషన్లు ఆఫ్';
+
+  @override
+  String get notOnApp => 'యాప్‌లో లేరు';
+
+  @override
+  String get sendTestNotification => 'టెస్ట్ నోటిఫికేషన్ పంపండి';
+
+  @override
+  String testSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ఫోన్లకు పంపాం',
+      one: '1 ఫోన్‌కు పంపాం',
+      zero: 'ఇంకా ఏ ఫోన్‌కూ చేరలేదు',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get testTitle => 'Gurtu నుంచి టెస్ట్';
+
+  @override
+  String testBody(String name) {
+    return '$name సంరక్షణ వలయానికి నోటిఫికేషన్లు పనిచేస్తున్నాయి.';
+  }
+
+  @override
+  String get settingUpCode => 'మీ కుటుంబ కోడ్ సిద్ధమవుతోంది…';
+
+  @override
+  String get offlineTitle => 'Gurtu సర్వర్‌ను చేరలేకపోయాం';
+
+  @override
+  String get offlineBody =>
+      'అన్నీ ఈ ఫోన్‌లో భద్రంగా ఉన్నాయి. ఇంటర్నెట్ రాగానే కుటుంబ కోడ్ కనిపిస్తుంది.';
+
+  @override
+  String get tryAgain => 'మళ్లీ ప్రయత్నించండి';
+
+  @override
+  String get haveFamilyCode => 'నా దగ్గర కుటుంబ కోడ్ ఉంది';
+
+  @override
+  String get joinTitle => 'సంరక్షణ వలయంలో చేరండి';
+
+  @override
+  String get joinSubtitle => 'మీ కుటుంబంలో ఎవరో పంపిన 6 అంకెల కోడ్‌ను ఇవ్వండి.';
+
+  @override
+  String get howHelping => 'మీరు ఎలా సహాయం చేస్తున్నారు?';
+
+  @override
+  String get joinButton => 'వలయంలో చేరండి';
+
+  @override
+  String get invalidCode =>
+      'ఈ కోడ్ ఏ కుటుంబానికీ సరిపోలలేదు. అంకెలు చూసి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String get tooManyTries =>
+      'చాలాసార్లు ప్రయత్నించారు. కొన్ని నిమిషాలు ఆగి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String get connectionFailed =>
+      'కనెక్ట్ కాలేదు. ఇంటర్నెట్ చూసి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String get somethingWrong =>
+      'ఏదో తప్పు జరిగింది. దయచేసి మళ్లీ ప్రయత్నించండి.';
+
+  @override
+  String joinedCircle(String name) {
+    return 'మీరు $name సంరక్షణ వలయంలో చేరారు';
+  }
+
+  @override
+  String get peopleYouCareFor => 'మీరు చూసుకునే వారు';
+
+  @override
+  String get addPersonTitle => 'చూసుకోవడానికి ఒకరిని జోడించండి';
+
+  @override
+  String get setUpNew => 'కొత్త వ్యక్తి కోసం సెటప్ చేయండి';
+
+  @override
+  String get setUpNewHint =>
+      'వారి గురించి కొన్ని ప్రశ్నలకు జవాబివ్వండి. వారికి సొంత కుటుంబ కోడ్ వస్తుంది.';
+
+  @override
+  String get joinWithCode => 'కుటుంబ కోడ్‌తో చేరండి';
+
+  @override
+  String get joinWithCodeHint =>
+      'కుటుంబంలో ఎవరో ఇప్పటికే వారి కోసం Gurtu సెటప్ చేశారు.';
+
+  @override
+  String get yourCare => 'మీ సంరక్షణ';
+
+  @override
+  String get lookingAfterYou => 'మిమ్మల్ని చూసుకునే వారు';
+
+  @override
+  String lookingAfterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count మంది మిమ్మల్ని చూసుకుంటున్నారు',
+      one: '1 వ్యక్తి మిమ్మల్ని చూసుకుంటున్నారు',
+      zero: 'ఇంకా ఎవరూ లేరు',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inviteFamily => 'మీ కుటుంబాన్ని ఆహ్వానించండి';
+
+  @override
+  String get inviteFamilyHint =>
+      'మీ కుటుంబ కోడ్‌ను పంపండి. వారు మీ సంరక్షణను చూడగలరు, మీ రిమైండర్లు పొందగలరు.';
+
+  @override
+  String get askForHelp => 'కుటుంబాన్ని సహాయం అడగండి';
+
+  @override
+  String get askForHelpTitle => 'మీ కుటుంబానికి సందేశం పంపాలా?';
+
+  @override
+  String get askForHelpBody =>
+      'మీ సంరక్షణ వలయంలోని అందరికీ మీకు ఫోన్ చేయమని లేదా చూసి రమ్మని నోటిఫికేషన్ వస్తుంది.';
+
+  @override
+  String get send => 'పంపండి';
+
+  @override
+  String helpSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count మందికి పంపాం',
+      one: '1 వ్యక్తికి పంపాం',
+      zero: 'ఇంకా ఎవరికీ చేరలేదు',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get circleSubtitleSelf => 'మిమ్మల్ని చూసుకునే వారు.';
+
+  @override
+  String get iAmPatient => 'సంరక్షణ పొందేది నేనే';
+
+  @override
+  String get patientTaken =>
+      'సంరక్షణ పొందే వ్యక్తిగా ఇప్పటికే ఒకరు చేరారు. వేరే పాత్రను ఎంచుకోండి.';
+
+  @override
+  String get medRemindersTitle => 'మందుల రిమైండర్లు';
+
+  @override
+  String medRemindersIntro(String name) {
+    return 'Gurtu $name కోసం డాక్టర్ మాటలను చదివింది. ప్రతి సమయం చూసి, రిమైండర్లు ఆన్ చేయండి.';
+  }
+
+  @override
+  String get readingMedicines => 'మందులను చదువుతున్నాం…';
+
+  @override
+  String get readByAi => 'Gurtu AI చదివింది';
+
+  @override
+  String get readByRules => 'మీ నోట్స్ నుంచి చదివాం';
+
+  @override
+  String get pickTimes => 'ఎప్పుడు వేసుకోవాలో ఎంచుకోండి';
+
+  @override
+  String get everyDay => 'ప్రతి రోజు';
+
+  @override
+  String forDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count రోజులు',
+      one: '1 రోజు',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get howLong => 'ఎన్ని రోజులు';
+
+  @override
+  String get turnOnReminders => 'రిమైండర్లు ఆన్ చేయండి';
+
+  @override
+  String remindersSaved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count రిమైండర్లు ఆన్‌లో ఉన్నాయి',
+      one: '1 రిమైండర్ ఆన్‌లో ఉంది',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String remindersGoToPatient(String name) {
+    return 'రిమైండర్లు $name ఫోన్‌కు వెళ్తాయి. వేసుకున్నట్లు గుర్తించకపోతే, Gurtu మరో రెండుసార్లు గుర్తు చేసి, తర్వాత కుటుంబానికి తెలియజేస్తుంది.';
+  }
+
+  @override
+  String remindersGoToFamily(String name) {
+    return '$name Gurtu వాడరు, కాబట్టి రిమైండర్లు కుటుంబ ఫోన్లకు వెళ్తాయి. వేసుకున్నట్లు గుర్తించకపోతే, Gurtu మరో రెండుసార్లు గుర్తు చేసి, తర్వాత అందరికీ తెలియజేస్తుంది.';
+  }
+
+  @override
+  String get remindersPending =>
+      'ఈ ఫోన్‌లో భద్రపరిచాం. ఇంటర్నెట్ రాగానే రిమైండర్లు ఆన్ అవుతాయి.';
+
+  @override
+  String get setUpReminders => 'రిమైండర్లు సెట్ చేయండి';
+
+  @override
+  String get changeReminders => 'రిమైండర్లు మార్చండి';
+
+  @override
+  String get takenIt => 'నేను వేసుకున్నాను';
+
+  @override
+  String get skipDose => 'ఈసారి వదిలేయండి';
+
+  @override
+  String dueAt(String time) {
+    return '$timeకి వేసుకోవాలి';
+  }
+
+  @override
+  String get readAloud => 'చదివి వినిపించండి';
+
+  @override
+  String get missedDoseEyebrow => 'తప్పిన మోతాదు';
+
+  @override
+  String get markTakenForThem => 'వేసుకున్నట్లు గుర్తించండి';
+
+  @override
+  String get illCheck => 'నేను చూసుకుంటాను';
+
+  @override
+  String get doseTakenThanks => 'వేసుకున్నట్లు గుర్తించాం. చాలా బాగుంది!';
+
+  @override
+  String get noReminderForThis => 'రిమైండర్ లేదు';
+
+  @override
+  String get reminderEyebrow => 'మందుల రిమైండర్';
 }

@@ -55,22 +55,28 @@ class _FakeStore implements AttachmentStore {
   }
 }
 
-VisitAttachment _photo(String file, VisitSection section) => VisitAttachment(
-  id: 'id_$file',
-  kind: AttachmentKind.photo,
-  section: section,
-  file: file,
-  createdAt: DateTime(2026, 9, 27),
-);
+VisitAttachment _photo(String file, VisitSection section, {String? itemId}) =>
+    VisitAttachment(
+      id: 'id_$file',
+      kind: AttachmentKind.photo,
+      section: section,
+      file: file,
+      createdAt: DateTime(2026, 9, 27),
+      itemId: itemId,
+    );
 
-VisitAttachment _voice(String file, VisitSection section) => VisitAttachment(
-  id: 'id_$file',
-  kind: AttachmentKind.audio,
-  section: section,
-  file: file,
-  createdAt: DateTime(2026, 9, 27),
-  duration: const Duration(seconds: 42),
-);
+VisitAttachment _voice(String file, VisitSection section, {String? itemId}) =>
+    VisitAttachment(
+      id: 'id_$file',
+      kind: AttachmentKind.audio,
+      section: section,
+      file: file,
+      createdAt: DateTime(2026, 9, 27),
+      duration: const Duration(seconds: 42),
+      itemId: itemId,
+    );
+
+const _tablet = VisitMedicine(id: 'm1', note: 'Tablet after food');
 
 void main() {
   late _FakeStore store;
@@ -149,17 +155,20 @@ void main() {
     final visit = repo.addVisit(
       date: DateTime(2026, 9, 27),
       doctorName: 'Dr. Rao',
-      medicines: 'Tablet after food',
+      medicines: [_tablet],
       attachments: [
-        _photo('rx.jpg', VisitSection.medicines),
-        _voice('note.m4a', VisitSection.medicines),
+        _photo('rx.jpg', VisitSection.medicines, itemId: 'm1'),
+        _voice('note.m4a', VisitSection.medicines, itemId: 'm1'),
       ],
     )!;
     await openPage(tester, VisitDetailPage(visitId: visit.id));
 
-    // Every section can take more, even ones with nothing written.
-    expect(find.text('Add photo'), findsNWidgets(3));
-    expect(find.text('Record voice note'), findsNWidgets(3));
+    // The medicine and the next visit can take more; tests are no longer
+    // asked for.
+    expect(find.text('Add photo'), findsNWidgets(2));
+    expect(find.text('Record voice note'), findsNWidgets(2));
+    expect(find.text('Tests to do'), findsNothing);
+    expect(find.text('Medicine 1'), findsOneWidget);
     expect(find.text('Tablet after food'), findsOneWidget);
     expect(
       find.byWidgetPredicate(
@@ -180,6 +189,42 @@ void main() {
     expect(visit.attachments.single.file, 'rx.jpg');
   });
 
+  testWidgets('recordings of the doctor play and can be deleted', (
+    tester,
+  ) async {
+    await openHome(tester);
+    final repo = CareScope.of(tester.element(find.byType(Scaffold).first));
+    store.files.addAll(['talk1.m4a', 'talk2.m4a']);
+    final visit = repo.addVisit(
+      date: DateTime(2026, 9, 27),
+      notes: 'Reduce salt',
+      attachments: [
+        _voice('talk1.m4a', VisitSection.doctor),
+        _voice('talk2.m4a', VisitSection.doctor),
+      ],
+    )!;
+
+    // Survives a restart.
+    final prefs = await SharedPreferences.getInstance();
+    expect(
+      CareRepository(prefs).visits.single.attachmentsFor(VisitSection.doctor),
+      hasLength(2),
+    );
+
+    await openPage(tester, VisitDetailPage(visitId: visit.id));
+    expect(find.text('Reduce salt'), findsOneWidget);
+    expect(find.textContaining('Recording 1'), findsOneWidget);
+    expect(find.textContaining('Recording 2'), findsOneWidget);
+    expect(find.byTooltip('Play'), findsNWidgets(2));
+
+    await tester.tap(find.byTooltip('Remove').first);
+    await tester.pumpAndSettle();
+    await tapText(tester, 'Remove');
+    expect(find.textContaining('Recording 2'), findsNothing);
+    expect(store.deleted, ['talk1.m4a']);
+    expect(visit.attachments.single.file, 'talk2.m4a');
+  });
+
   // Small 360dp phone, every language: overflow anywhere fails the test.
   for (final lang in AppLanguage.values) {
     testWidgets('attachments fit in ${lang.englishName}', (tester) async {
@@ -187,10 +232,16 @@ void main() {
       final repo = CareScope.of(tester.element(find.byType(Scaffold).first));
       final visit = repo.addVisit(
         date: DateTime(2026, 9, 27),
+        medicines: [
+          _tablet,
+          const VisitMedicine(id: 'm2', note: 'Metformin 500 mg'),
+        ],
         attachments: [
-          _photo('rx.jpg', VisitSection.medicines),
-          _voice('note.m4a', VisitSection.medicines),
+          _photo('rx.jpg', VisitSection.medicines, itemId: 'm1'),
+          _voice('note.m4a', VisitSection.medicines, itemId: 'm1'),
+          _voice('strip.m4a', VisitSection.medicines, itemId: 'm2'),
           _voice('card.m4a', VisitSection.nextVisit),
+          _voice('talk.m4a', VisitSection.doctor),
         ],
       )!;
       await openPage(tester, VisitDetailPage(visitId: visit.id));

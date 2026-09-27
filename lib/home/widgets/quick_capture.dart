@@ -5,11 +5,13 @@ import '../../data/care_models.dart';
 import '../../data/care_repository.dart';
 import '../../l10n/language.dart';
 import '../../theme/gurtu_theme.dart';
+import '../../medicines/prescription_import_page.dart';
+import '../../widgets/gurtu_page.dart';
 import '../../widgets/gurtu_widgets.dart';
 import '../care_text.dart';
 
-/// The main daily action. The five capture types live inside the sheet rather
-/// than as dashboard tiles, keeping Home short.
+/// The main daily action. What can be captured (a prescription scan, a note)
+/// lives inside the sheet rather than as dashboard tiles, keeping Home short.
 class CaptureCareButton extends StatelessWidget {
   const CaptureCareButton({super.key});
 
@@ -104,10 +106,7 @@ class _CaptureSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final options = [
-      (MomentType.voice, l.captureVoiceHint, false),
-      (MomentType.scan, l.captureScanHint, false),
-      (MomentType.vital, l.captureVitalHint, false),
-      (MomentType.document, l.captureDocumentHint, false),
+      (MomentType.scan, l.captureScanHint, true),
       (MomentType.note, l.captureNoteHint, true),
     ];
     return SafeArea(
@@ -128,9 +127,13 @@ class _CaptureSheet extends StatelessWidget {
                 ready: ready,
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: voice / scan / vital / document capture arrive with
-                  // the capture phase; only notes are wired up now.
-                  if (type == MomentType.note) showNoteSheet(host);
+                  if (type == MomentType.note) {
+                    showNoteSheet(host);
+                  } else {
+                    // Reads the medicines off a prescription photo, on the
+                    // phone, and adds the ones ticked to the list.
+                    pushPage(host, const PrescriptionImportPage());
+                  }
                 },
               ),
               const SizedBox(height: 10),

@@ -33,13 +33,22 @@ Future<void> check(WidgetTester tester, String typed) async {
 void main() {
   tearDown(() => MedicineScanner.instance = DeviceMedicineScanner());
 
-  testWidgets('Home has Scan & verify with the medicine list under it', (
-    tester,
-  ) async {
+  testWidgets('Home counts the medicines and opens the list', (tester) async {
     await openHome(tester, sample: true);
-    await tester.scrollUntilVisible(find.text('Scan & verify medicine'), 200);
-    expect(find.text('Is this the right tablet, right now?'), findsOneWidget);
-    expect(find.text('Medicine list · 3 medicines'), findsOneWidget);
+    expect(find.text('Scan & verify medicine'), findsNothing);
+    expect(find.bySemanticsLabel('Medicines: 3'), findsOneWidget);
+    // Metformin twice a day, two others once: nothing taken yet.
+    expect(find.bySemanticsLabel('Taken today: 0/4'), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel('Medicines: 3'));
+    await tester.pumpAndSettle();
+    expect(find.text('Medicine list'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('Metformin'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    // Scan & verify is still one tap away, from the list.
+    expect(find.text('Scan & verify medicine'), findsOneWidget);
   });
 
   testWidgets('a scanned strip is verified, marked taken, then blocked', (

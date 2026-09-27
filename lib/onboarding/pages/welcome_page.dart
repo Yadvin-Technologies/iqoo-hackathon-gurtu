@@ -2,10 +2,13 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../cloud/cloud_models.dart';
 import '../../l10n/language.dart';
 import '../../theme/gurtu_theme.dart';
 import '../../widgets/gurtu_widgets.dart';
+import '../../widgets/gurtu_page.dart';
 import '../onboarding_flow.dart';
+import 'join_circle_page.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -45,7 +48,30 @@ class WelcomePage extends StatelessWidget {
               icon: Icons.arrow_forward_rounded,
               onPressed: OnboardingFlow.of(context).next,
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 6),
+            // Someone in the family already set Gurtu up: join them.
+            TextButton.icon(
+              onPressed: () async {
+                final flow = OnboardingFlow.of(context);
+                final joined = await pushPage<(CircleInfo, String)>(
+                  context,
+                  const JoinCirclePage(),
+                );
+                if (joined != null) flow.joined(joined.$1, joined.$2);
+              },
+              icon: const Icon(Icons.group_add_rounded, size: 20),
+              label: Text(l.haveFamilyCode),
+              style: TextButton.styleFrom(
+                foregroundColor: GurtuColors.primary,
+                minimumSize: const Size(48, 48),
+                textStyle: const TextStyle(
+                  fontFamily: GurtuFonts.sans,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
             const _BuiltForIqoo(),
             const SizedBox(height: 12),
           ],

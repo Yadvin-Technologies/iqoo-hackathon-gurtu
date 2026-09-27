@@ -1,0 +1,23 @@
+{
+  "name": "gurtu-backend",
+  "version": "1.0.0",
+  "description": "Gurtu API: devices and their FCM tokens, family care circles joined by a 6-digit code, and scheduled reminder pushes.",
+  "main": "src/index.js",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test --test-concurrency=1 \"test/**/*.test.js\""
+  },
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "firebase-admin": "^14.5.0",
+    "mongodb": "^7.6.0",
+    "node-cron": "^4.6.0"
+  }
+}

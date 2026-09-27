@@ -1892,4 +1892,410 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewPhoto => 'View photo';
+
+  @override
+  String get doctorSpeaks => 'Doctor speaks in';
+
+  @override
+  String listeningIn(String language) {
+    return 'Listening · $language';
+  }
+
+  @override
+  String get liveCaptionHint => 'Listening… the doctor\'s words appear here.';
+
+  @override
+  String get transcriptHelp =>
+      'Each sentence is added here as it is heard. You can correct any word.';
+
+  @override
+  String voiceLanguageMissing(String language) {
+    return 'Voice typing in $language isn\'t set up on this phone. Choose another language, or add it in the phone\'s voice typing settings.';
+  }
+
+  @override
+  String get voiceNeedsInternet =>
+      'Voice typing needs the internet. You can type instead.';
+
+  @override
+  String get voiceWaitingInternet =>
+      'No internet. Still trying — nothing heard so far is lost.';
+
+  @override
+  String medicineNumber(int number) {
+    return 'Medicine $number';
+  }
+
+  @override
+  String get addAnotherMedicine => 'Add another medicine';
+
+  @override
+  String get medicinesVisitHint =>
+      'Add each medicine the doctor gives. Take a photo of the strip or prescription, record what the doctor said about it, or type it.';
+
+  @override
+  String get removeMedicineBody =>
+      'Its photos and voice notes will be deleted from this phone too.';
+
+  @override
+  String get questionRemoved => 'Question removed';
+
+  @override
+  String get recordDoctor => 'Record the doctor\'s voice';
+
+  @override
+  String get doctorRecordings => 'Recordings';
+
+  @override
+  String recordingNumber(int number) {
+    return 'Recording $number';
+  }
+
+  @override
+  String get recordOrListenHint =>
+      'Listen writes the doctor\'s words as text. Record keeps their voice to play later. The phone\'s microphone does one at a time.';
+
+  @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
+  String inDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'In $count days',
+      one: 'In 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String withDoctor(String doctor) {
+    return 'With $doctor';
+  }
+
+  @override
+  String recordingsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count recordings',
+      one: '1 recording',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String photosCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count photos',
+      one: '1 photo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noNextVisitHint =>
+      'When the doctor gives a date to come back, add it while recording the visit. It will show here.';
+
+  @override
+  String circleSubtitle(String name) {
+    return 'Everyone caring for $name, together.';
+  }
+
+  @override
+  String get familyCode => 'Family code';
+
+  @override
+  String familyCodeHint(String name) {
+    return 'Share this code. Family and helpers type it into Gurtu to join $name\'s circle.';
+  }
+
+  @override
+  String get copyCode => 'Copy code';
+
+  @override
+  String get codeCopied => 'Code copied';
+
+  @override
+  String get newCode => 'Make a new code';
+
+  @override
+  String get newCodeTitle => 'Make a new code?';
+
+  @override
+  String get newCodeBody =>
+      'The old code will stop working. People already in the circle stay in.';
+
+  @override
+  String get circleMembers => 'People in the circle';
+
+  @override
+  String get circleOwner => 'Started the circle';
+
+  @override
+  String get getsReminders => 'Gets reminders';
+
+  @override
+  String get noNotifications => 'Notifications off';
+
+  @override
+  String get notOnApp => 'Not on the app';
+
+  @override
+  String get sendTestNotification => 'Send a test notification';
+
+  @override
+  String testSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sent to $count phones',
+      one: 'Sent to 1 phone',
+      zero: 'No phones could be reached yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get testTitle => 'Test from Gurtu';
+
+  @override
+  String testBody(String name) {
+    return 'Notifications are working for $name\'s care circle.';
+  }
+
+  @override
+  String get settingUpCode => 'Setting up your family code…';
+
+  @override
+  String get offlineTitle => 'Couldn\'t reach the Gurtu server';
+
+  @override
+  String get offlineBody =>
+      'Everything is saved on this phone. The family code will appear once you\'re online.';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get haveFamilyCode => 'I have a family code';
+
+  @override
+  String get joinTitle => 'Join a care circle';
+
+  @override
+  String get joinSubtitle =>
+      'Enter the 6-digit code someone in your family shared with you.';
+
+  @override
+  String get howHelping => 'How are you helping?';
+
+  @override
+  String get joinButton => 'Join the circle';
+
+  @override
+  String get invalidCode =>
+      'That code doesn\'t match any family. Check the digits and try again.';
+
+  @override
+  String get tooManyTries =>
+      'Too many tries. Please wait a few minutes and try again.';
+
+  @override
+  String get connectionFailed =>
+      'Couldn\'t connect. Check the internet and try again.';
+
+  @override
+  String get somethingWrong => 'Something went wrong. Please try again.';
+
+  @override
+  String joinedCircle(String name) {
+    return 'You joined $name\'s care circle';
+  }
+
+  @override
+  String get peopleYouCareFor => 'People you care for';
+
+  @override
+  String get addPersonTitle => 'Add someone to care for';
+
+  @override
+  String get setUpNew => 'Set up for someone new';
+
+  @override
+  String get setUpNewHint =>
+      'Answer a few questions about them. They get their own family code.';
+
+  @override
+  String get joinWithCode => 'Join with a family code';
+
+  @override
+  String get joinWithCodeHint =>
+      'Someone in the family already set Gurtu up for them.';
+
+  @override
+  String get yourCare => 'Your care';
+
+  @override
+  String get lookingAfterYou => 'Looking after you';
+
+  @override
+  String lookingAfterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people look after you',
+      one: '1 person looks after you',
+      zero: 'No one yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inviteFamily => 'Invite your family';
+
+  @override
+  String get inviteFamilyHint =>
+      'Share your family code. They\'ll see your care and get your reminders.';
+
+  @override
+  String get askForHelp => 'Ask family for help';
+
+  @override
+  String get askForHelpTitle => 'Send a message to your family?';
+
+  @override
+  String get askForHelpBody =>
+      'Everyone in your care circle gets a notification to call or check on you.';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String helpSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sent to $count people',
+      one: 'Sent to 1 person',
+      zero: 'No one could be reached yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get circleSubtitleSelf => 'The people who look after you.';
+
+  @override
+  String get iAmPatient => 'I\'m the one being cared for';
+
+  @override
+  String get patientTaken =>
+      'Someone has already joined as the person being cared for. Choose another role.';
+
+  @override
+  String get medRemindersTitle => 'Medicine reminders';
+
+  @override
+  String medRemindersIntro(String name) {
+    return 'Gurtu read the doctor\'s notes for $name. Check each time, then turn the reminders on.';
+  }
+
+  @override
+  String get readingMedicines => 'Reading the medicines…';
+
+  @override
+  String get readByAi => 'Read by Gurtu AI';
+
+  @override
+  String get readByRules => 'Read from your notes';
+
+  @override
+  String get pickTimes => 'Choose when to take it';
+
+  @override
+  String get everyDay => 'Every day';
+
+  @override
+  String forDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'For $count days',
+      one: 'For 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get howLong => 'How long';
+
+  @override
+  String get turnOnReminders => 'Turn on reminders';
+
+  @override
+  String remindersSaved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reminders are on',
+      one: '1 reminder is on',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String remindersGoToPatient(String name) {
+    return 'Reminders go to $name\'s phone. If one isn\'t marked as taken, Gurtu reminds again twice, then alerts the family.';
+  }
+
+  @override
+  String remindersGoToFamily(String name) {
+    return '$name doesn\'t use Gurtu, so reminders go to the family\'s phones. If one isn\'t marked as taken, Gurtu reminds again twice, then alerts everyone.';
+  }
+
+  @override
+  String get remindersPending =>
+      'Saved on this phone. Reminders switch on as soon as it\'s online.';
+
+  @override
+  String get setUpReminders => 'Set up reminders';
+
+  @override
+  String get changeReminders => 'Change reminders';
+
+  @override
+  String get takenIt => 'I\'ve taken it';
+
+  @override
+  String get skipDose => 'Skip this time';
+
+  @override
+  String dueAt(String time) {
+    return 'Due at $time';
+  }
+
+  @override
+  String get readAloud => 'Read aloud';
+
+  @override
+  String get missedDoseEyebrow => 'MISSED DOSE';
+
+  @override
+  String get markTakenForThem => 'Mark as taken';
+
+  @override
+  String get illCheck => 'I\'ll check on them';
+
+  @override
+  String get doseTakenThanks => 'Marked as taken. Well done!';
+
+  @override
+  String get noReminderForThis => 'No reminder';
+
+  @override
+  String get reminderEyebrow => 'MEDICINE REMINDER';
 }

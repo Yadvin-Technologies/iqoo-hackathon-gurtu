@@ -980,5 +980,250 @@
   "attachHintNextVisit": "Add a photo of the appointment card, or record what the doctor said about the next visit.",
   "play": "Play",
   "pause": "Pause",
-  "viewPhoto": "View photo"
+  "viewPhoto": "View photo",
+  "doctorSpeaks": "Doctor speaks in",
+  "listeningIn": "Listening · {language}",
+  "@listeningIn": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "liveCaptionHint": "Listening… the doctor's words appear here.",
+  "transcriptHelp": "Each sentence is added here as it is heard. You can correct any word.",
+  "voiceLanguageMissing": "Voice typing in {language} isn't set up on this phone. Choose another language, or add it in the phone's voice typing settings.",
+  "@voiceLanguageMissing": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "voiceNeedsInternet": "Voice typing needs the internet. You can type instead.",
+  "voiceWaitingInternet": "No internet. Still trying — nothing heard so far is lost.",
+  "medicineNumber": "Medicine {number}",
+  "@medicineNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "addAnotherMedicine": "Add another medicine",
+  "medicinesVisitHint": "Add each medicine the doctor gives. Take a photo of the strip or prescription, record what the doctor said about it, or type it.",
+  "removeMedicineBody": "Its photos and voice notes will be deleted from this phone too.",
+  "questionRemoved": "Question removed",
+  "recordDoctor": "Record the doctor's voice",
+  "doctorRecordings": "Recordings",
+  "recordingNumber": "Recording {number}",
+  "@recordingNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "recordOrListenHint": "Listen writes the doctor's words as text. Record keeps their voice to play later. The phone's microphone does one at a time.",
+  "tomorrow": "Tomorrow",
+  "inDays": "{count, plural, =1{In 1 day} other{In {count} days}}",
+  "@inDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "withDoctor": "With {doctor}",
+  "@withDoctor": {
+    "placeholders": {
+      "doctor": {
+        "type": "String"
+      }
+    }
+  },
+  "recordingsCount": "{count, plural, =1{1 recording} other{{count} recordings}}",
+  "@recordingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "photosCount": "{count, plural, =1{1 photo} other{{count} photos}}",
+  "@photosCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noNextVisitHint": "When the doctor gives a date to come back, add it while recording the visit. It will show here.",
+  "circleSubtitle": "Everyone caring for {name}, together.",
+  "@circleSubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "familyCode": "Family code",
+  "familyCodeHint": "Share this code. Family and helpers type it into Gurtu to join {name}'s circle.",
+  "@familyCodeHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "copyCode": "Copy code",
+  "codeCopied": "Code copied",
+  "newCode": "Make a new code",
+  "newCodeTitle": "Make a new code?",
+  "newCodeBody": "The old code will stop working. People already in the circle stay in.",
+  "circleMembers": "People in the circle",
+  "circleOwner": "Started the circle",
+  "getsReminders": "Gets reminders",
+  "noNotifications": "Notifications off",
+  "notOnApp": "Not on the app",
+  "sendTestNotification": "Send a test notification",
+  "testSent": "{count, plural, =0{No phones could be reached yet} =1{Sent to 1 phone} other{Sent to {count} phones}}",
+  "@testSent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "testTitle": "Test from Gurtu",
+  "testBody": "Notifications are working for {name}'s care circle.",
+  "@testBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingUpCode": "Setting up your family code…",
+  "offlineTitle": "Couldn't reach the Gurtu server",
+  "offlineBody": "Everything is saved on this phone. The family code will appear once you're online.",
+  "tryAgain": "Try again",
+  "haveFamilyCode": "I have a family code",
+  "joinTitle": "Join a care circle",
+  "joinSubtitle": "Enter the 6-digit code someone in your family shared with you.",
+  "howHelping": "How are you helping?",
+  "joinButton": "Join the circle",
+  "invalidCode": "That code doesn't match any family. Check the digits and try again.",
+  "tooManyTries": "Too many tries. Please wait a few minutes and try again.",
+  "connectionFailed": "Couldn't connect. Check the internet and try again.",
+  "somethingWrong": "Something went wrong. Please try again.",
+  "joinedCircle": "You joined {name}'s care circle",
+  "@joinedCircle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleYouCareFor": "People you care for",
+  "addPersonTitle": "Add someone to care for",
+  "setUpNew": "Set up for someone new",
+  "setUpNewHint": "Answer a few questions about them. They get their own family code.",
+  "joinWithCode": "Join with a family code",
+  "joinWithCodeHint": "Someone in the family already set Gurtu up for them.",
+  "yourCare": "Your care",
+  "lookingAfterYou": "Looking after you",
+  "lookingAfterCount": "{count, plural, =0{No one yet} =1{1 person looks after you} other{{count} people look after you}}",
+  "@lookingAfterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inviteFamily": "Invite your family",
+  "inviteFamilyHint": "Share your family code. They'll see your care and get your reminders.",
+  "askForHelp": "Ask family for help",
+  "askForHelpTitle": "Send a message to your family?",
+  "askForHelpBody": "Everyone in your care circle gets a notification to call or check on you.",
+  "send": "Send",
+  "helpSent": "{count, plural, =0{No one could be reached yet} =1{Sent to 1 person} other{Sent to {count} people}}",
+  "@helpSent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "circleSubtitleSelf": "The people who look after you.",
+  "iAmPatient": "I'm the one being cared for",
+  "patientTaken": "Someone has already joined as the person being cared for. Choose another role.",
+  "medRemindersTitle": "Medicine reminders",
+  "medRemindersIntro": "Gurtu read the doctor's notes for {name}. Check each time, then turn the reminders on.",
+  "@medRemindersIntro": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "readingMedicines": "Reading the medicines…",
+  "readByAi": "Read by Gurtu AI",
+  "readByRules": "Read from your notes",
+  "pickTimes": "Choose when to take it",
+  "everyDay": "Every day",
+  "forDays": "{count, plural, =1{For 1 day} other{For {count} days}}",
+  "@forDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "howLong": "How long",
+  "turnOnReminders": "Turn on reminders",
+  "remindersSaved": "{count, plural, =1{1 reminder is on} other{{count} reminders are on}}",
+  "@remindersSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "remindersGoToPatient": "Reminders go to {name}'s phone. If one isn't marked as taken, Gurtu reminds again twice, then alerts the family.",
+  "@remindersGoToPatient": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "remindersGoToFamily": "{name} doesn't use Gurtu, so reminders go to the family's phones. If one isn't marked as taken, Gurtu reminds again twice, then alerts everyone.",
+  "@remindersGoToFamily": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "remindersPending": "Saved on this phone. Reminders switch on as soon as it's online.",
+  "setUpReminders": "Set up reminders",
+  "changeReminders": "Change reminders",
+  "takenIt": "I've taken it",
+  "skipDose": "Skip this time",
+  "dueAt": "Due at {time}",
+  "@dueAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "readAloud": "Read aloud",
+  "missedDoseEyebrow": "MISSED DOSE",
+  "markTakenForThem": "Mark as taken",
+  "illCheck": "I'll check on them",
+  "doseTakenThanks": "Marked as taken. Well done!",
+  "noReminderForThis": "No reminder",
+  "reminderEyebrow": "MEDICINE REMINDER"
 }

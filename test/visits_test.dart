@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gurtutest/data/care_repository.dart';
 import 'package:gurtutest/l10n/language.dart';
 import 'package:gurtutest/visits/prep_chat_page.dart';
 import 'package:gurtutest/visits/visits_page.dart';
@@ -20,6 +21,8 @@ class FakeSpeech implements SpeechService {
     required String localeId,
     required void Function(String words, bool isFinal) onWords,
     required VoidCallback onStopped,
+    ValueChanged<SpeechFailure>? onFailed,
+    ValueChanged<double>? onLevel,
   }) async {
     starts++;
     onWords(words, true);
@@ -35,6 +38,14 @@ Future<void> tapText(
   String text, {
   bool settle = true,
 }) async {
+  // Not built yet when far down a lazy list: scroll to it first.
+  if (find.text(text).evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      find.text(text),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+  }
   final finder = find.text(text).last;
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
@@ -42,6 +53,19 @@ Future<void> tapText(
   // The listening indicator pulses forever, so it never settles.
   settle ? await tester.pumpAndSettle() : await tester.pump();
 }
+
+/// Scrolls the open page until [text] is on screen.
+Future<void> seeText(WidgetTester tester, String text) =>
+    tester.scrollUntilVisible(
+      find.text(text),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byType(GurtuPage).last,
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
 
 Future<void> openPage(WidgetTester tester, Widget page) async {
   final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
@@ -61,7 +85,11 @@ void main() {
     tester,
   ) async {
     await openHome(tester);
-    expect(find.text('Doctor visit'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Doctor visit'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Questions for the doctor'), findsOneWidget);
     expect(find.text('Gurtu helps you prepare'), findsOneWidget);
   });
@@ -71,8 +99,7 @@ void main() {
   ) async {
     final prefs = await openHome(tester);
 
-    await tester.tap(find.text('Questions for the doctor'));
-    await tester.pumpAndSettle();
+    await tapText(tester, 'Questions for the doctor');
     expect(find.textContaining("Let's get ready for the doctor"), findsOne);
 
     await tapText(tester, 'Fever');
@@ -145,9 +172,8 @@ void main() {
     SpeechService.instance = FakeSpeech('Take the tablet after food.');
     final prefs = await openHome(tester);
 
-    await tester.tap(find.text('Doctor visit'));
-    await tester.pumpAndSettle();
-    expect(find.text('No visits recorded yet'), findsOneWidget);
+    await tapText(tester, 'Doctor visit');
+    await seeText(tester, 'No visits recorded yet');
 
     await tapText(tester, 'Record a visit');
     await tester.enterText(find.byType(TextField).first, 'Dr. Rao');
@@ -158,7 +184,8 @@ void main() {
     await tapText(tester, 'Save visit');
 
     expect(find.text('Visit saved'), findsOneWidget);
-    expect(find.text('All visits at a glance'), findsOneWidget);
+    expect(find.text('NEXT VISIT'), findsOneWidget);
+    expect(find.text('Not planned yet'), findsOneWidget);
     expect(find.text('1 visit'), findsOneWidget);
     expect(find.textContaining('Dr. Rao'), findsWidgets);
     expect(prefs.getString('care_data_v1'), contains('after food'));
@@ -175,6 +202,29 @@ void main() {
     );
     await tapText(tester, 'Take the tablet after food.');
     expect(find.text('What the doctor said'), findsOneWidget);
+  });
+
+  testWidgets('pulling down on Doctor visits shows new visits', (tester) async {
+    final prefs = await openHome(tester);
+    await openPage(tester, const VisitsPage());
+    expect(find.text('1 visit'), findsNothing);
+
+    CareRepository(prefs)
+        .addVisit(date: DateTime(2026, 9, 20), doctorName: 'Dr. Iyer');
+    await tester.fling(
+      find
+          .descendant(
+            of: find.byType(GurtuPage),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+      const Offset(0, 400),
+      1000,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('1 visit'), findsOneWidget);
+    await seeText(tester, 'Dr. Iyer');
+    expect(find.text('No visits recorded yet'), findsNothing);
   });
 
   testWidgets('leaving an unsaved visit asks first', (tester) async {
@@ -195,13 +245,24 @@ void main() {
     tester,
   ) async {
     await openHome(tester, sample: true);
-    await tester.scrollUntilVisible(find.textContaining('Next visit:'), 200);
+    await tester.scrollUntilVisible(
+      find.textContaining('Next visit:'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await openPage(tester, const VisitsPage());
 
     expect(find.text('2 visits'), findsOneWidget);
     expect(find.text('2 doctors'), findsOneWidget);
+    // What's next comes first: date, how far away, and with whom.
+    expect(find.text('In 18 days'), findsOneWidget);
+    expect(find.text('With Dr. Meena Rao'), findsOneWidget);
     expect(find.textContaining('Dr. Meena Rao'), findsWidgets);
-    await tester.scrollUntilVisible(find.text('Dr. Arjun Iyer'), 200);
+    await tester.scrollUntilVisible(
+      find.text('Dr. Arjun Iyer'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
 
     // Switch to the second person from Home: none of Amma's visits.
     await goBack(tester);
@@ -211,12 +272,12 @@ void main() {
       3000,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('CARING FOR'));
+    await tester.tap(find.text('Caring for'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nanna').last);
     await tester.pumpAndSettle();
     await openPage(tester, const VisitsPage());
-    expect(find.text('No visits recorded yet'), findsOneWidget);
+    await seeText(tester, 'No visits recorded yet');
     expect(find.textContaining('Dr. Meena Rao'), findsNothing);
   });
 

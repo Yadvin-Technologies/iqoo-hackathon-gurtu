@@ -1880,4 +1880,410 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get viewPhoto => 'फ़ोटो देखें';
+
+  @override
+  String get doctorSpeaks => 'डॉक्टर इस भाषा में बोलते हैं';
+
+  @override
+  String listeningIn(String language) {
+    return 'सुन रहे हैं · $language';
+  }
+
+  @override
+  String get liveCaptionHint => 'सुन रहे हैं… डॉक्टर की बातें यहाँ दिखेंगी।';
+
+  @override
+  String get transcriptHelp =>
+      'हर वाक्य सुनते ही यहाँ जुड़ जाता है। आप कोई भी शब्द ठीक कर सकते हैं।';
+
+  @override
+  String voiceLanguageMissing(String language) {
+    return 'इस फ़ोन पर $language में वॉइस टाइपिंग चालू नहीं है। कोई दूसरी भाषा चुनें, या फ़ोन की वॉइस टाइपिंग सेटिंग में इसे जोड़ें।';
+  }
+
+  @override
+  String get voiceNeedsInternet =>
+      'वॉइस टाइपिंग के लिए इंटरनेट चाहिए। आप टाइप भी कर सकते हैं।';
+
+  @override
+  String get voiceWaitingInternet =>
+      'इंटरनेट नहीं है। कोशिश जारी है — अब तक सुना हुआ सुरक्षित है।';
+
+  @override
+  String medicineNumber(int number) {
+    return 'दवा $number';
+  }
+
+  @override
+  String get addAnotherMedicine => 'एक और दवा जोड़ें';
+
+  @override
+  String get medicinesVisitHint =>
+      'डॉक्टर की दी हर दवा जोड़ें। पत्ते या पर्चे की फ़ोटो लें, डॉक्टर ने उसके बारे में जो कहा वह रिकॉर्ड करें, या लिख दें।';
+
+  @override
+  String get removeMedicineBody =>
+      'इसकी फ़ोटो और वॉइस नोट भी इस फ़ोन से मिट जाएँगे।';
+
+  @override
+  String get questionRemoved => 'सवाल हटा दिया गया';
+
+  @override
+  String get recordDoctor => 'डॉक्टर की आवाज़ रिकॉर्ड करें';
+
+  @override
+  String get doctorRecordings => 'रिकॉर्डिंग';
+
+  @override
+  String recordingNumber(int number) {
+    return 'रिकॉर्डिंग $number';
+  }
+
+  @override
+  String get recordOrListenHint =>
+      'सुनें से डॉक्टर की बातें लिखी जाती हैं। रिकॉर्ड से उनकी आवाज़ बाद में सुनने के लिए रहती है। फ़ोन का माइक एक समय में एक ही काम करता है।';
+
+  @override
+  String get tomorrow => 'कल';
+
+  @override
+  String inDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count दिन में',
+      one: '1 दिन में',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String withDoctor(String doctor) {
+    return '$doctor के साथ';
+  }
+
+  @override
+  String recordingsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count रिकॉर्डिंग',
+      one: '1 रिकॉर्डिंग',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String photosCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count फ़ोटो',
+      one: '1 फ़ोटो',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noNextVisitHint =>
+      'जब डॉक्टर दोबारा आने की तारीख दें, तो विज़िट रिकॉर्ड करते समय उसे जोड़ें। वह यहाँ दिखेगी।';
+
+  @override
+  String circleSubtitle(String name) {
+    return '$name की देखभाल करने वाले सभी, एक साथ।';
+  }
+
+  @override
+  String get familyCode => 'परिवार कोड';
+
+  @override
+  String familyCodeHint(String name) {
+    return 'यह कोड भेजें। परिवार और मददगार इसे Gurtu में डालकर $name के घेरे से जुड़ सकते हैं।';
+  }
+
+  @override
+  String get copyCode => 'कोड कॉपी करें';
+
+  @override
+  String get codeCopied => 'कोड कॉपी हो गया';
+
+  @override
+  String get newCode => 'नया कोड बनाएँ';
+
+  @override
+  String get newCodeTitle => 'नया कोड बनाएँ?';
+
+  @override
+  String get newCodeBody =>
+      'पुराना कोड काम करना बंद कर देगा। जो पहले से घेरे में हैं, वे बने रहेंगे।';
+
+  @override
+  String get circleMembers => 'घेरे के लोग';
+
+  @override
+  String get circleOwner => 'घेरा शुरू किया';
+
+  @override
+  String get getsReminders => 'रिमाइंडर मिलते हैं';
+
+  @override
+  String get noNotifications => 'सूचनाएँ बंद';
+
+  @override
+  String get notOnApp => 'ऐप पर नहीं';
+
+  @override
+  String get sendTestNotification => 'टेस्ट सूचना भेजें';
+
+  @override
+  String testSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count फ़ोन पर भेजा',
+      one: '1 फ़ोन पर भेजा',
+      zero: 'अभी किसी फ़ोन तक नहीं पहुँचा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get testTitle => 'Gurtu से टेस्ट';
+
+  @override
+  String testBody(String name) {
+    return '$name के देखभाल घेरे के लिए सूचनाएँ काम कर रही हैं।';
+  }
+
+  @override
+  String get settingUpCode => 'आपका परिवार कोड बन रहा है…';
+
+  @override
+  String get offlineTitle => 'Gurtu सर्वर से संपर्क नहीं हो सका';
+
+  @override
+  String get offlineBody =>
+      'सब कुछ इस फ़ोन पर सुरक्षित है। इंटरनेट मिलते ही परिवार कोड दिखेगा।';
+
+  @override
+  String get tryAgain => 'फिर कोशिश करें';
+
+  @override
+  String get haveFamilyCode => 'मेरे पास परिवार कोड है';
+
+  @override
+  String get joinTitle => 'देखभाल घेरे से जुड़ें';
+
+  @override
+  String get joinSubtitle =>
+      'परिवार के किसी सदस्य का भेजा 6 अंकों का कोड डालें।';
+
+  @override
+  String get howHelping => 'आप कैसे मदद कर रहे हैं?';
+
+  @override
+  String get joinButton => 'घेरे से जुड़ें';
+
+  @override
+  String get invalidCode =>
+      'यह कोड किसी परिवार से मेल नहीं खाता। अंक जाँचकर फिर कोशिश करें।';
+
+  @override
+  String get tooManyTries =>
+      'बहुत बार कोशिश हुई। कुछ मिनट रुककर फिर कोशिश करें।';
+
+  @override
+  String get connectionFailed =>
+      'कनेक्ट नहीं हो सका। इंटरनेट जाँचकर फिर कोशिश करें।';
+
+  @override
+  String get somethingWrong => 'कुछ गड़बड़ हो गई। कृपया फिर कोशिश करें।';
+
+  @override
+  String joinedCircle(String name) {
+    return 'आप $name के देखभाल घेरे से जुड़ गए';
+  }
+
+  @override
+  String get peopleYouCareFor => 'जिनकी आप देखभाल करते हैं';
+
+  @override
+  String get addPersonTitle => 'देखभाल के लिए किसी को जोड़ें';
+
+  @override
+  String get setUpNew => 'किसी नए के लिए सेट करें';
+
+  @override
+  String get setUpNewHint =>
+      'उनके बारे में कुछ सवालों के जवाब दें। उन्हें अपना परिवार कोड मिलेगा।';
+
+  @override
+  String get joinWithCode => 'परिवार कोड से जुड़ें';
+
+  @override
+  String get joinWithCodeHint =>
+      'परिवार में किसी ने उनके लिए पहले से Gurtu सेट किया है।';
+
+  @override
+  String get yourCare => 'आपकी देखभाल';
+
+  @override
+  String get lookingAfterYou => 'आपका ध्यान रखने वाले';
+
+  @override
+  String lookingAfterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count लोग आपका ध्यान रखते हैं',
+      one: '1 व्यक्ति आपका ध्यान रखते हैं',
+      zero: 'अभी कोई नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inviteFamily => 'अपने परिवार को बुलाएँ';
+
+  @override
+  String get inviteFamilyHint =>
+      'अपना परिवार कोड भेजें। वे आपकी देखभाल देख सकेंगे और आपके रिमाइंडर पाएँगे।';
+
+  @override
+  String get askForHelp => 'परिवार से मदद माँगें';
+
+  @override
+  String get askForHelpTitle => 'परिवार को संदेश भेजें?';
+
+  @override
+  String get askForHelpBody =>
+      'आपके देखभाल घेरे में सभी को आपको फ़ोन करने या आपका हाल देखने की सूचना मिलेगी।';
+
+  @override
+  String get send => 'भेजें';
+
+  @override
+  String helpSent(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count लोगों को भेजा',
+      one: '1 व्यक्ति को भेजा',
+      zero: 'अभी किसी तक नहीं पहुँचा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get circleSubtitleSelf => 'वे लोग जो आपका ध्यान रखते हैं।';
+
+  @override
+  String get iAmPatient => 'जिनकी देखभाल हो रही है, वह मैं हूँ';
+
+  @override
+  String get patientTaken =>
+      'कोई पहले ही देखभाल पाने वाले व्यक्ति के रूप में जुड़ चुका है। कोई दूसरी भूमिका चुनें।';
+
+  @override
+  String get medRemindersTitle => 'दवा के रिमाइंडर';
+
+  @override
+  String medRemindersIntro(String name) {
+    return 'Gurtu ने $name के लिए डॉक्टर की बातें पढ़ीं। हर समय जाँचें, फिर रिमाइंडर चालू करें।';
+  }
+
+  @override
+  String get readingMedicines => 'दवाइयाँ पढ़ी जा रही हैं…';
+
+  @override
+  String get readByAi => 'Gurtu AI ने पढ़ा';
+
+  @override
+  String get readByRules => 'आपके नोट्स से पढ़ा';
+
+  @override
+  String get pickTimes => 'कब लेनी है चुनें';
+
+  @override
+  String get everyDay => 'हर दिन';
+
+  @override
+  String forDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count दिन के लिए',
+      one: '1 दिन के लिए',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get howLong => 'कितने दिन';
+
+  @override
+  String get turnOnReminders => 'रिमाइंडर चालू करें';
+
+  @override
+  String remindersSaved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count रिमाइंडर चालू हैं',
+      one: '1 रिमाइंडर चालू है',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String remindersGoToPatient(String name) {
+    return 'रिमाइंडर $name के फ़ोन पर जाएँगे। अगर ली गई नहीं बताई गई, तो Gurtu दो बार फिर याद दिलाएगा, फिर परिवार को सूचना देगा।';
+  }
+
+  @override
+  String remindersGoToFamily(String name) {
+    return '$name Gurtu इस्तेमाल नहीं करते, इसलिए रिमाइंडर परिवार के फ़ोन पर जाएँगे। अगर ली गई नहीं बताई गई, तो Gurtu दो बार फिर याद दिलाएगा, फिर सबको सूचना देगा।';
+  }
+
+  @override
+  String get remindersPending =>
+      'इस फ़ोन पर सहेजा गया। इंटरनेट मिलते ही रिमाइंडर चालू हो जाएँगे।';
+
+  @override
+  String get setUpReminders => 'रिमाइंडर सेट करें';
+
+  @override
+  String get changeReminders => 'रिमाइंडर बदलें';
+
+  @override
+  String get takenIt => 'मैंने ले ली';
+
+  @override
+  String get skipDose => 'इस बार छोड़ें';
+
+  @override
+  String dueAt(String time) {
+    return '$time बजे लेनी है';
+  }
+
+  @override
+  String get readAloud => 'पढ़कर सुनाएँ';
+
+  @override
+  String get missedDoseEyebrow => 'छूटी खुराक';
+
+  @override
+  String get markTakenForThem => 'ली गई मार्क करें';
+
+  @override
+  String get illCheck => 'मैं हाल देखता हूँ';
+
+  @override
+  String get doseTakenThanks => 'ली गई मार्क हो गई। बहुत अच्छे!';
+
+  @override
+  String get noReminderForThis => 'कोई रिमाइंडर नहीं';
+
+  @override
+  String get reminderEyebrow => 'दवा का रिमाइंडर';
 }
