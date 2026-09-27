@@ -2286,4 +2286,40 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'दवा का रिमाइंडर';
+
+  @override
+  String get autoReminders => 'अपने-आप दवा के रिमाइंडर';
+
+  @override
+  String get autoRemindersHint =>
+      'Gurtu AI डॉक्टर की दी हुई हर दवा को समझकर उसके रिमाइंडर खुद चालू कर देता है। आप विज़िट में उन्हें देख या बदल सकते हैं।';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return '$medicines के रिमाइंडर चालू हैं';
+  }
+
+  @override
+  String get visitSavedAuto =>
+      'विज़िट सेव हो गई। Gurtu दवा के रिमाइंडर लगा रहा है।';
+
+  @override
+  String get testReminder => 'अभी टेस्ट रिमाइंडर भेजें';
+
+  @override
+  String get testReminderHint =>
+      'एक असली रिमाइंडर तुरंत उस फ़ोन पर जाता है जिस पर रिमाइंडर आते हैं। अगर कोई उसे नहीं दबाता, तो 1 और 2 मिनट बाद फिर आता है, फिर परिवार को छूटी खुराक की सूचना मिलती है।';
+
+  @override
+  String get testMedicine => 'टेस्ट दवा';
+
+  @override
+  String get testBadge => 'टेस्ट';
+
+  @override
+  String get skipConfirmTitle => 'यह खुराक छोड़ें?';
+
+  @override
+  String get skipConfirmBody =>
+      'इस खुराक के लिए Gurtu फिर याद नहीं दिलाएगा, और परिवार को बताया जाएगा।';
 }

@@ -2285,4 +2285,40 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'ওষুধের রিমাইন্ডার';
+
+  @override
+  String get autoReminders => 'স্বয়ংক্রিয় ওষুধের রিমাইন্ডার';
+
+  @override
+  String get autoRemindersHint =>
+      'ডাক্তারের দেওয়া প্রতিটি ওষুধ Gurtu AI বুঝে নিজেই তার রিমাইন্ডার চালু করে। ভিজিটে গিয়ে আপনি সেগুলো দেখতে বা বদলাতে পারেন।';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return '$medicines-এর রিমাইন্ডার চালু আছে';
+  }
+
+  @override
+  String get visitSavedAuto =>
+      'ভিজিট সেভ হয়েছে। Gurtu ওষুধের রিমাইন্ডার সেট করছে।';
+
+  @override
+  String get testReminder => 'এখনই একটি টেস্ট রিমাইন্ডার পাঠান';
+
+  @override
+  String get testReminderHint =>
+      'যে ফোনে রিমাইন্ডার যায়, সেখানে এখনই একটি আসল রিমাইন্ডার যাবে। কেউ চিহ্নিত না করলে 1 ও 2 মিনিট পরে আবার আসবে, তারপর পরিবার বাদ পড়া ডোজের সতর্কতা পাবে।';
+
+  @override
+  String get testMedicine => 'টেস্ট ওষুধ';
+
+  @override
+  String get testBadge => 'টেস্ট';
+
+  @override
+  String get skipConfirmTitle => 'এই ডোজটি বাদ দেবেন?';
+
+  @override
+  String get skipConfirmBody =>
+      'এই ডোজের জন্য Gurtu আর মনে করাবে না, আর পরিবারকে জানানো হবে।';
 }

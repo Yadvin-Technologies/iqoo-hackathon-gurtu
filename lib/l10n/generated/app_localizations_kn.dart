@@ -2300,4 +2300,40 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'ಔಷಧಿ ಜ್ಞಾಪನೆ';
+
+  @override
+  String get autoReminders => 'ಸ್ವಯಂಚಾಲಿತ ಔಷಧಿ ಜ್ಞಾಪನೆಗಳು';
+
+  @override
+  String get autoRemindersHint =>
+      'ವೈದ್ಯರು ನೀಡುವ ಪ್ರತಿ ಔಷಧಿಯನ್ನು Gurtu AI ಅರ್ಥಮಾಡಿಕೊಂಡು, ಅದರ ಜ್ಞಾಪನೆಗಳನ್ನು ತಾನೇ ಆನ್ ಮಾಡುತ್ತದೆ. ಭೇಟಿಯಲ್ಲಿ ನೀವು ಅವನ್ನು ನೋಡಿ ಬದಲಾಯಿಸಬಹುದು.';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return '$medicines ಗೆ ಜ್ಞಾಪನೆಗಳು ಆನ್ ಆಗಿವೆ';
+  }
+
+  @override
+  String get visitSavedAuto =>
+      'ಭೇಟಿ ಉಳಿಸಲಾಗಿದೆ. Gurtu ಔಷಧಿ ಜ್ಞಾಪನೆಗಳನ್ನು ಹೊಂದಿಸುತ್ತಿದೆ.';
+
+  @override
+  String get testReminder => 'ಈಗಲೇ ಪರೀಕ್ಷಾ ಜ್ಞಾಪನೆ ಕಳುಹಿಸಿ';
+
+  @override
+  String get testReminderHint =>
+      'ಜ್ಞಾಪನೆಗಳು ಬರುವ ಫೋನ್‌ಗೆ ನಿಜವಾದ ಜ್ಞಾಪನೆ ತಕ್ಷಣ ಹೋಗುತ್ತದೆ. ಯಾರೂ ಗುರುತಿಸದಿದ್ದರೆ, 1 ಮತ್ತು 2 ನಿಮಿಷಗಳ ನಂತರ ಮತ್ತೆ ಬರುತ್ತದೆ, ನಂತರ ಕುಟುಂಬಕ್ಕೆ ತಪ್ಪಿದ ಡೋಸ್ ಎಚ್ಚರಿಕೆ ಹೋಗುತ್ತದೆ.';
+
+  @override
+  String get testMedicine => 'ಪರೀಕ್ಷಾ ಔಷಧಿ';
+
+  @override
+  String get testBadge => 'ಪರೀಕ್ಷೆ';
+
+  @override
+  String get skipConfirmTitle => 'ಈ ಡೋಸ್ ಬಿಡಬೇಕೆ?';
+
+  @override
+  String get skipConfirmBody =>
+      'ಈ ಡೋಸ್‌ಗೆ Gurtu ಮತ್ತೆ ನೆನಪಿಸುವುದಿಲ್ಲ, ಮತ್ತು ಕುಟುಂಬಕ್ಕೆ ತಿಳಿಸಲಾಗುತ್ತದೆ.';
 }

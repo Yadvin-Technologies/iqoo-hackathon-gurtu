@@ -95,6 +95,9 @@ class FakeServer {
         req.headers['authorization'] != 'Bearer dev-1.secret') {
       return json(401, {'error': 'unauthorized'});
     }
+    if (key == 'POST /v1/circles/circle-1/medicine-reminders/test') {
+      return json(200, {'doseId': 'test-1', 'sent': 1});
+    }
     if (key.startsWith('PUT /v1/circles/circle-1/medicine-reminders/') ||
         key.startsWith('DELETE /v1/circles/circle-1/medicine-reminders/')) {
       return json(200, {'ok': true});

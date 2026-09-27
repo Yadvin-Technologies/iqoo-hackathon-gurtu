@@ -10,11 +10,14 @@ import 'cloud/cloud_sync.dart';
 import 'cloud/push_service.dart';
 import 'data/attachment_store.dart';
 import 'data/care_repository.dart';
+import 'data/visit_models.dart';
 import 'l10n/language.dart';
 import 'onboarding/onboarding_flow.dart';
 import 'onboarding/onboarding_state.dart';
+import 'reminders/auto_reminders.dart';
 import 'reminders/dose_alert.dart';
 import 'reminders/dose_reminder_page.dart';
+import 'reminders/medicine_plan.dart';
 import 'shell/app_shell.dart';
 import 'theme/gurtu_theme.dart';
 import 'widgets/in_app_notice.dart';
@@ -88,6 +91,9 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
   StreamSubscription<PushMessage>? _messages;
   StreamSubscription<PushMessage>? _taps;
 
+  /// Sets up medicine reminders by itself (when online).
+  AutoReminders? _auto;
+
   /// The reminder (or missed-dose alert) on screen, so a follow-up for the
   /// same dose doesn't open it a second time.
   String? _openDose;
@@ -114,6 +120,14 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
     _messages = _cloud.messages.listen(_showMessage);
     _taps = _cloud.opened.listen(_opened);
     if (widget.online) {
+      // Reminders are sent by the server, so they need it.
+      _auto = AutoReminders(
+        prefs: widget.prefs,
+        repo: _care,
+        cloud: _cloud,
+        ai: widget.ai,
+      )..onSet = _autoSet;
+      _auto!.start();
       _language.addListener(_languageChanged);
       WidgetsBinding.instance.addObserver(this);
       unawaited(_cloud.start(language: _language.value.code));
@@ -145,8 +159,8 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
       _openAlert(alert);
       return;
     }
-    // Someone marked a dose as taken: show it ticked here too.
-    if (m.data?['type'] == 'dose_taken') unawaited(_cloud.pullAllDoses());
+    // Someone marked a dose as taken (or skipped it): show it here too.
+    if (_isDoseAnswer(m)) unawaited(_cloud.pullAllDoses());
     if (m.title.isEmpty && m.body.isEmpty) return;
     final overlay = _navigator.currentState?.overlay;
     if (overlay == null) return;
@@ -157,14 +171,29 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
     );
   }
 
+  /// Gurtu turned reminders on by itself: say so, above every screen.
+  void _autoSet(DoctorVisit visit, List<PlannedMedicine> medicines) {
+    final overlay = _navigator.currentState?.overlay;
+    if (overlay == null || medicines.isEmpty) return;
+    final l = lookupAppLocalizations(_language.value.locale);
+    InAppNotice.show(
+      overlay,
+      title: l.autoRemindersDone(medicines.map((m) => m.label).join(', ')),
+      icon: Icons.alarm_on_rounded,
+    );
+  }
+
   /// A notification the person tapped.
   void _opened(PushMessage m) {
     if (DoseAlert.from(m) case final alert?) {
       _openAlert(alert);
-    } else if (m.data?['type'] == 'dose_taken') {
+    } else if (_isDoseAnswer(m)) {
       unawaited(_cloud.pullAllDoses());
     }
   }
+
+  static bool _isDoseAnswer(PushMessage m) =>
+      m.data?['type'] == 'dose_taken' || m.data?['type'] == 'dose_skipped';
 
   /// The full-screen reminder, or the family's red missed-dose screen.
   void _openAlert(DoseAlert alert, {bool retried = false}) {
@@ -251,6 +280,7 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
   void dispose() {
     _messages?.cancel();
     _taps?.cancel();
+    _auto?.dispose();
     InAppNotice.hide();
     WidgetsBinding.instance.removeObserver(this);
     _language.removeListener(_languageChanged);
@@ -271,34 +301,38 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
         sync: _cloud,
         child: CareScope(
           repository: _care,
-          child: LanguageScope(
-            controller: _language,
-            child: ValueListenableBuilder<AppLanguage>(
-              valueListenable: _language,
-              builder: (context, language, _) => MaterialApp(
-                scaffoldMessengerKey: _messenger,
-                navigatorKey: _navigator,
-                onGenerateTitle: (context) => 'Gurtu',
-                debugShowCheckedModeBanner: false,
-                theme: buildGurtuTheme(),
-                locale: language.locale,
-                supportedLocales: AppLocalizations.supportedLocales,
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                home: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 400),
-                  child: _booting
-                      ? const SplashScreen(key: ValueKey('splash'))
-                      : _onboarded
-                      ? AppShell(
-                          key: const ValueKey('app'),
-                          onRestartOnboarding: _restartOnboarding,
-                        )
-                      : OnboardingFlow(
-                          key: const ValueKey('onboarding'),
-                          prefs: widget.prefs,
-                          onFinished: _finishOnboarding,
-                          onJoined: _finishJoin,
-                        ),
+          child: AutoScope(
+            auto: _auto,
+            child: LanguageScope(
+              controller: _language,
+              child: ValueListenableBuilder<AppLanguage>(
+                valueListenable: _language,
+                builder: (context, language, _) => MaterialApp(
+                  scaffoldMessengerKey: _messenger,
+                  navigatorKey: _navigator,
+                  onGenerateTitle: (context) => 'Gurtu',
+                  debugShowCheckedModeBanner: false,
+                  theme: buildGurtuTheme(),
+                  locale: language.locale,
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  localizationsDelegates:
+                      AppLocalizations.localizationsDelegates,
+                  home: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    child: _booting
+                        ? const SplashScreen(key: ValueKey('splash'))
+                        : _onboarded
+                        ? AppShell(
+                            key: const ValueKey('app'),
+                            onRestartOnboarding: _restartOnboarding,
+                          )
+                        : OnboardingFlow(
+                            key: const ValueKey('onboarding'),
+                            prefs: widget.prefs,
+                            onFinished: _finishOnboarding,
+                            onJoined: _finishJoin,
+                          ),
+                  ),
                 ),
               ),
             ),

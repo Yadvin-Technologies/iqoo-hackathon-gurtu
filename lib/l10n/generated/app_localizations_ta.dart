@@ -2319,4 +2319,40 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'மருந்து நினைவூட்டல்';
+
+  @override
+  String get autoReminders => 'தானியங்கி மருந்து நினைவூட்டல்கள்';
+
+  @override
+  String get autoRemindersHint =>
+      'மருத்துவர் தரும் ஒவ்வொரு மருந்தையும் Gurtu AI புரிந்துகொண்டு, அதன் நினைவூட்டல்களைத் தானாக இயக்கும். சந்திப்பில் அவற்றைப் பார்த்து மாற்றலாம்.';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return '$medicines க்கான நினைவூட்டல்கள் இயக்கத்தில் உள்ளன';
+  }
+
+  @override
+  String get visitSavedAuto =>
+      'சந்திப்பு சேமிக்கப்பட்டது. Gurtu மருந்து நினைவூட்டல்களை அமைக்கிறது.';
+
+  @override
+  String get testReminder => 'இப்போதே சோதனை நினைவூட்டலை அனுப்பு';
+
+  @override
+  String get testReminderHint =>
+      'நினைவூட்டல்கள் வரும் ஃபோனுக்கு உண்மையான நினைவூட்டல் உடனே செல்லும். யாரும் குறிக்காவிட்டால், 1 மற்றும் 2 நிமிடங்களுக்குப் பிறகு மீண்டும் வரும், பிறகு குடும்பத்துக்குத் தவறிய டோஸ் எச்சரிக்கை செல்லும்.';
+
+  @override
+  String get testMedicine => 'சோதனை மருந்து';
+
+  @override
+  String get testBadge => 'சோதனை';
+
+  @override
+  String get skipConfirmTitle => 'இந்த டோஸைத் தவிர்க்கவா?';
+
+  @override
+  String get skipConfirmBody =>
+      'இந்த டோஸுக்கு Gurtu மீண்டும் நினைவூட்டாது, குடும்பத்துக்குத் தெரிவிக்கப்படும்.';
 }

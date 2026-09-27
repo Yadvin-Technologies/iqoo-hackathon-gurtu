@@ -2301,4 +2301,40 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'మందుల రిమైండర్';
+
+  @override
+  String get autoReminders => 'ఆటోమేటిక్ మందుల రిమైండర్లు';
+
+  @override
+  String get autoRemindersHint =>
+      'డాక్టర్ ఇచ్చిన ప్రతి మందును Gurtu AI అర్థం చేసుకుని, దాని రిమైండర్లను తానే ఆన్ చేస్తుంది. మీరు విజిట్‌లో వాటిని చూసి మార్చవచ్చు.';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return '$medicines కోసం రిమైండర్లు ఆన్‌లో ఉన్నాయి';
+  }
+
+  @override
+  String get visitSavedAuto =>
+      'విజిట్ సేవ్ అయింది. Gurtu మందుల రిమైండర్లు సెట్ చేస్తోంది.';
+
+  @override
+  String get testReminder => 'ఇప్పుడే టెస్ట్ రిమైండర్ పంపండి';
+
+  @override
+  String get testReminderHint =>
+      'రిమైండర్లు వచ్చే ఫోన్‌కు నిజమైన రిమైండర్ వెంటనే వెళ్తుంది. ఎవరూ గుర్తించకపోతే, 1 మరియు 2 నిమిషాల తర్వాత మళ్ళీ వస్తుంది, తర్వాత కుటుంబానికి తప్పిన మోతాదు హెచ్చరిక వెళ్తుంది.';
+
+  @override
+  String get testMedicine => 'టెస్ట్ మందు';
+
+  @override
+  String get testBadge => 'టెస్ట్';
+
+  @override
+  String get skipConfirmTitle => 'ఈ మోతాదు వదిలేయాలా?';
+
+  @override
+  String get skipConfirmBody =>
+      'ఈ మోతాదు కోసం Gurtu మళ్ళీ గుర్తు చేయదు, కుటుంబానికి తెలియజేస్తుంది.';
 }

@@ -9,6 +9,7 @@ import '../data/medicine_models.dart';
 import '../l10n/language.dart';
 import '../medicines/medicine_text.dart';
 import '../theme/gurtu_theme.dart';
+import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
 import 'dose_alert.dart';
 
@@ -73,6 +74,19 @@ class _DoseReminderPageState extends State<DoseReminderPage> {
     await ReminderVoice.instance.stop();
   }
 
+  /// A skip is checked first: it ends the reminders for this dose and the
+  /// family is told. Closing the screen instead keeps the reminders coming.
+  Future<void> _skip() async {
+    final l = context.l10n;
+    final ok = await confirmAction(
+      context,
+      title: l.skipConfirmTitle,
+      body: l.skipConfirmBody,
+      confirm: l.skipDose,
+    );
+    if (ok && mounted) _answer('skipped');
+  }
+
   void _answer(String status) {
     if (_answered) return;
     _answered = true;
@@ -114,7 +128,7 @@ class _DoseReminderPageState extends State<DoseReminderPage> {
         label: l.skipDose,
         style: GurtuButtonStyle.ghost,
         icon: Icons.skip_next_rounded,
-        onPressed: () => _answer('skipped'),
+        onPressed: _skip,
       ),
     );
   }
@@ -176,7 +190,7 @@ class _MissedDosePageState extends State<MissedDosePage> {
 /// this phone's medicine list.
 void answerDose(BuildContext context, DoseAlert alert, String status) {
   final cloud = CloudScope.of(context);
-  if (status == 'taken') {
+  if (status == 'taken' && !alert.test) {
     final repo = CareScope.of(context);
     final patientId = cloud.patientForCircle(alert.circleId);
     final medicine = patientId == null
@@ -269,6 +283,10 @@ class _DoseScaffold extends StatelessWidget {
                       size: 22,
                     ),
                     const SizedBox(width: 8),
+                    if (a.test) ...[
+                      _TestBadge(label: l.testBadge),
+                      const SizedBox(width: 8),
+                    ],
                     Flexible(
                       child: Eyebrow(
                         eyebrow,
@@ -348,6 +366,29 @@ class _DoseScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: missed ? _missedBackground : null,
       body: missed ? body : GlowBackground(child: body),
+    );
+  }
+}
+
+/// Marks a reminder sent with "Send a test reminder".
+class _TestBadge extends StatelessWidget {
+  const _TestBadge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: GurtuColors.info.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelSmall
+            ?.copyWith(color: GurtuColors.info),
+      ),
     );
   }
 }

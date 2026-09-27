@@ -125,6 +125,7 @@ class _ReminderReviewPageState extends State<ReminderReviewPage> {
       photoFile: first(AttachmentKind.photo),
       audioFile: first(AttachmentKind.audio),
       byAi: p.byAi,
+      source: p.source,
     );
   }
 

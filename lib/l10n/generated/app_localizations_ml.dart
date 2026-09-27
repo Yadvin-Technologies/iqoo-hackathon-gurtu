@@ -2309,4 +2309,40 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'മരുന്ന് ഓർമ്മപ്പെടുത്തൽ';
+
+  @override
+  String get autoReminders => 'ഓട്ടോമാറ്റിക് മരുന്ന് ഓർമ്മപ്പെടുത്തലുകൾ';
+
+  @override
+  String get autoRemindersHint =>
+      'ഡോക്ടർ നൽകുന്ന ഓരോ മരുന്നും Gurtu AI മനസ്സിലാക്കി, അതിന്റെ ഓർമ്മപ്പെടുത്തലുകൾ സ്വയം ഓണാക്കുന്നു. സന്ദർശനത്തിൽ അവ കാണാനും മാറ്റാനും കഴിയും.';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return '$medicines എന്നതിനുള്ള ഓർമ്മപ്പെടുത്തലുകൾ ഓണാണ്';
+  }
+
+  @override
+  String get visitSavedAuto =>
+      'സന്ദർശനം സേവ് ചെയ്തു. Gurtu മരുന്ന് ഓർമ്മപ്പെടുത്തലുകൾ ക്രമീകരിക്കുന്നു.';
+
+  @override
+  String get testReminder => 'ഇപ്പോൾ ഒരു ടെസ്റ്റ് ഓർമ്മപ്പെടുത്തൽ അയയ്ക്കുക';
+
+  @override
+  String get testReminderHint =>
+      'ഓർമ്മപ്പെടുത്തലുകൾ ലഭിക്കുന്ന ഫോണിലേക്ക് ഒരു യഥാർത്ഥ ഓർമ്മപ്പെടുത്തൽ ഉടൻ പോകും. ആരും അടയാളപ്പെടുത്തിയില്ലെങ്കിൽ, 1, 2 മിനിറ്റിനു ശേഷം വീണ്ടും വരും, തുടർന്ന് കുടുംബത്തിന് വിട്ടുപോയ ഡോസിന്റെ മുന്നറിയിപ്പ് ലഭിക്കും.';
+
+  @override
+  String get testMedicine => 'ടെസ്റ്റ് മരുന്ന്';
+
+  @override
+  String get testBadge => 'ടെസ്റ്റ്';
+
+  @override
+  String get skipConfirmTitle => 'ഈ ഡോസ് ഒഴിവാക്കണോ?';
+
+  @override
+  String get skipConfirmBody =>
+      'ഈ ഡോസിനായി Gurtu വീണ്ടും ഓർമ്മിപ്പിക്കില്ല, കുടുംബത്തെ അറിയിക്കും.';
 }

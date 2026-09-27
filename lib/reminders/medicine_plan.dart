@@ -34,6 +34,7 @@ class PlannedMedicine {
     this.photoFile,
     this.audioFile,
     this.byAi = false,
+    this.source,
   }) : times = times ?? {};
 
   final String visitMedicineId;
@@ -54,6 +55,11 @@ class PlannedMedicine {
 
   /// Read by Gurtu AI (rather than the built-in rules).
   bool byAi;
+
+  /// What it was read from (see [MedicinePlanner.sourceOf]). When the
+  /// medicine's notes or photo change, automatic reminders read it again;
+  /// null for plans from before, which are left as the family set them.
+  String? source;
 
   bool get isOn => name.trim().isNotEmpty && times.isNotEmpty;
 
@@ -76,6 +82,7 @@ class PlannedMedicine {
     'photoFile': photoFile,
     'audioFile': audioFile,
     'byAi': byAi,
+    'source': source,
   };
 
   factory PlannedMedicine.fromJson(Map<String, dynamic> j) => PlannedMedicine(
@@ -92,6 +99,7 @@ class PlannedMedicine {
     photoFile: j['photoFile'] as String?,
     audioFile: j['audioFile'] as String?,
     byAi: j['byAi'] as bool? ?? false,
+    source: j['source'] as String?,
   );
 }
 
@@ -409,9 +417,17 @@ class MedicinePlanner {
         photoFile: photo,
         audioFile: audio,
       );
-      out.add(await _withAi(text, rules) ?? rules);
+      out.add(
+        (await _withAi(text, rules) ?? rules)..source = sourceOf(visit, m),
+      );
     }
     return out;
+  }
+
+  /// What [m] is read from: its notes and its photo and voice note.
+  static String sourceOf(DoctorVisit visit, VisitMedicine m) {
+    final files = [for (final a in visit.attachmentsOf(m)) a.file]..sort();
+    return [m.note.trim(), ...files].join('\n');
   }
 
   /// Gurtu AI's reading, filled in by [rules] where it left gaps; null when

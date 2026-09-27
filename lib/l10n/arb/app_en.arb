@@ -1225,5 +1225,22 @@
   "illCheck": "I'll check on them",
   "doseTakenThanks": "Marked as taken. Well done!",
   "noReminderForThis": "No reminder",
-  "reminderEyebrow": "MEDICINE REMINDER"
+  "reminderEyebrow": "MEDICINE REMINDER",
+  "autoReminders": "Automatic medicine reminders",
+  "autoRemindersHint": "Gurtu AI reads each medicine the doctor gives and turns on its reminders by itself. You can still check or change them on the visit.",
+  "autoRemindersDone": "Reminders are on for {medicines}",
+  "@autoRemindersDone": {
+    "placeholders": {
+      "medicines": {
+        "type": "String"
+      }
+    }
+  },
+  "visitSavedAuto": "Visit saved. Gurtu is setting up the medicine reminders.",
+  "testReminder": "Send a test reminder now",
+  "testReminderHint": "A real reminder goes straight away to the phone that gets reminders. If no one marks it, it comes again after 1 and 2 minutes, then the family gets the missed-dose alert.",
+  "testMedicine": "Test medicine",
+  "testBadge": "TEST",
+  "skipConfirmTitle": "Skip this dose?",
+  "skipConfirmBody": "Gurtu won't remind again for this dose, and the family will be told."
 }

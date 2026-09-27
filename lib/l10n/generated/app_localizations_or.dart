@@ -2288,4 +2288,39 @@ class AppLocalizationsOr extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'ଔଷଧ ସ୍ମାରକ';
+
+  @override
+  String get autoReminders => 'ସ୍ୱୟଂଚାଳିତ ଔଷଧ ସ୍ମାରକ';
+
+  @override
+  String get autoRemindersHint =>
+      'ଡାକ୍ତର ଦେଇଥିବା ପ୍ରତ୍ୟେକ ଔଷଧକୁ Gurtu AI ବୁଝି ତାହାର ସ୍ମାରକ ନିଜେ ଚାଲୁ କରେ। ଭିଜିଟ୍‌ରେ ଆପଣ ସେଗୁଡ଼ିକୁ ଦେଖି ବା ବଦଳାଇ ପାରିବେ।';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return '$medicines ପାଇଁ ସ୍ମାରକ ଚାଲୁ ଅଛି';
+  }
+
+  @override
+  String get visitSavedAuto => 'ଭିଜିଟ୍ ସେଭ୍ ହେଲା। Gurtu ଔଷଧ ସ୍ମାରକ ସେଟ୍ କରୁଛି।';
+
+  @override
+  String get testReminder => 'ଏବେ ଏକ ଟେଷ୍ଟ ସ୍ମାରକ ପଠାନ୍ତୁ';
+
+  @override
+  String get testReminderHint =>
+      'ଯେଉଁ ଫୋନରେ ସ୍ମାରକ ଆସେ, ସେଠାକୁ ଏକ ପ୍ରକୃତ ସ୍ମାରକ ତୁରନ୍ତ ଯାଏ। କେହି ଚିହ୍ନିତ ନକଲେ, 1 ଓ 2 ମିନିଟ ପରେ ପୁଣି ଆସେ, ତାପରେ ପରିବାରକୁ ଛାଡ଼ି ଯାଇଥିବା ଡୋଜ୍‌ର ସତର୍କତା ଯାଏ।';
+
+  @override
+  String get testMedicine => 'ଟେଷ୍ଟ ଔଷଧ';
+
+  @override
+  String get testBadge => 'ଟେଷ୍ଟ';
+
+  @override
+  String get skipConfirmTitle => 'ଏହି ଡୋଜ୍ ଛାଡ଼ିବେ କି?';
+
+  @override
+  String get skipConfirmBody =>
+      'ଏହି ଡୋଜ୍ ପାଇଁ Gurtu ଆଉ ମନେ ପକାଇବ ନାହିଁ, ଏବଂ ପରିବାରକୁ ଜଣାଯିବ।';
 }

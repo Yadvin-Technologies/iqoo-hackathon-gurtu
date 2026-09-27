@@ -4011,6 +4011,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'MEDICINE REMINDER'**
   String get reminderEyebrow;
+
+  /// No description provided for @autoReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic medicine reminders'**
+  String get autoReminders;
+
+  /// No description provided for @autoRemindersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu AI reads each medicine the doctor gives and turns on its reminders by itself. You can still check or change them on the visit.'**
+  String get autoRemindersHint;
+
+  /// No description provided for @autoRemindersDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are on for {medicines}'**
+  String autoRemindersDone(String medicines);
+
+  /// No description provided for @visitSavedAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit saved. Gurtu is setting up the medicine reminders.'**
+  String get visitSavedAuto;
+
+  /// No description provided for @testReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a test reminder now'**
+  String get testReminder;
+
+  /// No description provided for @testReminderHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A real reminder goes straight away to the phone that gets reminders. If no one marks it, it comes again after 1 and 2 minutes, then the family gets the missed-dose alert.'**
+  String get testReminderHint;
+
+  /// No description provided for @testMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Test medicine'**
+  String get testMedicine;
+
+  /// No description provided for @testBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'TEST'**
+  String get testBadge;
+
+  /// No description provided for @skipConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip this dose?'**
+  String get skipConfirmTitle;
+
+  /// No description provided for @skipConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu won\'t remind again for this dose, and the family will be told.'**
+  String get skipConfirmBody;
 }
 
 class _AppLocalizationsDelegate

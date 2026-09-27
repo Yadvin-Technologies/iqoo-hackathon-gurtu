@@ -15,6 +15,8 @@ import 'package:gurtutest/reminders/dose_reminder_page.dart';
 import 'package:gurtutest/reminders/medicine_plan.dart';
 import 'package:gurtutest/reminders/reminder_review_page.dart';
 import 'package:gurtutest/visits/visit_detail_page.dart';
+import 'package:gurtutest/visits/visit_recorder_page.dart';
+import 'package:gurtutest/widgets/language_grid.dart';
 import 'package:gurtutest/widgets/gurtu_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -296,6 +298,7 @@ void main() {
     WidgetTester tester, {
     String language = 'en',
     Size size = const Size(1080, 2400),
+    bool auto = false,
   }) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 2.75;
@@ -303,6 +306,7 @@ void main() {
     SharedPreferences.setMockInitialValues({
       'onboarding_complete': true,
       'app_language': language,
+      'auto_medicine_reminders': auto,
     });
     final prefs = await SharedPreferences.getInstance();
     final seed = CareRepository(prefs)
@@ -421,6 +425,188 @@ void main() {
     );
   });
 
+  /// Lets automatic reminders notice the change, read and send.
+  Future<void> settleAuto(WidgetTester tester) async {
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+  }
+
+  Iterable<String> reminderCalls(FakeServer server) =>
+      server.requests.where((r) => r.contains('medicine-reminders'));
+
+  testWidgets('Gurtu AI turns reminders on by itself and follows changes', (
+    tester,
+  ) async {
+    final (repo, server) = await openLinked(tester, auto: true);
+    final visit = addVisit(repo);
+    await settleAuto(tester);
+
+    // Metformin 1-0-1 and Amlodipine at night: three reminders.
+    final id = visit.id;
+    const path = 'PUT /v1/circles/circle-1/medicine-reminders/';
+    expect(reminderCalls(server), [
+      '$path$id%3Avm1%3Amorning',
+      '$path$id%3Avm1%3Anight',
+      '$path$id%3Avm2%3Anight',
+    ]);
+    expect(
+      find.text('Reminders are on for Metformin 500 mg, Amlodipine 5 mg'),
+      findsOneWidget,
+    );
+    expect(repo.medicineList.map((m) => m.label), [
+      'Amlodipine 5 mg',
+      'Metformin 500 mg',
+    ]);
+
+    // Nothing about the medicines changed: nothing is read again.
+    server.requests.clear();
+    repo.dismissSetupCard();
+    await settleAuto(tester);
+    expect(reminderCalls(server), isEmpty);
+
+    // The family corrects one by hand: that is kept.
+    await openPage(tester, ReminderReviewPage(visitId: id));
+    final night = find.text('Night').first;
+    await tester.ensureVisible(night);
+    await tester.pumpAndSettle();
+    await tester.tap(night);
+    await tester.pump();
+    await tapText(tester, 'Turn on reminders');
+    await settleAuto(tester);
+    // Saving sends what stays on again; nothing reads it back over.
+    expect(
+      reminderCalls(server),
+      unorderedEquals([
+        '$path$id%3Avm1%3Amorning',
+        '$path$id%3Avm2%3Anight',
+        'DELETE /v1/circles/circle-1/medicine-reminders/$id%3Avm1%3Anight',
+      ]),
+    );
+
+    // A note changes: that medicine is read again.
+    server.requests.clear();
+    repo.updateVisitMedicine(
+      visit,
+      const VisitMedicine(id: 'vm2', note: 'Amlodipine 5 mg morning'),
+    );
+    await settleAuto(tester);
+    expect(
+      reminderCalls(server),
+      unorderedEquals([
+        '$path$id%3Avm1%3Amorning',
+        '$path$id%3Avm2%3Amorning',
+        'DELETE /v1/circles/circle-1/medicine-reminders/$id%3Avm2%3Anight',
+      ]),
+    );
+
+    // A medicine removed, then the whole visit: their reminders go.
+    server.requests.clear();
+    repo.removeVisitMedicine(visit, visit.medicines.first);
+    await settleAuto(tester);
+    expect(
+      reminderCalls(server),
+      unorderedEquals([
+        '$path$id%3Avm2%3Amorning',
+        'DELETE /v1/circles/circle-1/medicine-reminders/$id%3Avm1%3Amorning',
+      ]),
+    );
+    repo.deleteVisit(visit);
+    await settleAuto(tester);
+    expect(
+      reminderCalls(server).last,
+      'DELETE /v1/circles/circle-1/medicine-reminders/$id%3Avm2%3Amorning',
+    );
+  });
+
+  testWidgets('with automatic reminders, saving a visit is all it takes', (
+    tester,
+  ) async {
+    final (_, server) = await openLinked(tester, auto: true);
+    await openPage(tester, const VisitRecorderPage());
+    await seeText(tester, 'e.g. Metformin 500 mg after breakfast');
+    await tester.enterText(
+      find.widgetWithText(TextField, 'e.g. Metformin 500 mg after breakfast'),
+      'Metformin 500 mg 1-0-1 after food',
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save visit'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ReminderReviewPage), findsNothing);
+    expect(
+      find.text('Visit saved. Gurtu is setting up the medicine reminders.'),
+      findsOneWidget,
+    );
+    await settleAuto(tester);
+    expect(reminderCalls(server).length, 2);
+  });
+
+  testWidgets('Profile turns automatic reminders off and sends a test', (
+    tester,
+  ) async {
+    final (repo, server) = await openLinked(tester, auto: true);
+    await tester.tap(find.text('Profile').first);
+    await tester.pumpAndSettle();
+    final profile = find
+        .ancestor(
+          of: find.byType(LanguageGrid),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    await tester.scrollUntilVisible(
+      find.text('Send a test reminder now'),
+      300,
+      scrollable: profile,
+    );
+    expect(find.text('Automatic medicine reminders'), findsOneWidget);
+
+    // Off: a new visit's medicines wait for the family.
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+    expect((tester.widget(find.byType(Switch)) as Switch).value, isFalse);
+    addVisit(repo);
+    await settleAuto(tester);
+    expect(reminderCalls(server), isEmpty);
+
+    // The test goes through the server straight away.
+    await tester.tap(find.text('Send a test reminder now'));
+    await tester.pumpAndSettle();
+    expect(
+      server.requests,
+      contains('POST /v1/circles/circle-1/medicine-reminders/test'),
+    );
+    final sent =
+        server.bodies['POST /v1/circles/circle-1/medicine-reminders/test']!;
+    expect((sent['medicine'] as Map)['name'], 'Test medicine');
+    expect(find.text('Sent to 1 phone'), findsOneWidget);
+
+    // It arrives like any reminder, marked as a test; answering it doesn't
+    // tick the real medicine.
+    repo.saveFromReminders(repo.selectedPatient!.id, [
+      (
+        name: 'Metformin',
+        strength: '500 mg',
+        times: [DoseTime.morning],
+        food: FoodTiming.afterFood,
+      ),
+    ]);
+    (PushService.instance as FakePush).messages.add(
+      PushMessage(
+        title: 'Time for Metformin 500 mg',
+        body: '',
+        data: {
+          ...reminderPush(doseId: 'test-1').data!,
+          'test': '1',
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('TEST'), findsOneWidget);
+    await tester.tap(find.text("I've taken it"));
+    await tester.pumpAndSettle();
+    expect(server.bodies['POST /v1/doses/test-1/ack'], {'status': 'taken'});
+    expect(repo.doseTaken(repo.medicineList.single, DoseTime.morning), isNull);
+  });
+
   testWidgets('a reminder opens full screen, is read out and answered', (
     tester,
   ) async {
@@ -458,6 +644,45 @@ void main() {
     expect(server.bodies['POST /v1/doses/d1/ack'], {'status': 'taken'});
     final metformin = repo.medicineList.single;
     expect(repo.doseTaken(metformin, DoseTime.morning), isNotNull);
+  });
+
+  testWidgets('skipping asks first, then the family is told', (tester) async {
+    final (_, server) = await openLinked(tester);
+    final push = PushService.instance as FakePush;
+    push.messages.add(reminderPush(doseId: 'd3'));
+    await tester.pumpAndSettle();
+
+    // Changed their mind: the reminder stays, nothing is sent.
+    await tester.tap(find.text('Skip this time'));
+    await tester.pumpAndSettle();
+    expect(find.text('Skip this dose?'), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(find.byType(DoseReminderPage), findsOneWidget);
+    expect(server.requests, isNot(contains('POST /v1/doses/d3/ack')));
+
+    await tester.tap(find.text('Skip this time'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Skip this time').last);
+    await tester.pumpAndSettle();
+    expect(find.byType(DoseReminderPage), findsNothing);
+    expect(server.bodies['POST /v1/doses/d3/ack'], {'status': 'skipped'});
+
+    // On a family phone: the notice shows, and the doses are fetched.
+    server.requests.clear();
+    push.messages.add(
+      const PushMessage(
+        title: 'Amma skipped Metformin 500 mg',
+        body: 'It was due at 8:00 am. You may want to check on Amma.',
+        data: {'type': 'dose_skipped', 'doseId': 'd3', 'circleId': 'circle-1'},
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('Amma skipped Metformin 500 mg'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(server.requests, contains('GET /v1/circles/circle-1/doses'));
+    await tester.pump(const Duration(seconds: 6));
   });
 
   testWidgets('the family sees a missed dose in red and can mark it', (
@@ -524,6 +749,25 @@ void main() {
       push.messages.add(reminderPush(doseId: 'd9', type: 'missed_dose'));
       await tester.pumpAndSettle();
       expect(find.byType(MissedDosePage), findsOneWidget);
+      Navigator.of(tester.element(find.byType(MissedDosePage))).pop();
+      await tester.pumpAndSettle();
+
+      // Profile, with the automatic reminders switch and the test button.
+      final l = lookupAppLocalizations(Locale(lang.code));
+      await tester.tap(find.text(l.navProfile).first);
+      await tester.pumpAndSettle();
+      final profile = find
+          .ancestor(
+            of: find.byType(LanguageGrid),
+            matching: find.byType(Scrollable),
+          )
+          .first;
+      await tester.scrollUntilVisible(
+        find.text(l.testReminderHint),
+        300,
+        scrollable: profile,
+      );
+      expect(find.text(l.autoReminders), findsOneWidget);
     });
   }
 }

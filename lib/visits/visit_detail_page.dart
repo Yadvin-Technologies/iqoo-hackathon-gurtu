@@ -8,7 +8,9 @@ import '../data/medicine_models.dart';
 import '../l10n/language.dart';
 import '../medicines/medicine_text.dart';
 import '../reminders/medicine_plan.dart';
+import '../reminders/auto_reminders.dart';
 import '../reminders/reminder_review_page.dart';
+import '../reminders/test_reminder_button.dart';
 import '../theme/gurtu_theme.dart';
 import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
@@ -319,6 +321,9 @@ class _Reminders extends StatelessWidget {
       for (final m in cloud.planFor(visit.id) ?? const <PlannedMedicine>[])
         if (m.isOn) m,
     ];
+    final reading =
+        (AutoScope.maybeOf(context)?.busy ?? false) &&
+        cloud.planFor(visit.id) == null;
     return Padding(
       padding: const EdgeInsets.only(top: 14),
       child: Column(
@@ -352,6 +357,22 @@ class _Reminders extends StatelessWidget {
                 ],
               ),
             ),
+          if (reading) ...[
+            Row(
+              children: [
+                const SizedBox.square(
+                  dimension: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: GurtuColors.primary,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(child: Text(l.readingMedicines, style: t.bodyMedium)),
+              ],
+            ),
+            const SizedBox(height: 12),
+          ],
           if (cloud.hasWaitingReminders(visit.id)) ...[
             InfoBanner(
               text: l.remindersPending,
@@ -369,6 +390,10 @@ class _Reminders extends StatelessWidget {
             onPressed: () =>
                 pushPage(context, ReminderReviewPage(visitId: visit.id)),
           ),
+          if (on.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            TestReminderButton(visitId: visit.id),
+          ],
         ],
       ),
     );

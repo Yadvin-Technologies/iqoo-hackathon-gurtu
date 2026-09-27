@@ -7,6 +7,7 @@ import '../data/care_repository.dart';
 import '../data/visit_models.dart';
 import '../l10n/language.dart';
 import '../theme/gurtu_theme.dart';
+import '../reminders/auto_reminders.dart';
 import '../reminders/reminder_review_page.dart';
 import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
@@ -223,6 +224,7 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     final repo = CareScope.of(context);
     final l = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
+    final auto = AutoScope.maybeOf(context)?.enabled ?? false;
     final visit = repo.addVisit(
       date: _date,
       doctorName: _doctor.text,
@@ -239,7 +241,8 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     );
     HapticFeedback.mediumImpact();
     setState(() => _leaving = true);
-    if (visit != null && visit.medicines.isNotEmpty) {
+    final medicines = visit != null && visit.medicines.isNotEmpty;
+    if (medicines && !auto) {
       // Straight on to checking what Gurtu read, and turning reminders on.
       Navigator.pushReplacement(
         context,
@@ -252,7 +255,12 @@ class _VisitRecorderPageState extends State<VisitRecorderPage> {
     }
     messenger
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(l.visitSaved)));
+      ..showSnackBar(
+        SnackBar(
+          // Gurtu AI reads them and turns the reminders on by itself.
+          content: Text(medicines && auto ? l.visitSavedAuto : l.visitSaved),
+        ),
+      );
   }
 
   Future<void> _confirmLeave() async {

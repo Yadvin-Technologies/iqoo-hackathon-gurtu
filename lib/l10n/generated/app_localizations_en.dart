@@ -2298,4 +2298,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'MEDICINE REMINDER';
+
+  @override
+  String get autoReminders => 'Automatic medicine reminders';
+
+  @override
+  String get autoRemindersHint =>
+      'Gurtu AI reads each medicine the doctor gives and turns on its reminders by itself. You can still check or change them on the visit.';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return 'Reminders are on for $medicines';
+  }
+
+  @override
+  String get visitSavedAuto =>
+      'Visit saved. Gurtu is setting up the medicine reminders.';
+
+  @override
+  String get testReminder => 'Send a test reminder now';
+
+  @override
+  String get testReminderHint =>
+      'A real reminder goes straight away to the phone that gets reminders. If no one marks it, it comes again after 1 and 2 minutes, then the family gets the missed-dose alert.';
+
+  @override
+  String get testMedicine => 'Test medicine';
+
+  @override
+  String get testBadge => 'TEST';
+
+  @override
+  String get skipConfirmTitle => 'Skip this dose?';
+
+  @override
+  String get skipConfirmBody =>
+      'Gurtu won\'t remind again for this dose, and the family will be told.';
 }

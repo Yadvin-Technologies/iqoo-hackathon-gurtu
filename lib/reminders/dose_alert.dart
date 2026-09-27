@@ -16,6 +16,7 @@ class DoseAlert {
     required this.medicine,
     this.missed = false,
     this.followUp = false,
+    this.test = false,
     this.title = '',
     this.body = '',
     this.food = FoodTiming.any,
@@ -38,6 +39,9 @@ class DoseAlert {
 
   /// Sent again because nobody answered the first one.
   final bool followUp;
+
+  /// From "Send a test reminder": answering it doesn't tick the medicine.
+  final bool test;
 
   /// The notification's own words, already in this phone's language.
   final String title;
@@ -78,6 +82,7 @@ class DoseAlert {
       medicine: text('medicine'),
       missed: type == 'missed_dose',
       followUp: text('followUp') == '1',
+      test: text('test') == '1',
       title: m.title,
       body: m.body,
       food: FoodTiming.values.asNameMap()[text('food')] ?? FoodTiming.any,

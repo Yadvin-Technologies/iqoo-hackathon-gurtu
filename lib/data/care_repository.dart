@@ -589,7 +589,8 @@ class CareRepository extends ChangeNotifier {
   int applyRemoteDoses(String patientId, List<Map<String, dynamic>> remote) {
     var added = 0;
     for (final d in remote) {
-      if (d['status'] != 'taken') continue;
+      // Test reminders aren't real doses.
+      if (d['status'] != 'taken' || d['test'] == true) continue;
       final medicine = medicineNamed(
         patientId,
         ((d['medicine'] as Map?)?['name'] as String?) ?? '',

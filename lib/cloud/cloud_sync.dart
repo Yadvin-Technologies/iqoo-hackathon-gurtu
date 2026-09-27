@@ -10,6 +10,7 @@ import 'dart:io';
 
 import '../data/attachment_store.dart';
 import '../data/care_models.dart';
+import '../data/medicine_models.dart';
 import '../reminders/medicine_plan.dart';
 import 'cloud_models.dart';
 import 'gurtu_api.dart';
@@ -71,6 +72,9 @@ class CloudSync extends ChangeNotifier {
 
   /// Visit id -> the medicine plan the family confirmed (JSON).
   final _visitPlans = <String, List<Map<String, dynamic>>>{};
+
+  /// Visit id -> the local patient its reminders are for.
+  final _planPatients = <String, String>{};
 
   /// Reminder id -> work still to send: {patientId, op: put|delete, body,
   /// photo, audio}. Kept across restarts; retried until the server has it.
@@ -376,6 +380,26 @@ class CloudSync extends ChangeNotifier {
   List<PlannedMedicine>? planFor(String visitId) =>
       _visitPlans[visitId]?.map(PlannedMedicine.fromJson).toList();
 
+  /// Visits that have (or had) reminders set up.
+  List<String> get plannedVisits => _visitPlans.keys.toList();
+
+  /// The visit was deleted: its reminders go too.
+  Future<void> forgetVisit(String visitId) async {
+    final patientId = _planPatients[visitId];
+    final done = patientId == null
+        ? Future<void>.value()
+        : setVisitReminders(
+            patientId: patientId,
+            visitId: visitId,
+            plan: const [],
+          );
+    _visitPlans.remove(visitId);
+    _planPatients.remove(visitId);
+    _save();
+    notifyListeners();
+    await done;
+  }
+
   /// Reminders of [visitId] still waiting for the server.
   bool hasWaitingReminders(String visitId) =>
       _jobs.keys.any((k) => k.startsWith('$visitId:'));
@@ -435,6 +459,7 @@ class CloudSync extends ChangeNotifier {
       _jobs[id] = {'patientId': patientId, 'op': 'delete'};
     }
     _visitPlans[visitId] = [for (final m in plan) m.toJson()];
+    _planPatients[visitId] = patientId;
     _save();
     notifyListeners();
     await _flushJobs();
@@ -508,6 +533,37 @@ class CloudSync extends ChangeNotifier {
     return !_acks.containsKey(doseId);
   }
 
+  /// "Send a test reminder": [medicine] reminded now, exactly as it would be
+  /// at its time. Uses its saved reminder when there is one. Returns the
+  /// phones reached, or null when it couldn't be sent (offline, no circle).
+  Future<int?> sendTestReminder(
+    String patientId,
+    PlannedMedicine medicine, {
+    String? visitId,
+  }) async {
+    final circleId = _links[patientId];
+    if (circleId == null || !await _ensureDevice()) return null;
+    // Anything still waiting goes first, so the saved reminder is used.
+    await _flushJobs();
+    final slot =
+        medicine.orderedTimes.firstOrNull ?? DoseTime.at(DateTime.now());
+    return _call(
+      () => _api.testMedicineReminder(
+        circleId,
+        clientId: visitId == null
+            ? null
+            : '$visitId:${medicine.visitMedicineId}:${slot.name}',
+        medicine: {
+          'name': medicine.name.trim(),
+          'strength': medicine.strength.trim(),
+          'food': medicine.food.name,
+          'note': medicine.note.trim(),
+        },
+        slot: slot.name,
+      ),
+    );
+  }
+
   /// Answered doses still waiting for the server.
   bool get hasWaitingAnswers => _acks.isNotEmpty;
 
@@ -557,6 +613,7 @@ class CloudSync extends ChangeNotifier {
     _circles.clear();
     _pending.clear();
     _visitPlans.clear();
+    _planPatients.clear();
     _jobs.clear();
     _uploaded.clear();
     _acks.clear();
@@ -594,6 +651,9 @@ class CloudSync extends ChangeNotifier {
       for (final e in (j['pending'] as Map? ?? const {}).entries) {
         _pending[e.key as String] = Map<String, dynamic>.from(e.value as Map);
       }
+      _planPatients.addAll(
+        Map<String, String>.from(j['planPatients'] as Map? ?? const {}),
+      );
       for (final e in (j['visitPlans'] as Map? ?? const {}).entries) {
         _visitPlans[e.key as String] = [
           for (final m in e.value as List) Map<String, dynamic>.from(m as Map),
@@ -623,6 +683,7 @@ class CloudSync extends ChangeNotifier {
         'circles': {for (final c in _circles.values) c.id: c.toJson()},
         'pending': _pending,
         'visitPlans': _visitPlans,
+        'planPatients': _planPatients,
         'jobs': _jobs,
         'uploaded': _uploaded,
         'acks': _acks,

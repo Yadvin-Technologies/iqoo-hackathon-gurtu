@@ -2283,4 +2283,40 @@ class AppLocalizationsAs extends AppLocalizations {
 
   @override
   String get reminderEyebrow => 'ঔষধৰ সোঁৱৰণী';
+
+  @override
+  String get autoReminders => 'স্বয়ংক্ৰিয় ঔষধৰ সোঁৱৰণী';
+
+  @override
+  String get autoRemindersHint =>
+      'চিকিৎসকে দিয়া প্ৰতিটো ঔষধ Gurtu AI-এ বুজি তাৰ সোঁৱৰণী নিজেই অন কৰে। ভিজিটত আপুনি সেইবোৰ চাব বা সলনি কৰিব পাৰে।';
+
+  @override
+  String autoRemindersDone(String medicines) {
+    return '$medicinesৰ সোঁৱৰণী অন আছে';
+  }
+
+  @override
+  String get visitSavedAuto =>
+      'ভিজিট ছেভ হ\'ল। Gurtu-এ ঔষধৰ সোঁৱৰণী ছেট কৰি আছে।';
+
+  @override
+  String get testReminder => 'এতিয়াই এটা পৰীক্ষামূলক সোঁৱৰণী পঠিয়াওক';
+
+  @override
+  String get testReminderHint =>
+      'যিটো ফোনলৈ সোঁৱৰণী যায়, তালৈ এটা সঁচা সোঁৱৰণী লগে লগে যায়। কোনেও চিহ্নিত নকৰিলে 1 আৰু 2 মিনিটৰ পিছত পুনৰ আহে, তাৰ পিছত পৰিয়ালে বাদ পৰা ডোজৰ সতৰ্কবাণী পায়।';
+
+  @override
+  String get testMedicine => 'পৰীক্ষামূলক ঔষধ';
+
+  @override
+  String get testBadge => 'পৰীক্ষা';
+
+  @override
+  String get skipConfirmTitle => 'এই ডোজটো বাদ দিবনে?';
+
+  @override
+  String get skipConfirmBody =>
+      'এই ডোজৰ বাবে Gurtu-এ পুনৰ সোঁৱৰাই নিদিব, আৰু পৰিয়ালক জনোৱা হ\'ব।';
 }

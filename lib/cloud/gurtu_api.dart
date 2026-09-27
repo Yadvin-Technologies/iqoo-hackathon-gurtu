@@ -211,6 +211,23 @@ class GurtuApi {
             '${Uri.encodeComponent(clientId)}',
       );
 
+  /// Sends one medicine reminder now, as a test: the saved reminder
+  /// [clientId], or [medicine] when it isn't saved yet. Follow-ups and the
+  /// family's alert come a minute apart. Returns how many phones it reached.
+  Future<int> testMedicineReminder(
+    String circleId, {
+    String? clientId,
+    required Map<String, dynamic> medicine,
+    String? slot,
+  }) async {
+    final j = await _call(
+      'POST',
+      '/v1/circles/$circleId/medicine-reminders/test',
+      {'clientId': ?clientId, 'medicine': medicine, 'slot': ?slot},
+    );
+    return j['sent'] as int? ?? 0;
+  }
+
   /// "I've taken it" (or skipped) for one reminder sent.
   Future<void> ackDose(String doseId, String status) =>
       _call('POST', '/v1/doses/$doseId/ack', {'status': status});

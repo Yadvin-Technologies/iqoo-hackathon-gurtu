@@ -6,6 +6,8 @@ import '../data/care_repository.dart';
 import '../home/home_page.dart';
 import '../l10n/language.dart';
 import '../theme/gurtu_theme.dart';
+import '../reminders/auto_reminders.dart';
+import '../reminders/test_reminder_button.dart';
 import '../widgets/ai_status.dart';
 import '../widgets/gurtu_widgets.dart';
 import '../widgets/language_grid.dart';
@@ -200,7 +202,12 @@ class _ProfileTab extends StatelessWidget {
           SectionHeader(title: l.rowAi),
           const AiStatusCard(),
           const AiTechDetails(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 28),
+          if (AutoScope.maybeOf(context) case final auto?) ...[
+            SectionHeader(title: l.medRemindersTitle),
+            _MedicineReminders(auto: auto),
+            const SizedBox(height: 28),
+          ],
           if (repo.hasSampleData) ...[
             Text(l.sampleDataOn, style: t.bodyMedium),
             const SizedBox(height: 8),
@@ -218,6 +225,63 @@ class _ProfileTab extends StatelessWidget {
             icon: Icons.replay_rounded,
             onPressed: onRestartOnboarding,
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Automatic medicine reminders on or off, and a test reminder sent now.
+class _MedicineReminders extends StatelessWidget {
+  const _MedicineReminders({required this.auto});
+
+  final AutoReminders auto;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final t = Theme.of(context).textTheme;
+    return GurtuCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          MergeSemantics(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Icon(
+                    Icons.auto_awesome_rounded,
+                    color: GurtuColors.primary,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(l.autoReminders, style: t.titleMedium),
+                      const SizedBox(height: 4),
+                      Text(l.autoRemindersHint, style: t.bodySmall),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Switch(
+                  value: auto.enabled,
+                  activeTrackColor: GurtuColors.primary,
+                  onChanged: (on) => auto.enabled = on,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: GurtuColors.outline),
+          const SizedBox(height: 16),
+          const TestReminderButton(),
+          const SizedBox(height: 10),
+          Text(l.testReminderHint, style: t.bodySmall),
         ],
       ),
     );
