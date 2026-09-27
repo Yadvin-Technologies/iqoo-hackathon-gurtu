@@ -4,7 +4,8 @@ import 'package:gurtutest/ai/on_device_ai.dart';
 import 'package:gurtutest/data/care_repository.dart';
 import 'package:gurtutest/l10n/language.dart';
 import 'package:gurtutest/main.dart';
-import 'package:gurtutest/medicines/prescription_import_page.dart';
+import 'package:gurtutest/home/widgets/sos_button.dart';
+import 'package:gurtutest/memory/memory_editor_page.dart';
 import 'package:gurtutest/onboarding/onboarding_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,7 +54,8 @@ void main() {
     expect(find.text('Caring for'), findsOneWidget);
     expect(find.text('Amma'), findsWidgets);
     expect(find.text('64 years'), findsOneWidget);
-    expect(find.text('SOS'), findsOneWidget);
+    // SOS is hidden until it can really reach someone.
+    expect(find.text('SOS'), findsNothing);
     expect(find.text('Gurtu'), findsOneWidget);
 
     // Live numbers from the records, nothing made up.
@@ -162,9 +164,11 @@ void main() {
     expect(prefs.getString('care_data_v1'), contains('Felt dizzy'));
   });
 
-  testWidgets('Capture Care offers a prescription scan and a note only', (
+  testWidgets('Capture Care offers a document scan and a note only', (
     tester,
   ) async {
+    DocumentCamera.instance = _NoCamera();
+    addTearDown(() => DocumentCamera.instance = DeviceDocumentCamera());
     await openHome(tester);
     await tester.ensureVisible(find.text('Capture Care'));
     await tester.pumpAndSettle();
@@ -175,9 +179,11 @@ void main() {
     for (final gone in ['Voice', 'Vital', 'Document', 'Coming soon']) {
       expect(find.text(gone), findsNothing);
     }
+    expect(find.text('Report, prescription or any document'), findsOneWidget);
     await tester.tap(find.text('Scan'));
     await tester.pumpAndSettle();
-    expect(find.byType(PrescriptionImportPage), findsOneWidget);
+    // Straight to the camera, saving into the care memory.
+    expect(find.byType(MemoryEditorPage), findsOneWidget);
   });
 
   testWidgets('pulling down on Home shows what is saved', (tester) async {
@@ -203,6 +209,15 @@ void main() {
     tester,
   ) async {
     await openHome(tester);
+    // Hidden on Home for now; the button itself still works.
+    tester
+        .state<NavigatorState>(find.byType(Navigator).first)
+        .push(
+          MaterialPageRoute<void>(
+            builder: (_) => const Scaffold(body: Center(child: SosButton())),
+          ),
+        );
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('SOS'));
     await tester.pumpAndSettle();
@@ -269,4 +284,13 @@ void main() {
       }
     });
   }
+}
+
+/// The camera, cancelled straight away.
+class _NoCamera implements DocumentCamera {
+  @override
+  bool get available => true;
+
+  @override
+  Future<String?> pick({required bool fromGallery}) async => null;
 }

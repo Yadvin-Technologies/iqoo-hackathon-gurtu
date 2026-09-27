@@ -547,7 +547,10 @@ void main() {
     expect(find.text('2 people look after you'), findsOneWidget);
     expect(find.text('Sai'), findsOneWidget);
 
-    // One tap (and a confirm) tells the family.
+    // One tap (and a confirm) tells the family, once the "you joined"
+    // notice has gone from the top.
+    await tester.pump(const Duration(seconds: 6));
+    await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Ask family for help'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ask family for help'));

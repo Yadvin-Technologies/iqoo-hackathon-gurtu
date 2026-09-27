@@ -1242,5 +1242,98 @@
   "testMedicine": "Test medicine",
   "testBadge": "TEST",
   "skipConfirmTitle": "Skip this dose?",
-  "skipConfirmBody": "Gurtu won't remind again for this dose, and the family will be told."
+  "skipConfirmBody": "Gurtu won't remind again for this dose, and the family will be told.",
+  "addPage": "Add another page",
+  "addToMemory": "Add to memory",
+  "askExampleMedicines": "Which medicines are taken at night?",
+  "askExampleReport": "What did the last test report say?",
+  "askFailed": "Gurtu AI couldn't answer just now. Here is what I found in the memory:",
+  "askFoundInMemory": "Gurtu AI isn't on this phone yet, so here is what I found in the memory:",
+  "askHint": "Ask about medicines, reports, visits…",
+  "askNewChat": "New chat",
+  "askNothingFound": "I couldn't find anything about that in the memory yet. Try other words, or save the report or note first.",
+  "askSources": "From memory",
+  "cantOpenFile": "No app on this phone can open this file.",
+  "captureDocHint": "Report, prescription or any document",
+  "changesSaved": "Changes saved",
+  "clearSearch": "Clear search",
+  "conditionsLabel": "Health conditions",
+  "dailyMedicinesLabel": "Takes medicines every day",
+  "deleteMemoryTitle": "Delete this from memory?",
+  "editDetails": "Edit details",
+  "editMemory": "Edit",
+  "gettingAroundLabel": "Getting around",
+  "memoryAll": "All",
+  "memoryDocuments": "Reports & scans",
+  "memoryEmptyBody": "Scan a report or prescription, write a note, or share a file to Gurtu from any app.",
+  "memoryNotes": "Notes",
+  "memoryPrivate": "Saved only on this phone. Gurtu reads it to answer your questions.",
+  "memorySearchHint": "Search, e.g. sugar report",
+  "memoryTextHint": "Gurtu reads the printed text. You can correct it or add more.",
+  "memoryTextLabel": "What it says",
+  "memoryTitleHint": "e.g. Blood test report",
+  "memoryTitleLabel": "Title",
+  "readingDocument": "Reading the document…",
+  "recentHospitalLabel": "Hospital or doctor in the last 30 days",
+  "saveChanges": "Save changes",
+  "saveToMemory": "Save to memory",
+  "saveToMemoryHint": "Photograph each page. Gurtu reads it on this phone so you can find it later and ask about it.",
+  "smartSearchDownload": "Download",
+  "smartSearchTitle": "Smarter search",
+  "aboutPerson": "About {name}",
+  "@aboutPerson": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "addMedicinesFound": "{count, plural, =1{Add 1 medicine to the list} other{Add {count} medicines to the list}}",
+  "@addMedicinesFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "askThinking": "Looking through {name}'s memory…",
+  "@askThinking": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "memoryNoResults": "Nothing found for “{query}”.",
+  "@memoryNoResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "memorySubtitle": "Everything saved about {name}: notes, reports, visits and medicines.",
+  "@memorySubtitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "smartSearchBody": "Download a small AI model ({size} MB) so Gurtu finds things by meaning, not only exact words. It stays on this phone.",
+  "@smartSearchBody": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "smartSearchProgress": "Downloading… {percent}%",
+  "@smartSearchProgress": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  }
 }

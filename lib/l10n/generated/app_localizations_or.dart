@@ -2323,4 +2323,164 @@ class AppLocalizationsOr extends AppLocalizations {
   @override
   String get skipConfirmBody =>
       'ଏହି ଡୋଜ୍ ପାଇଁ Gurtu ଆଉ ମନେ ପକାଇବ ନାହିଁ, ଏବଂ ପରିବାରକୁ ଜଣାଯିବ।';
+
+  @override
+  String get addPage => 'ଆଉ ଏକ ପୃଷ୍ଠା ଯୋଡ଼ନ୍ତୁ';
+
+  @override
+  String get addToMemory => 'ସ୍ମୃତିରେ ଯୋଡ଼ନ୍ତୁ';
+
+  @override
+  String get askExampleMedicines => 'ରାତିରେ କେଉଁ ଔଷଧ ଖାଇବାକୁ ଅଛି?';
+
+  @override
+  String get askExampleReport => 'ଶେଷ ପରୀକ୍ଷା ରିପୋର୍ଟରେ କଣ ଥିଲା?';
+
+  @override
+  String get askFailed =>
+      'Gurtu AI ଏବେ ଉତ୍ତର ଦେଇପାରିଲା ନାହିଁ। ସ୍ମୃତିରେ ଏହା ମିଳିଲା:';
+
+  @override
+  String get askFoundInMemory =>
+      'Gurtu AI ଏପର୍ଯ୍ୟନ୍ତ ଏହି ଫୋନରେ ନାହିଁ, ତେଣୁ ସ୍ମୃତିରେ ଏହା ମିଳିଲା:';
+
+  @override
+  String get askHint => 'ଔଷଧ, ରିପୋର୍ଟ, ଭିଜିଟ୍ ବିଷୟରେ ପଚାରନ୍ତୁ…';
+
+  @override
+  String get askNewChat => 'ନୂଆ ଚାଟ୍';
+
+  @override
+  String get askNothingFound =>
+      'ଏ ବିଷୟରେ ସ୍ମୃତିରେ ଏପର୍ଯ୍ୟନ୍ତ କିଛି ମିଳିଲା ନାହିଁ। ଅନ୍ୟ ଶବ୍ଦରେ ପଚାରନ୍ତୁ, କିମ୍ବା ପ୍ରଥମେ ରିପୋର୍ଟ ବା ନୋଟ୍ ସେଭ୍ କରନ୍ତୁ।';
+
+  @override
+  String get askSources => 'ସ୍ମୃତିରୁ';
+
+  @override
+  String get cantOpenFile =>
+      'ଏହି ଫାଇଲ୍ ଖୋଲିପାରୁଥିବା କୌଣସି ଆପ୍ ଏହି ଫୋନରେ ନାହିଁ।';
+
+  @override
+  String get captureDocHint => 'ରିପୋର୍ଟ, ପ୍ରେସକ୍ରିପସନ୍ ବା ଯେକୌଣସି କାଗଜ';
+
+  @override
+  String get changesSaved => 'ପରିବର୍ତ୍ତନ ସେଭ୍ ହେଲା';
+
+  @override
+  String get clearSearch => 'ଖୋଜା ସଫା କରନ୍ତୁ';
+
+  @override
+  String get conditionsLabel => 'ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା';
+
+  @override
+  String get dailyMedicinesLabel => 'ପ୍ରତିଦିନ ଔଷଧ ଖାଆନ୍ତି';
+
+  @override
+  String get deleteMemoryTitle => 'ଏହାକୁ ସ୍ମୃତିରୁ ହଟାଇବେ କି?';
+
+  @override
+  String get editDetails => 'ବିବରଣୀ ବଦଳାନ୍ତୁ';
+
+  @override
+  String get editMemory => 'ବଦଳାନ୍ତୁ';
+
+  @override
+  String get gettingAroundLabel => 'ଚାଲିବା-ବୁଲିବା';
+
+  @override
+  String get memoryAll => 'ସବୁ';
+
+  @override
+  String get memoryDocuments => 'ରିପୋର୍ଟ ଓ ସ୍କାନ୍';
+
+  @override
+  String get memoryEmptyBody =>
+      'ରିପୋର୍ଟ ବା ପ୍ରେସକ୍ରିପସନ୍ ସ୍କାନ୍ କରନ୍ତୁ, ନୋଟ୍ ଲେଖନ୍ତୁ, କିମ୍ବା ଯେକୌଣସି ଆପ୍‌ରୁ ଫାଇଲ୍ Gurtuକୁ ସେୟାର୍ କରନ୍ତୁ।';
+
+  @override
+  String get memoryNotes => 'ନୋଟ୍';
+
+  @override
+  String get memoryPrivate =>
+      'କେବଳ ଏହି ଫୋନରେ ସେଭ୍ ହୁଏ। ଆପଣଙ୍କ ପ୍ରଶ୍ନର ଉତ୍ତର ଦେବା ପାଇଁ Gurtu ଏହାକୁ ପଢ଼େ।';
+
+  @override
+  String get memorySearchHint => 'ଖୋଜନ୍ତୁ, ଯେପରି ସୁଗାର ରିପୋର୍ଟ';
+
+  @override
+  String get memoryTextHint =>
+      'Gurtu ଛପା ଅକ୍ଷର ପଢ଼େ। ଆପଣ ସଂଶୋଧନ କରିପାରିବେ କିମ୍ବା ଅଧିକ ଯୋଡ଼ିପାରିବେ।';
+
+  @override
+  String get memoryTextLabel => 'ଏଥିରେ କଣ ଲେଖାଅଛି';
+
+  @override
+  String get memoryTitleHint => 'ଯେପରି ରକ୍ତ ପରୀକ୍ଷା ରିପୋର୍ଟ';
+
+  @override
+  String get memoryTitleLabel => 'ଶୀର୍ଷକ';
+
+  @override
+  String get readingDocument => 'କାଗଜ ପଢ଼ାଯାଉଛି…';
+
+  @override
+  String get recentHospitalLabel => 'ଗତ 30 ଦିନରେ ଡାକ୍ତରଖାନା ବା ଡାକ୍ତର';
+
+  @override
+  String get saveChanges => 'ପରିବର୍ତ୍ତନ ସେଭ୍ କରନ୍ତୁ';
+
+  @override
+  String get saveToMemory => 'ସ୍ମୃତିରେ ସେଭ୍ କରନ୍ତୁ';
+
+  @override
+  String get saveToMemoryHint =>
+      'ପ୍ରତ୍ୟେକ ପୃଷ୍ଠାର ଫଟୋ ନିଅନ୍ତୁ। ପରେ ଖୋଜିବା ଓ ପଚାରିବା ପାଇଁ Gurtu ଏହାକୁ ଏହି ଫୋନରେ ହିଁ ପଢ଼େ।';
+
+  @override
+  String get smartSearchDownload => 'ଡାଉନଲୋଡ୍ କରନ୍ତୁ';
+
+  @override
+  String get smartSearchTitle => 'ଅଧିକ ବୁଦ୍ଧିମାନ ଖୋଜା';
+
+  @override
+  String aboutPerson(String name) {
+    return '$nameଙ୍କ ବିଷୟରେ';
+  }
+
+  @override
+  String addMedicinesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countଟି ଔଷଧ ତାଲିକାରେ ଯୋଡ଼ନ୍ତୁ',
+      one: '1ଟି ଔଷଧ ତାଲିକାରେ ଯୋଡ଼ନ୍ତୁ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String askThinking(String name) {
+    return '$nameଙ୍କ ସ୍ମୃତିରେ ଖୋଜାଯାଉଛି…';
+  }
+
+  @override
+  String memoryNoResults(String query) {
+    return '“$query” ପାଇଁ କିଛି ମିଳିଲା ନାହିଁ।';
+  }
+
+  @override
+  String memorySubtitle(String name) {
+    return '$nameଙ୍କ ବିଷୟରେ ସେଭ୍ ହୋଇଥିବା ସବୁକିଛି: ନୋଟ୍, ରିପୋର୍ଟ, ଭିଜିଟ୍ ଓ ଔଷଧ।';
+  }
+
+  @override
+  String smartSearchBody(int size) {
+    return 'ଏକ ଛୋଟ AI ମଡେଲ୍ ($size MB) ଡାଉନଲୋଡ୍ କରନ୍ତୁ, ଯାହାଦ୍ୱାରା Gurtu କେବଳ ଶବ୍ଦ ନୁହେଁ, ଅର୍ଥ ଦେଖି ମଧ୍ୟ ଖୋଜିବ। ଏହା ଏହି ଫୋନରେ ହିଁ ରହେ।';
+  }
+
+  @override
+  String smartSearchProgress(int percent) {
+    return 'ଡାଉନଲୋଡ୍ ହେଉଛି… $percent%';
+  }
 }

@@ -289,7 +289,10 @@ class CareRepository extends ChangeNotifier {
               ? oldPatient.id
               : 'cm_${m.id}',
           patientId: patientId,
-          name: m.name,
+          // As last set on this phone (Profile) rather than when they joined.
+          name: m.role == CareRole.patient.name
+              ? patientById(patientId)?.name ?? m.name
+              : m.name,
           role: CareRole.values.asNameMap()[m.role] ?? CareRole.family,
           isYou: m.isYou,
         ),
@@ -336,6 +339,107 @@ class CareRepository extends ChangeNotifier {
         source: const SourceRef(type: MomentType.note),
       ),
     );
+    _save();
+  }
+
+  /// A scan, a shared document or a note, saved to the selected person's
+  /// care memory.
+  CareMoment? addMoment({
+    required MomentType type,
+    String title = '',
+    String detail = '',
+    List<String> files = const [],
+    String? patientId,
+  }) {
+    final patient = patientId == null
+        ? selectedPatient
+        : patientById(patientId);
+    if (patient == null) return null;
+    if (title.trim().isEmpty && detail.trim().isEmpty && files.isEmpty) {
+      return null;
+    }
+    final now = DateTime.now();
+    final moment = CareMoment(
+      id: 'm_${now.microsecondsSinceEpoch}',
+      patientId: patient.id,
+      createdBy: you?.id ?? '',
+      type: type,
+      title: title.trim(),
+      detail: detail.trim(),
+      timestamp: now,
+      source: SourceRef(
+        type: type,
+        reference: files.isEmpty ? null : files.first,
+      ),
+      files: [...files],
+    );
+    moments.add(moment);
+    _save();
+    return moment;
+  }
+
+  CareMoment? momentById(String id) =>
+      moments.where((m) => m.id == id).firstOrNull;
+
+  void updateMoment(CareMoment moment) {
+    final i = moments.indexWhere((m) => m.id == moment.id);
+    if (i < 0) return;
+    // Files taken off it are deleted from the phone.
+    for (final f in moments[i].files) {
+      if (!moment.files.contains(f)) AttachmentStore.instance.delete(f);
+    }
+    moments[i] = moment;
+    _save();
+  }
+
+  /// Removes it and deletes its photos and documents from the phone.
+  void deleteMoment(CareMoment moment) {
+    for (final f in moment.files) {
+      AttachmentStore.instance.delete(f);
+    }
+    moments.removeWhere((m) => m.id == moment.id);
+    _save();
+  }
+
+  /// The person's details, changed in Profile. Returns the saved profile.
+  PatientProfile? updatePatient(PatientProfile profile) {
+    final i = patients.indexWhere((p) => p.id == profile.id);
+    if (i < 0) return null;
+    patients[i] = profile;
+    // Their own entry in the circle shows the new name.
+    for (final (j, m) in members.indexed) {
+      if (m.patientId == profile.id && m.role == CareRole.patient) {
+        members[j] = CareMember(
+          id: m.id,
+          patientId: m.patientId,
+          name: profile.name,
+          role: m.role,
+          isYou: m.isYou,
+          isSample: m.isSample,
+        );
+      }
+    }
+    _save();
+    return profile;
+  }
+
+  /// What you're called in the app (and in the circles on this phone).
+  void setUserName(String name) {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return;
+    userName = trimmed;
+    for (final (j, m) in members.indexed) {
+      if (m.isYou) {
+        members[j] = CareMember(
+          id: m.id,
+          patientId: m.patientId,
+          name: trimmed,
+          role: m.role,
+          isYou: true,
+          isSample: m.isSample,
+        );
+      }
+    }
     _save();
   }
 
@@ -432,10 +536,12 @@ class CareRepository extends ChangeNotifier {
     _save();
   }
 
-  /// Every photo and voice note still in use, for clearing out the rest.
+  /// Every photo, voice note and document still in use, for clearing out
+  /// the rest.
   Set<String> get attachmentFiles => {
     for (final v in visits)
       for (final a in v.attachments) a.file,
+    for (final m in moments) ...m.files,
   };
 
   void _deleteFiles(Iterable<DoctorVisit> gone) {

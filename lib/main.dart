@@ -12,6 +12,11 @@ import 'data/attachment_store.dart';
 import 'data/care_repository.dart';
 import 'data/visit_models.dart';
 import 'l10n/language.dart';
+import 'memory/knowledge.dart';
+import 'memory/memory_editor_page.dart';
+import 'memory/memory_page.dart';
+import 'memory/share_inbox.dart';
+import 'memory/smart_search.dart';
 import 'onboarding/onboarding_flow.dart';
 import 'onboarding/onboarding_state.dart';
 import 'reminders/auto_reminders.dart';
@@ -90,6 +95,14 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
   final _navigator = GlobalKey<NavigatorState>();
   StreamSubscription<PushMessage>? _messages;
   StreamSubscription<PushMessage>? _taps;
+  StreamSubscription<SharedContent>? _shares;
+
+  /// Shared before the app was ready (still starting): opened once it is.
+  SharedContent? _waitingShare;
+
+  /// Meaning-based search for Memory and Ask Gurtu (downloads with the AI).
+  late final _smart = SmartSearch(widget.prefs, widget.ai);
+  late final _knowledge = KnowledgeBase(repo: _care, smart: _smart);
 
   /// Sets up medicine reminders by itself (when online).
   AutoReminders? _auto;
@@ -115,10 +128,20 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
       ]).whenComplete(() {
         _pruneFiles();
         if (mounted) setState(() => _booting = false);
+        if (_waitingShare case final s?) {
+          _waitingShare = null;
+          _openShared(s);
+        }
       });
     }
     _messages = _cloud.messages.listen(_showMessage);
     _taps = _cloud.opened.listen(_opened);
+    // Gurtu in the phone's Share menu: what is shared is saved to memory.
+    final inbox = ShareInbox.instance;
+    _shares = inbox.incoming.listen(_openShared);
+    inbox.initial().then((s) {
+      if (s != null) _openShared(s);
+    });
     if (widget.online) {
       // Reminders are sent by the server, so they need it.
       _auto = AutoReminders(
@@ -180,6 +203,33 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
       overlay,
       title: l.autoRemindersDone(medicines.map((m) => m.label).join(', ')),
       icon: Icons.alarm_on_rounded,
+    );
+  }
+
+  /// Something shared from another app: the save-to-memory screen, with it.
+  void _openShared(SharedContent shared, {bool retried = false}) {
+    unawaited(ShareInbox.instance.done());
+    if (!_onboarded || shared.isEmpty) return;
+    if (_booting) {
+      _waitingShare = shared;
+      return;
+    }
+    final navigator = _navigator.currentState;
+    if (navigator == null) {
+      if (!retried) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _openShared(shared, retried: true),
+        );
+      }
+      return;
+    }
+    navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => MemoryEditorPage(
+          sharedPaths: shared.paths,
+          sharedText: shared.text,
+        ),
+      ),
     );
   }
 
@@ -280,6 +330,9 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
   void dispose() {
     _messages?.cancel();
     _taps?.cancel();
+    _shares?.cancel();
+    _knowledge.dispose();
+    _smart.dispose();
     _auto?.dispose();
     InAppNotice.hide();
     WidgetsBinding.instance.removeObserver(this);
@@ -303,35 +356,41 @@ class _GurtuAppState extends State<GurtuApp> with WidgetsBindingObserver {
           repository: _care,
           child: AutoScope(
             auto: _auto,
-            child: LanguageScope(
-              controller: _language,
-              child: ValueListenableBuilder<AppLanguage>(
-                valueListenable: _language,
-                builder: (context, language, _) => MaterialApp(
-                  scaffoldMessengerKey: _messenger,
-                  navigatorKey: _navigator,
-                  onGenerateTitle: (context) => 'Gurtu',
-                  debugShowCheckedModeBanner: false,
-                  theme: buildGurtuTheme(),
-                  locale: language.locale,
-                  supportedLocales: AppLocalizations.supportedLocales,
-                  localizationsDelegates:
-                      AppLocalizations.localizationsDelegates,
-                  home: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 400),
-                    child: _booting
-                        ? const SplashScreen(key: ValueKey('splash'))
-                        : _onboarded
-                        ? AppShell(
-                            key: const ValueKey('app'),
-                            onRestartOnboarding: _restartOnboarding,
-                          )
-                        : OnboardingFlow(
-                            key: const ValueKey('onboarding'),
-                            prefs: widget.prefs,
-                            onFinished: _finishOnboarding,
-                            onJoined: _finishJoin,
-                          ),
+            child: KnowledgeScope(
+              knowledge: _knowledge,
+              child: SmartSearchScope(
+                smart: _smart,
+                child: LanguageScope(
+                  controller: _language,
+                  child: ValueListenableBuilder<AppLanguage>(
+                    valueListenable: _language,
+                    builder: (context, language, _) => MaterialApp(
+                      scaffoldMessengerKey: _messenger,
+                      navigatorKey: _navigator,
+                      onGenerateTitle: (context) => 'Gurtu',
+                      debugShowCheckedModeBanner: false,
+                      theme: buildGurtuTheme(),
+                      locale: language.locale,
+                      supportedLocales: AppLocalizations.supportedLocales,
+                      localizationsDelegates:
+                          AppLocalizations.localizationsDelegates,
+                      home: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 400),
+                        child: _booting
+                            ? const SplashScreen(key: ValueKey('splash'))
+                            : _onboarded
+                            ? AppShell(
+                                key: const ValueKey('app'),
+                                onRestartOnboarding: _restartOnboarding,
+                              )
+                            : OnboardingFlow(
+                                key: const ValueKey('onboarding'),
+                                prefs: widget.prefs,
+                                onFinished: _finishOnboarding,
+                                onJoined: _finishJoin,
+                              ),
+                      ),
+                    ),
                   ),
                 ),
               ),

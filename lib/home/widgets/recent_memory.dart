@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../data/care_models.dart';
 import '../../data/care_repository.dart';
 import '../../l10n/language.dart';
+import '../../memory/memory_detail_page.dart';
+import '../../widgets/gurtu_page.dart';
 import '../../theme/gurtu_theme.dart';
 import '../../widgets/gurtu_widgets.dart';
 import '../care_text.dart';
@@ -128,7 +130,12 @@ class MomentRow extends StatelessWidget {
                 ),
                 // Source is always one tap away.
                 TextButton.icon(
-                  onPressed: () => showSourceSheet(context, moment),
+                  onPressed: () => moment.isSample
+                      ? showSourceSheet(context, moment)
+                      : pushPage(
+                          context,
+                          MemoryDetailPage(momentId: moment.id),
+                        ),
                   icon: Icon(
                     moment.type == MomentType.voice
                         ? Icons.play_circle_rounded

@@ -332,6 +332,29 @@ class CloudSync extends ChangeNotifier {
     }
   }
 
+  /// The person's details were changed in Profile: every family phone gets
+  /// them. Best effort; the next change sends them again.
+  Future<void> updatePatient(PatientProfile p) async {
+    final payload = _pending[p.id];
+    if (payload != null) {
+      // Not saved yet: it goes with the new details.
+      payload['patient'] = circlePayload(p, myName: '')['patient'];
+      _save();
+      return;
+    }
+    final id = _links[p.id];
+    if (id == null || !await _ensureDevice()) return;
+    final circle = await _call(
+      () => _api.updatePatient(
+        id,
+        Map<String, dynamic>.from(
+          circlePayload(p, myName: '')['patient'] as Map,
+        ),
+      ),
+    );
+    if (circle != null) link(p.id, circle);
+  }
+
   /// A fresh family code (owner only).
   Future<ApiError?> newCode(String patientId) async {
     final id = _links[patientId];

@@ -5,7 +5,7 @@ import '../../data/care_models.dart';
 import '../../data/care_repository.dart';
 import '../../l10n/language.dart';
 import '../../theme/gurtu_theme.dart';
-import '../../medicines/prescription_import_page.dart';
+import '../../memory/memory_editor_page.dart';
 import '../../widgets/gurtu_page.dart';
 import '../../widgets/gurtu_widgets.dart';
 import '../care_text.dart';
@@ -106,7 +106,7 @@ class _CaptureSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final options = [
-      (MomentType.scan, l.captureScanHint, true),
+      (MomentType.scan, l.captureDocHint, true),
       (MomentType.note, l.captureNoteHint, true),
     ];
     return SafeArea(
@@ -130,9 +130,9 @@ class _CaptureSheet extends StatelessWidget {
                   if (type == MomentType.note) {
                     showNoteSheet(host);
                   } else {
-                    // Reads the medicines off a prescription photo, on the
-                    // phone, and adds the ones ticked to the list.
-                    pushPage(host, const PrescriptionImportPage());
+                    // Photographs any report, prescription or bill into the
+                    // care memory; its medicines can be added from there.
+                    pushPage(host, const MemoryEditorPage(scan: true));
                   }
                 },
               ),

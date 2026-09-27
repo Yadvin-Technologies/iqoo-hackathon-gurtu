@@ -2318,4 +2318,163 @@ class AppLocalizationsGu extends AppLocalizations {
   @override
   String get skipConfirmBody =>
       'આ ડોઝ માટે Gurtu ફરી યાદ નહીં કરાવે, અને પરિવારને જણાવાશે.';
+
+  @override
+  String get addPage => 'બીજું પાનું ઉમેરો';
+
+  @override
+  String get addToMemory => 'યાદમાં ઉમેરો';
+
+  @override
+  String get askExampleMedicines => 'રાત્રે કઈ દવાઓ લેવાની છે?';
+
+  @override
+  String get askExampleReport => 'છેલ્લા ટેસ્ટ રિપોર્ટમાં શું હતું?';
+
+  @override
+  String get askFailed =>
+      'Gurtu AI અત્યારે જવાબ આપી શક્યું નહીં. યાદમાં આ મળ્યું:';
+
+  @override
+  String get askFoundInMemory =>
+      'Gurtu AI હજી આ ફોનમાં નથી, તેથી યાદમાં આ મળ્યું:';
+
+  @override
+  String get askHint => 'દવાઓ, રિપોર્ટ, મુલાકાતો વિશે પૂછો…';
+
+  @override
+  String get askNewChat => 'નવી વાતચીત';
+
+  @override
+  String get askNothingFound =>
+      'આ વિશે યાદમાં હજી કંઈ મળ્યું નથી. બીજા શબ્દોમાં પૂછો, અથવા પહેલાં રિપોર્ટ કે નોંધ સેવ કરો.';
+
+  @override
+  String get askSources => 'યાદમાંથી';
+
+  @override
+  String get cantOpenFile => 'આ ફાઇલ ખોલી શકે એવી કોઈ એપ આ ફોનમાં નથી.';
+
+  @override
+  String get captureDocHint => 'રિપોર્ટ, પ્રિસ્ક્રિપ્શન કે કોઈ પણ દસ્તાવેજ';
+
+  @override
+  String get changesSaved => 'ફેરફારો સેવ થયા';
+
+  @override
+  String get clearSearch => 'શોધ સાફ કરો';
+
+  @override
+  String get conditionsLabel => 'આરોગ્યની તકલીફો';
+
+  @override
+  String get dailyMedicinesLabel => 'રોજ દવા લે છે';
+
+  @override
+  String get deleteMemoryTitle => 'આને યાદમાંથી કાઢી નાખવું છે?';
+
+  @override
+  String get editDetails => 'વિગતો બદલો';
+
+  @override
+  String get editMemory => 'બદલો';
+
+  @override
+  String get gettingAroundLabel => 'હરવું-ફરવું';
+
+  @override
+  String get memoryAll => 'બધું';
+
+  @override
+  String get memoryDocuments => 'રિપોર્ટ અને સ્કેન';
+
+  @override
+  String get memoryEmptyBody =>
+      'રિપોર્ટ કે પ્રિસ્ક્રિપ્શન સ્કેન કરો, નોંધ લખો, અથવા કોઈ પણ એપમાંથી ફાઇલ Gurtuમાં શેર કરો.';
+
+  @override
+  String get memoryNotes => 'નોંધો';
+
+  @override
+  String get memoryPrivate =>
+      'ફક્ત આ ફોનમાં જ સેવ થાય છે. તમારા પ્રશ્નોના જવાબ આપવા Gurtu તેને વાંચે છે.';
+
+  @override
+  String get memorySearchHint => 'શોધો, જેમ કે સુગર રિપોર્ટ';
+
+  @override
+  String get memoryTextHint =>
+      'Gurtu છપાયેલા અક્ષરો વાંચે છે. તમે તેને સુધારી કે વધુ ઉમેરી શકો છો.';
+
+  @override
+  String get memoryTextLabel => 'એમાં શું લખ્યું છે';
+
+  @override
+  String get memoryTitleHint => 'જેમ કે લોહીની તપાસનો રિપોર્ટ';
+
+  @override
+  String get memoryTitleLabel => 'શીર્ષક';
+
+  @override
+  String get readingDocument => 'દસ્તાવેજ વાંચી રહ્યું છે…';
+
+  @override
+  String get recentHospitalLabel => 'છેલ્લા 30 દિવસમાં હોસ્પિટલ કે ડૉક્ટર';
+
+  @override
+  String get saveChanges => 'ફેરફારો સેવ કરો';
+
+  @override
+  String get saveToMemory => 'યાદમાં સેવ કરો';
+
+  @override
+  String get saveToMemoryHint =>
+      'દરેક પાનાનો ફોટો લો. પછી શોધવા અને પૂછવા માટે Gurtu તેને આ ફોનમાં જ વાંચે છે.';
+
+  @override
+  String get smartSearchDownload => 'ડાઉનલોડ કરો';
+
+  @override
+  String get smartSearchTitle => 'વધુ સમજદાર શોધ';
+
+  @override
+  String aboutPerson(String name) {
+    return '$name વિશે';
+  }
+
+  @override
+  String addMedicinesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count દવાઓ યાદીમાં ઉમેરો',
+      one: '1 દવા યાદીમાં ઉમેરો',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String askThinking(String name) {
+    return '$nameની યાદમાં શોધી રહ્યું છે…';
+  }
+
+  @override
+  String memoryNoResults(String query) {
+    return '“$query” માટે કંઈ મળ્યું નહીં.';
+  }
+
+  @override
+  String memorySubtitle(String name) {
+    return '$name વિશે સેવ કરેલું બધું: નોંધો, રિપોર્ટ, મુલાકાતો અને દવાઓ.';
+  }
+
+  @override
+  String smartSearchBody(int size) {
+    return 'એક નાનું AI મોડેલ ($size MB) ડાઉનલોડ કરો, જેથી Gurtu ફક્ત શબ્દોથી નહીં, અર્થથી પણ શોધે. તે આ ફોનમાં જ રહે છે.';
+  }
+
+  @override
+  String smartSearchProgress(int percent) {
+    return 'ડાઉનલોડ થઈ રહ્યું છે… $percent%';
+  }
 }

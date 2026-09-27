@@ -354,6 +354,24 @@ class PrescriptionReader {
   };
 }
 
+/// The medicines in a saved document, without test results that look like
+/// doses ("Fasting blood sugar 142 mg/dL" is a value per volume, never a
+/// tablet).
+List<MedicineDraft> medicinesIn(String text) {
+  final perVolume = RegExp(
+    r'(mg|g|mmol|µmol|umol|iu|u|meq)\s*/\s*(d?l|ml)\b',
+    caseSensitive: false,
+  );
+  final labLines = [
+    for (final line in text.split('\n'))
+      if (perVolume.hasMatch(line)) line.toLowerCase(),
+  ];
+  return [
+    for (final d in const PrescriptionReader().readPrescription(text))
+      if (!labLines.any((l) => l.contains(d.name.toLowerCase()))) d,
+  ];
+}
+
 /// "500 mg", "2.5 mg", "10 ml" found in [text], normalised.
 List<String> readStrengths(String text) => [
   for (final m in RegExp(

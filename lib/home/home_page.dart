@@ -125,7 +125,7 @@ class _TopBar extends StatelessWidget {
         children: [
           const GurtuLogo(size: 38),
           const Spacer(),
-          const SosButton(),
+          if (sosEnabled) const SosButton(),
         ],
       ),
     );

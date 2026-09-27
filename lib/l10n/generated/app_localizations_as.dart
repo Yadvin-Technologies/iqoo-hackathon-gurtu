@@ -2319,4 +2319,163 @@ class AppLocalizationsAs extends AppLocalizations {
   @override
   String get skipConfirmBody =>
       'এই ডোজৰ বাবে Gurtu-এ পুনৰ সোঁৱৰাই নিদিব, আৰু পৰিয়ালক জনোৱা হ\'ব।';
+
+  @override
+  String get addPage => 'আৰু এখন পৃষ্ঠা যোগ কৰক';
+
+  @override
+  String get addToMemory => 'স্মৃতিত যোগ কৰক';
+
+  @override
+  String get askExampleMedicines => 'ৰাতি কোনবোৰ ঔষধ খাব লাগে?';
+
+  @override
+  String get askExampleReport => 'শেষৰ পৰীক্ষাৰ ৰিপৰ্টত কি আছিল?';
+
+  @override
+  String get askFailed =>
+      'Gurtu AI-এ এতিয়া উত্তৰ দিব নোৱাৰিলে। স্মৃতিত এইখিনি পোৱা গ\'ল:';
+
+  @override
+  String get askFoundInMemory =>
+      'Gurtu AI এতিয়াও এই ফোনত নাই, সেয়েহে স্মৃতিত এইখিনি পোৱা গ\'ল:';
+
+  @override
+  String get askHint => 'ঔষধ, ৰিপৰ্ট, ভিজিটৰ বিষয়ে সোধক…';
+
+  @override
+  String get askNewChat => 'নতুন চেট';
+
+  @override
+  String get askNothingFound =>
+      'এই বিষয়ে স্মৃতিত এতিয়াও একো পোৱা নগ\'ল। আন শব্দেৰে সোধক, বা প্ৰথমে ৰিপৰ্ট বা টোকা ছেভ কৰক।';
+
+  @override
+  String get askSources => 'স্মৃতিৰ পৰা';
+
+  @override
+  String get cantOpenFile => 'এই ফাইল খুলিব পৰা কোনো এপ এই ফোনত নাই।';
+
+  @override
+  String get captureDocHint => 'ৰিপৰ্ট, প্ৰেছক্ৰিপচন বা যিকোনো কাগজ';
+
+  @override
+  String get changesSaved => 'সলনিবোৰ ছেভ হ\'ল';
+
+  @override
+  String get clearSearch => 'সন্ধান মচক';
+
+  @override
+  String get conditionsLabel => 'স্বাস্থ্যৰ সমস্যা';
+
+  @override
+  String get dailyMedicinesLabel => 'প্ৰতিদিনে ঔষধ খায়';
+
+  @override
+  String get deleteMemoryTitle => 'এইটো স্মৃতিৰ পৰা মচিবনে?';
+
+  @override
+  String get editDetails => 'তথ্য সলনি কৰক';
+
+  @override
+  String get editMemory => 'সলনি কৰক';
+
+  @override
+  String get gettingAroundLabel => 'খোজ কঢ়া-ফুৰা';
+
+  @override
+  String get memoryAll => 'সকলো';
+
+  @override
+  String get memoryDocuments => 'ৰিপৰ্ট আৰু স্কেন';
+
+  @override
+  String get memoryEmptyBody =>
+      'ৰিপৰ্ট বা প্ৰেছক্ৰিপচন স্কেন কৰক, টোকা লিখক, বা যিকোনো এপৰ পৰা ফাইল Gurtu-লৈ শ্বেয়াৰ কৰক।';
+
+  @override
+  String get memoryNotes => 'টোকা';
+
+  @override
+  String get memoryPrivate =>
+      'কেৱল এই ফোনতে ছেভ থাকে। আপোনাৰ প্ৰশ্নৰ উত্তৰ দিবলৈ Gurtu-এ ইয়াক পঢ়ে।';
+
+  @override
+  String get memorySearchHint => 'বিচাৰক, যেনে চুগাৰৰ ৰিপৰ্ট';
+
+  @override
+  String get memoryTextHint =>
+      'Gurtu-এ ছপা আখৰ পঢ়ে। আপুনি শুধৰাব বা আৰু যোগ কৰিব পাৰে।';
+
+  @override
+  String get memoryTextLabel => 'ইয়াত কি লিখা আছে';
+
+  @override
+  String get memoryTitleHint => 'যেনে তেজ পৰীক্ষাৰ ৰিপৰ্ট';
+
+  @override
+  String get memoryTitleLabel => 'শিৰোনাম';
+
+  @override
+  String get readingDocument => 'কাগজখন পঢ়ি আছে…';
+
+  @override
+  String get recentHospitalLabel => 'যোৱা 30 দিনত চিকিৎসালয় বা চিকিৎসক';
+
+  @override
+  String get saveChanges => 'সলনিবোৰ ছেভ কৰক';
+
+  @override
+  String get saveToMemory => 'স্মৃতিত ছেভ কৰক';
+
+  @override
+  String get saveToMemoryHint =>
+      'প্ৰতিখন পৃষ্ঠাৰ ফটো লওক। পিছত বিচাৰিবলৈ আৰু সুধিবলৈ Gurtu-এ ইয়াক এই ফোনতে পঢ়ে।';
+
+  @override
+  String get smartSearchDownload => 'ডাউনলোড কৰক';
+
+  @override
+  String get smartSearchTitle => 'অধিক বুদ্ধিমান সন্ধান';
+
+  @override
+  String aboutPerson(String name) {
+    return '$nameৰ বিষয়ে';
+  }
+
+  @override
+  String addMedicinesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটা ঔষধ তালিকাত যোগ কৰক',
+      one: '1টা ঔষধ তালিকাত যোগ কৰক',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String askThinking(String name) {
+    return '$nameৰ স্মৃতিত বিচাৰি আছে…';
+  }
+
+  @override
+  String memoryNoResults(String query) {
+    return '“$query”ৰ বাবে একো পোৱা নগ\'ল।';
+  }
+
+  @override
+  String memorySubtitle(String name) {
+    return '$nameৰ বিষয়ে ছেভ কৰা সকলো: টোকা, ৰিপৰ্ট, ভিজিট আৰু ঔষধ।';
+  }
+
+  @override
+  String smartSearchBody(int size) {
+    return 'এটা সৰু AI মডেল ($size MB) ডাউনলোড কৰক, তেতিয়া Gurtu-এ কেৱল শব্দেৰে নহয়, অৰ্থেৰেও বিচাৰিব। ই এই ফোনতে থাকে।';
+  }
+
+  @override
+  String smartSearchProgress(int percent) {
+    return 'ডাউনলোড হৈ আছে… $percent%';
+  }
 }

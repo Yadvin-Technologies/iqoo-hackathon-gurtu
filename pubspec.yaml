@@ -51,6 +51,8 @@ dependencies:
   firebase_messaging: ^16.7.0
   http: ^1.6.0
   flutter_tts: ^4.2.5
+  flutter_gemma_embeddings: 2.2.0
+  open_filex: 4.7.0
 
 dev_dependencies:
   flutter_test:

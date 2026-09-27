@@ -2321,4 +2321,163 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get skipConfirmBody =>
       'এই ডোজের জন্য Gurtu আর মনে করাবে না, আর পরিবারকে জানানো হবে।';
+
+  @override
+  String get addPage => 'আরেকটি পাতা যোগ করুন';
+
+  @override
+  String get addToMemory => 'স্মৃতিতে যোগ করুন';
+
+  @override
+  String get askExampleMedicines => 'রাতে কোন ওষুধগুলো খেতে হয়?';
+
+  @override
+  String get askExampleReport => 'শেষ পরীক্ষার রিপোর্টে কী ছিল?';
+
+  @override
+  String get askFailed =>
+      'Gurtu AI এখন উত্তর দিতে পারেনি। স্মৃতিতে যা পাওয়া গেছে:';
+
+  @override
+  String get askFoundInMemory =>
+      'Gurtu AI এখনও এই ফোনে নেই, তাই স্মৃতিতে যা পাওয়া গেছে:';
+
+  @override
+  String get askHint => 'ওষুধ, রিপোর্ট, ভিজিট নিয়ে জিজ্ঞেস করুন…';
+
+  @override
+  String get askNewChat => 'নতুন চ্যাট';
+
+  @override
+  String get askNothingFound =>
+      'এ বিষয়ে স্মৃতিতে এখনও কিছু পাওয়া যায়নি। অন্য কথায় জিজ্ঞেস করুন, অথবা আগে রিপোর্ট বা নোট সেভ করুন।';
+
+  @override
+  String get askSources => 'স্মৃতি থেকে';
+
+  @override
+  String get cantOpenFile => 'এই ফাইল খুলতে পারে এমন কোনো অ্যাপ এই ফোনে নেই।';
+
+  @override
+  String get captureDocHint => 'রিপোর্ট, প্রেসক্রিপশন বা যেকোনো কাগজ';
+
+  @override
+  String get changesSaved => 'পরিবর্তন সেভ হয়েছে';
+
+  @override
+  String get clearSearch => 'খোঁজ মুছুন';
+
+  @override
+  String get conditionsLabel => 'স্বাস্থ্য সমস্যা';
+
+  @override
+  String get dailyMedicinesLabel => 'রোজ ওষুধ খান';
+
+  @override
+  String get deleteMemoryTitle => 'এটি স্মৃতি থেকে মুছবেন?';
+
+  @override
+  String get editDetails => 'তথ্য বদলান';
+
+  @override
+  String get editMemory => 'বদলান';
+
+  @override
+  String get gettingAroundLabel => 'চলাফেরা';
+
+  @override
+  String get memoryAll => 'সব';
+
+  @override
+  String get memoryDocuments => 'রিপোর্ট ও স্ক্যান';
+
+  @override
+  String get memoryEmptyBody =>
+      'রিপোর্ট বা প্রেসক্রিপশন স্ক্যান করুন, নোট লিখুন, অথবা যেকোনো অ্যাপ থেকে ফাইল Gurtu-তে শেয়ার করুন।';
+
+  @override
+  String get memoryNotes => 'নোট';
+
+  @override
+  String get memoryPrivate =>
+      'শুধু এই ফোনেই সেভ থাকে। আপনার প্রশ্নের উত্তর দিতে Gurtu এটি পড়ে।';
+
+  @override
+  String get memorySearchHint => 'খুঁজুন, যেমন সুগারের রিপোর্ট';
+
+  @override
+  String get memoryTextHint =>
+      'Gurtu ছাপা লেখা পড়ে নেয়। আপনি ঠিক করতে বা আরও যোগ করতে পারেন।';
+
+  @override
+  String get memoryTextLabel => 'এতে কী লেখা আছে';
+
+  @override
+  String get memoryTitleHint => 'যেমন রক্ত পরীক্ষার রিপোর্ট';
+
+  @override
+  String get memoryTitleLabel => 'শিরোনাম';
+
+  @override
+  String get readingDocument => 'কাগজটি পড়া হচ্ছে…';
+
+  @override
+  String get recentHospitalLabel => 'গত 30 দিনে হাসপাতাল বা ডাক্তার';
+
+  @override
+  String get saveChanges => 'পরিবর্তন সেভ করুন';
+
+  @override
+  String get saveToMemory => 'স্মৃতিতে সেভ করুন';
+
+  @override
+  String get saveToMemoryHint =>
+      'প্রতিটি পাতার ছবি তুলুন। পরে খুঁজে পেতে ও জিজ্ঞেস করতে Gurtu এটি এই ফোনেই পড়ে রাখে।';
+
+  @override
+  String get smartSearchDownload => 'ডাউনলোড করুন';
+
+  @override
+  String get smartSearchTitle => 'আরও বুদ্ধিমান খোঁজ';
+
+  @override
+  String aboutPerson(String name) {
+    return '$name সম্পর্কে';
+  }
+
+  @override
+  String addMedicinesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ওষুধ তালিকায় যোগ করুন',
+      one: '1টি ওষুধ তালিকায় যোগ করুন',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String askThinking(String name) {
+    return '$name-এর স্মৃতিতে খোঁজা হচ্ছে…';
+  }
+
+  @override
+  String memoryNoResults(String query) {
+    return '“$query”-এর জন্য কিছু পাওয়া যায়নি।';
+  }
+
+  @override
+  String memorySubtitle(String name) {
+    return '$name সম্পর্কে সেভ করা সবকিছু: নোট, রিপোর্ট, ভিজিট ও ওষুধ।';
+  }
+
+  @override
+  String smartSearchBody(int size) {
+    return 'একটি ছোট AI মডেল ($size MB) ডাউনলোড করুন, তাহলে Gurtu শুধু শব্দ নয়, মানে দিয়েও খুঁজবে। এটি এই ফোনেই থাকে।';
+  }
+
+  @override
+  String smartSearchProgress(int percent) {
+    return 'ডাউনলোড হচ্ছে… $percent%';
+  }
 }

@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
+import 'package:flutter_gemma_embeddings/flutter_gemma_embeddings.dart';
 import 'package:flutter_gemma_litertlm/flutter_gemma_litertlm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -81,7 +82,12 @@ class GurtuAi extends ChangeNotifier with WidgetsBindingObserver {
     build = buildFor(device);
     WidgetsBinding.instance.addObserver(this);
     try {
-      await FlutterGemma.initialize(inferenceEngines: [LiteRtLmEngine()]);
+      await FlutterGemma.initialize(
+        inferenceEngines: [LiteRtLmEngine()],
+        // Smart search in Memory (see SmartSearch): Gecko on LiteRT.
+        embeddingBackends: [const LiteRtEmbeddingBackend()],
+        embeddingTokenizers: [const GemmaEmbeddingTokenizers()],
+      );
       final installed = await FlutterGemma.isModelInstalled(build!.fileName);
       _set(installed ? AiStatus.installed : AiStatus.notInstalled);
     } on Object catch (e) {

@@ -5,6 +5,9 @@ import '../../l10n/language.dart';
 import '../../theme/gurtu_theme.dart';
 import '../../widgets/gurtu_widgets.dart';
 
+/// SOS is hidden for now, until it can really reach someone.
+const sosEnabled = false;
+
 /// Compact emergency entry point. Deliberately small and calm: a tap only
 /// opens the hold-to-send sheet, so SOS can never fire by accident.
 class SosButton extends StatelessWidget {

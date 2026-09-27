@@ -2336,4 +2336,163 @@ class AppLocalizationsKn extends AppLocalizations {
   @override
   String get skipConfirmBody =>
       'ಈ ಡೋಸ್‌ಗೆ Gurtu ಮತ್ತೆ ನೆನಪಿಸುವುದಿಲ್ಲ, ಮತ್ತು ಕುಟುಂಬಕ್ಕೆ ತಿಳಿಸಲಾಗುತ್ತದೆ.';
+
+  @override
+  String get addPage => 'ಇನ್ನೊಂದು ಪುಟ ಸೇರಿಸಿ';
+
+  @override
+  String get addToMemory => 'ನೆನಪಿಗೆ ಸೇರಿಸಿ';
+
+  @override
+  String get askExampleMedicines => 'ರಾತ್ರಿ ಯಾವ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳಬೇಕು?';
+
+  @override
+  String get askExampleReport => 'ಕೊನೆಯ ಪರೀಕ್ಷಾ ವರದಿಯಲ್ಲಿ ಏನಿತ್ತು?';
+
+  @override
+  String get askFailed =>
+      'Gurtu AI ಈಗ ಉತ್ತರಿಸಲಾಗಲಿಲ್ಲ. ನೆನಪಿನಲ್ಲಿ ಸಿಕ್ಕಿದ್ದು ಇದು:';
+
+  @override
+  String get askFoundInMemory =>
+      'Gurtu AI ಇನ್ನೂ ಈ ಫೋನ್‌ನಲ್ಲಿ ಇಲ್ಲ, ಹಾಗಾಗಿ ನೆನಪಿನಲ್ಲಿ ಸಿಕ್ಕಿದ್ದು ಇದು:';
+
+  @override
+  String get askHint => 'ಔಷಧಿಗಳು, ವರದಿಗಳು, ಭೇಟಿಗಳ ಬಗ್ಗೆ ಕೇಳಿ…';
+
+  @override
+  String get askNewChat => 'ಹೊಸ ಚಾಟ್';
+
+  @override
+  String get askNothingFound =>
+      'ಇದರ ಬಗ್ಗೆ ನೆನಪಿನಲ್ಲಿ ಇನ್ನೂ ಏನೂ ಸಿಗಲಿಲ್ಲ. ಬೇರೆ ಪದಗಳಲ್ಲಿ ಕೇಳಿ, ಅಥವಾ ಮೊದಲು ವರದಿ ಅಥವಾ ಟಿಪ್ಪಣಿ ಉಳಿಸಿ.';
+
+  @override
+  String get askSources => 'ನೆನಪಿನಿಂದ';
+
+  @override
+  String get cantOpenFile => 'ಈ ಫೈಲ್ ತೆರೆಯಬಲ್ಲ ಆಪ್ ಈ ಫೋನ್‌ನಲ್ಲಿ ಇಲ್ಲ.';
+
+  @override
+  String get captureDocHint => 'ವರದಿ, ಔಷಧಿ ಚೀಟಿ ಅಥವಾ ಯಾವುದೇ ದಾಖಲೆ';
+
+  @override
+  String get changesSaved => 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಲಾಗಿದೆ';
+
+  @override
+  String get clearSearch => 'ಹುಡುಕಾಟ ತೆರವುಗೊಳಿಸಿ';
+
+  @override
+  String get conditionsLabel => 'ಆರೋಗ್ಯ ಸಮಸ್ಯೆಗಳು';
+
+  @override
+  String get dailyMedicinesLabel => 'ಪ್ರತಿದಿನ ಔಷಧಿ ತೆಗೆದುಕೊಳ್ಳುತ್ತಾರೆ';
+
+  @override
+  String get deleteMemoryTitle => 'ಇದನ್ನು ನೆನಪಿನಿಂದ ಅಳಿಸಬೇಕೆ?';
+
+  @override
+  String get editDetails => 'ವಿವರ ಬದಲಿಸಿ';
+
+  @override
+  String get editMemory => 'ಬದಲಿಸಿ';
+
+  @override
+  String get gettingAroundLabel => 'ಓಡಾಟ';
+
+  @override
+  String get memoryAll => 'ಎಲ್ಲಾ';
+
+  @override
+  String get memoryDocuments => 'ವರದಿಗಳು & ಸ್ಕ್ಯಾನ್‌ಗಳು';
+
+  @override
+  String get memoryEmptyBody =>
+      'ವರದಿ ಅಥವಾ ಔಷಧಿ ಚೀಟಿಯನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ, ಟಿಪ್ಪಣಿ ಬರೆಯಿರಿ, ಅಥವಾ ಯಾವುದೇ ಆಪ್‌ನಿಂದ ಫೈಲ್ ಅನ್ನು Gurtu ಗೆ ಹಂಚಿಕೊಳ್ಳಿ.';
+
+  @override
+  String get memoryNotes => 'ಟಿಪ್ಪಣಿಗಳು';
+
+  @override
+  String get memoryPrivate =>
+      'ಈ ಫೋನ್‌ನಲ್ಲಿ ಮಾತ್ರ ಉಳಿಯುತ್ತದೆ. ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಲು Gurtu ಇದನ್ನು ಓದುತ್ತದೆ.';
+
+  @override
+  String get memorySearchHint => 'ಹುಡುಕಿ, ಉದಾ. ಸಕ್ಕರೆ ವರದಿ';
+
+  @override
+  String get memoryTextHint =>
+      'Gurtu ಮುದ್ರಿತ ಅಕ್ಷರಗಳನ್ನು ಓದುತ್ತದೆ. ನೀವು ಸರಿಪಡಿಸಬಹುದು ಅಥವಾ ಇನ್ನಷ್ಟು ಸೇರಿಸಬಹುದು.';
+
+  @override
+  String get memoryTextLabel => 'ಇದರಲ್ಲಿ ಏನಿದೆ';
+
+  @override
+  String get memoryTitleHint => 'ಉದಾ. ರಕ್ತ ಪರೀಕ್ಷೆಯ ವರದಿ';
+
+  @override
+  String get memoryTitleLabel => 'ಶೀರ್ಷಿಕೆ';
+
+  @override
+  String get readingDocument => 'ದಾಖಲೆಯನ್ನು ಓದುತ್ತಿದೆ…';
+
+  @override
+  String get recentHospitalLabel => 'ಕಳೆದ 30 ದಿನಗಳಲ್ಲಿ ಆಸ್ಪತ್ರೆ ಅಥವಾ ವೈದ್ಯರು';
+
+  @override
+  String get saveChanges => 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ';
+
+  @override
+  String get saveToMemory => 'ನೆನಪಿನಲ್ಲಿ ಉಳಿಸಿ';
+
+  @override
+  String get saveToMemoryHint =>
+      'ಪ್ರತಿ ಪುಟದ ಫೋಟೋ ತೆಗೆಯಿರಿ. ನಂತರ ಹುಡುಕಲು ಮತ್ತು ಕೇಳಲು Gurtu ಇದನ್ನು ಈ ಫೋನ್‌ನಲ್ಲೇ ಓದುತ್ತದೆ.';
+
+  @override
+  String get smartSearchDownload => 'ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ';
+
+  @override
+  String get smartSearchTitle => 'ಇನ್ನಷ್ಟು ಜಾಣ ಹುಡುಕಾಟ';
+
+  @override
+  String aboutPerson(String name) {
+    return '$name ಬಗ್ಗೆ';
+  }
+
+  @override
+  String addMedicinesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ಔಷಧಿಗಳನ್ನು ಪಟ್ಟಿಗೆ ಸೇರಿಸಿ',
+      one: '1 ಔಷಧಿಯನ್ನು ಪಟ್ಟಿಗೆ ಸೇರಿಸಿ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String askThinking(String name) {
+    return '$name ಅವರ ನೆನಪಿನಲ್ಲಿ ಹುಡುಕುತ್ತಿದೆ…';
+  }
+
+  @override
+  String memoryNoResults(String query) {
+    return '“$query” ಗೆ ಏನೂ ಸಿಗಲಿಲ್ಲ.';
+  }
+
+  @override
+  String memorySubtitle(String name) {
+    return '$name ಬಗ್ಗೆ ಉಳಿಸಿದ ಎಲ್ಲವೂ: ಟಿಪ್ಪಣಿಗಳು, ವರದಿಗಳು, ಭೇಟಿಗಳು ಮತ್ತು ಔಷಧಿಗಳು.';
+  }
+
+  @override
+  String smartSearchBody(int size) {
+    return 'ಒಂದು ಚಿಕ್ಕ AI ಮಾದರಿಯನ್ನು ($size MB) ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ; ಆಗ Gurtu ಪದಗಳಿಂದ ಮಾತ್ರವಲ್ಲ, ಅರ್ಥದಿಂದಲೂ ಹುಡುಕುತ್ತದೆ. ಇದು ಈ ಫೋನ್‌ನಲ್ಲೇ ಇರುತ್ತದೆ.';
+  }
+
+  @override
+  String smartSearchProgress(int percent) {
+    return 'ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… $percent%';
+  }
 }

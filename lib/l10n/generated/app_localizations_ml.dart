@@ -2345,4 +2345,166 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get skipConfirmBody =>
       'ഈ ഡോസിനായി Gurtu വീണ്ടും ഓർമ്മിപ്പിക്കില്ല, കുടുംബത്തെ അറിയിക്കും.';
+
+  @override
+  String get addPage => 'ഒരു പേജ് കൂടി ചേർക്കുക';
+
+  @override
+  String get addToMemory => 'ഓർമ്മയിൽ ചേർക്കുക';
+
+  @override
+  String get askExampleMedicines => 'രാത്രി ഏതൊക്കെ മരുന്നുകൾ കഴിക്കണം?';
+
+  @override
+  String get askExampleReport =>
+      'അവസാനത്തെ ടെസ്റ്റ് റിപ്പോർട്ടിൽ എന്തായിരുന്നു?';
+
+  @override
+  String get askFailed =>
+      'Gurtu AI-ക്ക് ഇപ്പോൾ ഉത്തരം നൽകാനായില്ല. ഓർമ്മയിൽ കണ്ടത് ഇതാ:';
+
+  @override
+  String get askFoundInMemory =>
+      'Gurtu AI ഇതുവരെ ഈ ഫോണിൽ ഇല്ല, അതിനാൽ ഓർമ്മയിൽ കണ്ടത് ഇതാ:';
+
+  @override
+  String get askHint =>
+      'മരുന്നുകൾ, റിപ്പോർട്ടുകൾ, സന്ദർശനങ്ങൾ എന്നിവയെക്കുറിച്ച് ചോദിക്കൂ…';
+
+  @override
+  String get askNewChat => 'പുതിയ ചാറ്റ്';
+
+  @override
+  String get askNothingFound =>
+      'ഇതിനെക്കുറിച്ച് ഓർമ്മയിൽ ഇതുവരെ ഒന്നും കണ്ടില്ല. മറ്റു വാക്കുകളിൽ ചോദിക്കൂ, അല്ലെങ്കിൽ ആദ്യം റിപ്പോർട്ടോ കുറിപ്പോ സേവ് ചെയ്യൂ.';
+
+  @override
+  String get askSources => 'ഓർമ്മയിൽ നിന്ന്';
+
+  @override
+  String get cantOpenFile => 'ഈ ഫയൽ തുറക്കാൻ കഴിയുന്ന ആപ്പ് ഈ ഫോണിൽ ഇല്ല.';
+
+  @override
+  String get captureDocHint => 'റിപ്പോർട്ട്, കുറിപ്പടി അല്ലെങ്കിൽ ഏത് രേഖയും';
+
+  @override
+  String get changesSaved => 'മാറ്റങ്ങൾ സേവ് ചെയ്തു';
+
+  @override
+  String get clearSearch => 'തിരയൽ മായ്ക്കുക';
+
+  @override
+  String get conditionsLabel => 'ആരോഗ്യ പ്രശ്നങ്ങൾ';
+
+  @override
+  String get dailyMedicinesLabel => 'ദിവസവും മരുന്ന് കഴിക്കുന്നു';
+
+  @override
+  String get deleteMemoryTitle => 'ഇത് ഓർമ്മയിൽ നിന്ന് നീക്കണോ?';
+
+  @override
+  String get editDetails => 'വിവരങ്ങൾ മാറ്റുക';
+
+  @override
+  String get editMemory => 'മാറ്റുക';
+
+  @override
+  String get gettingAroundLabel => 'നടക്കലും യാത്രയും';
+
+  @override
+  String get memoryAll => 'എല്ലാം';
+
+  @override
+  String get memoryDocuments => 'റിപ്പോർട്ടുകളും സ്കാനുകളും';
+
+  @override
+  String get memoryEmptyBody =>
+      'റിപ്പോർട്ടോ കുറിപ്പടിയോ സ്കാൻ ചെയ്യൂ, കുറിപ്പ് എഴുതൂ, അല്ലെങ്കിൽ ഏത് ആപ്പിൽ നിന്നും ഫയൽ Gurtu-ലേക്ക് ഷെയർ ചെയ്യൂ.';
+
+  @override
+  String get memoryNotes => 'കുറിപ്പുകൾ';
+
+  @override
+  String get memoryPrivate =>
+      'ഈ ഫോണിൽ മാത്രം സേവ് ചെയ്യും. നിങ്ങളുടെ ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകാൻ Gurtu ഇത് വായിക്കും.';
+
+  @override
+  String get memorySearchHint => 'തിരയൂ, ഉദാ. ഷുഗർ റിപ്പോർട്ട്';
+
+  @override
+  String get memoryTextHint =>
+      'Gurtu അച്ചടിച്ച അക്ഷരങ്ങൾ വായിക്കും. നിങ്ങൾക്ക് തിരുത്താനോ കൂടുതൽ ചേർക്കാനോ കഴിയും.';
+
+  @override
+  String get memoryTextLabel => 'ഇതിൽ എന്താണ്';
+
+  @override
+  String get memoryTitleHint => 'ഉദാ. രക്ത പരിശോധനാ റിപ്പോർട്ട്';
+
+  @override
+  String get memoryTitleLabel => 'തലക്കെട്ട്';
+
+  @override
+  String get readingDocument => 'രേഖ വായിക്കുന്നു…';
+
+  @override
+  String get recentHospitalLabel =>
+      'കഴിഞ്ഞ 30 ദിവസത്തിൽ ആശുപത്രി അല്ലെങ്കിൽ ഡോക്ടർ';
+
+  @override
+  String get saveChanges => 'മാറ്റങ്ങൾ സേവ് ചെയ്യുക';
+
+  @override
+  String get saveToMemory => 'ഓർമ്മയിൽ സേവ് ചെയ്യുക';
+
+  @override
+  String get saveToMemoryHint =>
+      'ഓരോ പേജിന്റെയും ഫോട്ടോ എടുക്കൂ. പിന്നീട് തിരയാനും ചോദിക്കാനും Gurtu ഇത് ഈ ഫോണിൽ തന്നെ വായിക്കും.';
+
+  @override
+  String get smartSearchDownload => 'ഡൗൺലോഡ് ചെയ്യുക';
+
+  @override
+  String get smartSearchTitle => 'കൂടുതൽ സ്മാർട്ടായ തിരയൽ';
+
+  @override
+  String aboutPerson(String name) {
+    return '$name-നെക്കുറിച്ച്';
+  }
+
+  @override
+  String addMedicinesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count മരുന്നുകൾ പട്ടികയിൽ ചേർക്കുക',
+      one: '1 മരുന്ന് പട്ടികയിൽ ചേർക്കുക',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String askThinking(String name) {
+    return '$name-ന്റെ ഓർമ്മയിൽ തിരയുന്നു…';
+  }
+
+  @override
+  String memoryNoResults(String query) {
+    return '“$query” എന്നതിന് ഒന്നും കണ്ടില്ല.';
+  }
+
+  @override
+  String memorySubtitle(String name) {
+    return '$name-നെക്കുറിച്ച് സേവ് ചെയ്തതെല്ലാം: കുറിപ്പുകൾ, റിപ്പോർട്ടുകൾ, സന്ദർശനങ്ങൾ, മരുന്നുകൾ.';
+  }
+
+  @override
+  String smartSearchBody(int size) {
+    return 'ഒരു ചെറിയ AI മോഡൽ ($size MB) ഡൗൺലോഡ് ചെയ്യൂ; അപ്പോൾ Gurtu വാക്കുകൾ മാത്രമല്ല, അർത്ഥവും നോക്കി തിരയും. ഇത് ഈ ഫോണിൽ തന്നെ തുടരും.';
+  }
+
+  @override
+  String smartSearchProgress(int percent) {
+    return 'ഡൗൺലോഡ് ചെയ്യുന്നു… $percent%';
+  }
 }

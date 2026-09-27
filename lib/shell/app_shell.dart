@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../ask/ask_gurtu_page.dart';
 import '../circle/circle_page.dart';
+import '../memory/memory_page.dart';
+import '../profile/person_details.dart';
 
-import '../data/care_repository.dart';
 import '../home/home_page.dart';
 import '../l10n/language.dart';
 import '../theme/gurtu_theme.dart';
@@ -53,12 +55,11 @@ class _AppShellState extends State<AppShell> {
                   _tab = AppTab.ai;
                 }),
               ),
-              _ComingTab(title: l.navMemory, icon: Icons.auto_stories_rounded),
+              const MemoryPage(),
               const CirclePage(),
-              _ComingTab(
-                title: l.askGurtuTitle,
-                icon: Icons.auto_awesome_rounded,
+              AskGurtuPage(
                 question: _pendingQuestion,
+                onQuestionTaken: () => _pendingQuestion = null,
               ),
               _ProfileTab(onRestartOnboarding: widget.onRestartOnboarding),
             ],
@@ -81,10 +82,10 @@ class _AppShellState extends State<AppShell> {
               Icons.auto_stories_rounded,
               l.navMemory,
             ),
-            _dest(
-              Icons.diversity_1_outlined,
-              Icons.diversity_1_rounded,
-              l.navCircle,
+            NavigationDestination(
+              icon: const _CircleNavIcon(selected: false),
+              selectedIcon: const _CircleNavIcon(selected: true),
+              label: l.navCircle,
             ),
             _dest(
               Icons.auto_awesome_outlined,
@@ -110,71 +111,45 @@ class _AppShellState extends State<AppShell> {
       );
 }
 
-/// Placeholder for tabs built in later phases.
-class _ComingTab extends StatelessWidget {
-  const _ComingTab({required this.title, required this.icon, this.question});
+/// The care circle's tab: a filled, coloured circle so it stands out as the
+/// heart of the app.
+class _CircleNavIcon extends StatelessWidget {
+  const _CircleNavIcon({required this.selected});
 
-  final String title;
-  final IconData icon;
-
-  /// Question handed over from Home's "Ask Gurtu", shown so the tap has a
-  /// visible result until the assistant exists.
-  final String? question;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context).textTheme;
-    return SafeArea(
-      child: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(GurtuSpace.gutter),
-          child: Column(
-            children: [
-              IconBadge(icon: icon, size: 72),
-              const SizedBox(height: 20),
-              Text(title, textAlign: TextAlign.center, style: t.headlineMedium),
-              const SizedBox(height: 8),
-              Text(
-                context.l10n.comingNextPhase,
-                textAlign: TextAlign.center,
-                style: t.bodyLarge,
-              ),
-              if (question != null) ...[
-                const SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: const BoxDecoration(
-                      gradient: GurtuColors.primaryGradient,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(18),
-                        topRight: Radius.circular(18),
-                        bottomLeft: Radius.circular(18),
-                        bottomRight: Radius.circular(4),
-                      ),
-                    ),
-                    child: Text(
-                      question!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: 34,
+      height: 34,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: GurtuColors.iqooGradient,
+        border: Border.all(
+          color: selected ? GurtuColors.primary : Colors.white,
+          width: 2,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: GurtuColors.orange.withValues(alpha: selected ? 0.45 : 0.25),
+            blurRadius: selected ? 12 : 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const Icon(
+        Icons.diversity_1_rounded,
+        size: 19,
+        color: Colors.white,
       ),
     );
   }
 }
 
-/// Minimal Profile for now: language, Gurtu AI, sample data and restart. The full
-/// profile (patients, SOS settings, privacy…) comes in later phases.
+/// Profile: the person's details from onboarding (editable), language,
+/// Gurtu AI, medicine reminders and restart.
 class _ProfileTab extends StatelessWidget {
   const _ProfileTab({required this.onRestartOnboarding});
 
@@ -182,11 +157,11 @@ class _ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repo = CareScope.of(context);
     final l = context.l10n;
     final t = Theme.of(context).textTheme;
     return SafeArea(
       child: ListView(
+        key: const ValueKey('profile'),
         padding: const EdgeInsets.fromLTRB(
           GurtuSpace.gutter,
           16,
@@ -196,28 +171,19 @@ class _ProfileTab extends StatelessWidget {
         children: [
           Text(l.navProfile, style: t.headlineMedium),
           const SizedBox(height: 24),
+          const PersonDetailsCard(),
+          const SizedBox(height: 28),
           SectionHeader(title: l.rowLanguage),
           const LanguageGrid(),
           const SizedBox(height: 28),
           SectionHeader(title: l.rowAi),
-          const AiStatusCard(),
+          const AiStatusCard(showRemove: false),
           const AiTechDetails(),
           const SizedBox(height: 28),
           if (AutoScope.maybeOf(context) case final auto?) ...[
             SectionHeader(title: l.medRemindersTitle),
             _MedicineReminders(auto: auto),
             const SizedBox(height: 28),
-          ],
-          if (repo.hasSampleData) ...[
-            Text(l.sampleDataOn, style: t.bodyMedium),
-            const SizedBox(height: 8),
-            GurtuButton(
-              label: l.remove,
-              style: GurtuButtonStyle.ghost,
-              icon: Icons.delete_outline_rounded,
-              onPressed: repo.removeSampleData,
-            ),
-            const SizedBox(height: 12),
           ],
           GurtuButton(
             label: l.restartOnboarding,

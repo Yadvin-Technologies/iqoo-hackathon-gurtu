@@ -16,7 +16,6 @@ import 'package:gurtutest/reminders/medicine_plan.dart';
 import 'package:gurtutest/reminders/reminder_review_page.dart';
 import 'package:gurtutest/visits/visit_detail_page.dart';
 import 'package:gurtutest/visits/visit_recorder_page.dart';
-import 'package:gurtutest/widgets/language_grid.dart';
 import 'package:gurtutest/widgets/gurtu_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -547,8 +546,8 @@ void main() {
     await tester.tap(find.text('Profile').first);
     await tester.pumpAndSettle();
     final profile = find
-        .ancestor(
-          of: find.byType(LanguageGrid),
+        .descendant(
+          of: find.byKey(const ValueKey('profile')),
           matching: find.byType(Scrollable),
         )
         .first;
@@ -757,8 +756,8 @@ void main() {
       await tester.tap(find.text(l.navProfile).first);
       await tester.pumpAndSettle();
       final profile = find
-          .ancestor(
-            of: find.byType(LanguageGrid),
+          .descendant(
+            of: find.byKey(const ValueKey('profile')),
             matching: find.byType(Scrollable),
           )
           .first;

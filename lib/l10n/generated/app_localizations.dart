@@ -4071,6 +4071,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gurtu won\'t remind again for this dose, and the family will be told.'**
   String get skipConfirmBody;
+
+  /// No description provided for @addPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add another page'**
+  String get addPage;
+
+  /// No description provided for @addToMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to memory'**
+  String get addToMemory;
+
+  /// No description provided for @askExampleMedicines.
+  ///
+  /// In en, this message translates to:
+  /// **'Which medicines are taken at night?'**
+  String get askExampleMedicines;
+
+  /// No description provided for @askExampleReport.
+  ///
+  /// In en, this message translates to:
+  /// **'What did the last test report say?'**
+  String get askExampleReport;
+
+  /// No description provided for @askFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu AI couldn\'t answer just now. Here is what I found in the memory:'**
+  String get askFailed;
+
+  /// No description provided for @askFoundInMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu AI isn\'t on this phone yet, so here is what I found in the memory:'**
+  String get askFoundInMemory;
+
+  /// No description provided for @askHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about medicines, reports, visits…'**
+  String get askHint;
+
+  /// No description provided for @askNewChat.
+  ///
+  /// In en, this message translates to:
+  /// **'New chat'**
+  String get askNewChat;
+
+  /// No description provided for @askNothingFound.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t find anything about that in the memory yet. Try other words, or save the report or note first.'**
+  String get askNothingFound;
+
+  /// No description provided for @askSources.
+  ///
+  /// In en, this message translates to:
+  /// **'From memory'**
+  String get askSources;
+
+  /// No description provided for @cantOpenFile.
+  ///
+  /// In en, this message translates to:
+  /// **'No app on this phone can open this file.'**
+  String get cantOpenFile;
+
+  /// No description provided for @captureDocHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Report, prescription or any document'**
+  String get captureDocHint;
+
+  /// No description provided for @changesSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes saved'**
+  String get changesSaved;
+
+  /// No description provided for @clearSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get clearSearch;
+
+  /// No description provided for @conditionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Health conditions'**
+  String get conditionsLabel;
+
+  /// No description provided for @dailyMedicinesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Takes medicines every day'**
+  String get dailyMedicinesLabel;
+
+  /// No description provided for @deleteMemoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this from memory?'**
+  String get deleteMemoryTitle;
+
+  /// No description provided for @editDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit details'**
+  String get editDetails;
+
+  /// No description provided for @editMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editMemory;
+
+  /// No description provided for @gettingAroundLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting around'**
+  String get gettingAroundLabel;
+
+  /// No description provided for @memoryAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get memoryAll;
+
+  /// No description provided for @memoryDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports & scans'**
+  String get memoryDocuments;
+
+  /// No description provided for @memoryEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a report or prescription, write a note, or share a file to Gurtu from any app.'**
+  String get memoryEmptyBody;
+
+  /// No description provided for @memoryNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get memoryNotes;
+
+  /// No description provided for @memoryPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved only on this phone. Gurtu reads it to answer your questions.'**
+  String get memoryPrivate;
+
+  /// No description provided for @memorySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search, e.g. sugar report'**
+  String get memorySearchHint;
+
+  /// No description provided for @memoryTextHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu reads the printed text. You can correct it or add more.'**
+  String get memoryTextHint;
+
+  /// No description provided for @memoryTextLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What it says'**
+  String get memoryTextLabel;
+
+  /// No description provided for @memoryTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Blood test report'**
+  String get memoryTitleHint;
+
+  /// No description provided for @memoryTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get memoryTitleLabel;
+
+  /// No description provided for @readingDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the document…'**
+  String get readingDocument;
+
+  /// No description provided for @recentHospitalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hospital or doctor in the last 30 days'**
+  String get recentHospitalLabel;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get saveChanges;
+
+  /// No description provided for @saveToMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to memory'**
+  String get saveToMemory;
+
+  /// No description provided for @saveToMemoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph each page. Gurtu reads it on this phone so you can find it later and ask about it.'**
+  String get saveToMemoryHint;
+
+  /// No description provided for @smartSearchDownload.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get smartSearchDownload;
+
+  /// No description provided for @smartSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Smarter search'**
+  String get smartSearchTitle;
+
+  /// No description provided for @aboutPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'About {name}'**
+  String aboutPerson(String name);
+
+  /// No description provided for @addMedicinesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Add 1 medicine to the list} other{Add {count} medicines to the list}}'**
+  String addMedicinesFound(int count);
+
+  /// No description provided for @askThinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking through {name}\'s memory…'**
+  String askThinking(String name);
+
+  /// No description provided for @memoryNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found for “{query}”.'**
+  String memoryNoResults(String query);
+
+  /// No description provided for @memorySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything saved about {name}: notes, reports, visits and medicines.'**
+  String memorySubtitle(String name);
+
+  /// No description provided for @smartSearchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Download a small AI model ({size} MB) so Gurtu finds things by meaning, not only exact words. It stays on this phone.'**
+  String smartSearchBody(int size);
+
+  /// No description provided for @smartSearchProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading… {percent}%'**
+  String smartSearchProgress(int percent);
 }
 
 class _AppLocalizationsDelegate

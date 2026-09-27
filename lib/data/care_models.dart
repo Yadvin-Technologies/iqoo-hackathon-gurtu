@@ -163,6 +163,7 @@ class CareMoment {
     this.detail = '',
     this.sample,
     this.verified = false,
+    this.files = const [],
   });
 
   final String id;
@@ -172,7 +173,12 @@ class CareMoment {
   final String createdBy;
   final MomentType type;
   final String title;
+
+  /// What it says: typed, or read off the photo.
   final String detail;
+
+  /// Photos and documents kept with it (see `AttachmentStore`).
+  final List<String> files;
   final SampleText? sample;
   final DateTime timestamp;
   final SourceRef source;
@@ -191,7 +197,23 @@ class CareMoment {
     'timestamp': timestamp.toIso8601String(),
     'source': source.toJson(),
     'verified': verified,
+    'files': files,
   };
+
+  CareMoment copyWith({String? title, String? detail, List<String>? files}) =>
+      CareMoment(
+        id: id,
+        patientId: patientId,
+        createdBy: createdBy,
+        type: type,
+        timestamp: timestamp,
+        source: source,
+        title: title ?? this.title,
+        detail: detail ?? this.detail,
+        sample: sample,
+        verified: verified,
+        files: files ?? this.files,
+      );
 
   factory CareMoment.fromJson(Map<String, dynamic> j) => CareMoment(
     id: j['id'] as String,
@@ -206,6 +228,7 @@ class CareMoment {
     timestamp: DateTime.parse(j['timestamp'] as String),
     source: SourceRef.fromJson(j['source'] as Map<String, dynamic>),
     verified: j['verified'] as bool? ?? false,
+    files: List<String>.from(j['files'] as List? ?? const []),
   );
 }
 

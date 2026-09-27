@@ -14,7 +14,11 @@ import 'medicine_text.dart';
 /// Photograph a printed prescription; Gurtu lists the medicines it finds
 /// (with "1-0-1" style timings) and the family ticks which to add.
 class PrescriptionImportPage extends StatefulWidget {
-  const PrescriptionImportPage({super.key});
+  const PrescriptionImportPage({super.key, this.initialText});
+
+  /// Text already read off a prescription (a scan saved to memory): its
+  /// medicines are listed straight away.
+  final String? initialText;
 
   @override
   State<PrescriptionImportPage> createState() => _PrescriptionImportPageState();
@@ -24,6 +28,16 @@ class _PrescriptionImportPageState extends State<PrescriptionImportPage> {
   List<MedicineDraft>? _found;
   final _picked = <MedicineDraft>{};
   var _reading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final text = widget.initialText;
+    if (text != null) {
+      _found = medicinesIn(text);
+      _picked.addAll(_found!);
+    }
+  }
 
   Future<void> _scan({required bool fromGallery}) async {
     final messenger = ScaffoldMessenger.of(context);

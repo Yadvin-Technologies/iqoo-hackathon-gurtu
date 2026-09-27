@@ -2322,4 +2322,162 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get skipConfirmBody =>
       'इस खुराक के लिए Gurtu फिर याद नहीं दिलाएगा, और परिवार को बताया जाएगा।';
+
+  @override
+  String get addPage => 'एक और पेज जोड़ें';
+
+  @override
+  String get addToMemory => 'याद में जोड़ें';
+
+  @override
+  String get askExampleMedicines => 'रात को कौन-सी दवाएँ लेनी हैं?';
+
+  @override
+  String get askExampleReport => 'पिछली जाँच रिपोर्ट में क्या लिखा था?';
+
+  @override
+  String get askFailed => 'Gurtu AI अभी जवाब नहीं दे पाया। याद में यह मिला:';
+
+  @override
+  String get askFoundInMemory =>
+      'Gurtu AI अभी इस फ़ोन पर नहीं है, इसलिए याद में यह मिला:';
+
+  @override
+  String get askHint => 'दवाओं, रिपोर्ट, डॉक्टर विज़िट के बारे में पूछें…';
+
+  @override
+  String get askNewChat => 'नई बातचीत';
+
+  @override
+  String get askNothingFound =>
+      'याद में इसके बारे में अभी कुछ नहीं मिला। दूसरे शब्दों में पूछें, या पहले रिपोर्ट या नोट सेव करें।';
+
+  @override
+  String get askSources => 'याद से';
+
+  @override
+  String get cantOpenFile => 'इस फ़ोन पर यह फ़ाइल खोलने वाला कोई ऐप नहीं है।';
+
+  @override
+  String get captureDocHint => 'रिपोर्ट, पर्ची या कोई भी दस्तावेज़';
+
+  @override
+  String get changesSaved => 'बदलाव सेव हो गए';
+
+  @override
+  String get clearSearch => 'खोज साफ़ करें';
+
+  @override
+  String get conditionsLabel => 'स्वास्थ्य समस्याएँ';
+
+  @override
+  String get dailyMedicinesLabel => 'रोज़ दवा लेते हैं';
+
+  @override
+  String get deleteMemoryTitle => 'इसे याद से हटाएँ?';
+
+  @override
+  String get editDetails => 'जानकारी बदलें';
+
+  @override
+  String get editMemory => 'बदलें';
+
+  @override
+  String get gettingAroundLabel => 'चलना-फिरना';
+
+  @override
+  String get memoryAll => 'सब';
+
+  @override
+  String get memoryDocuments => 'रिपोर्ट और स्कैन';
+
+  @override
+  String get memoryEmptyBody =>
+      'रिपोर्ट या पर्ची स्कैन करें, नोट लिखें, या किसी भी ऐप से फ़ाइल Gurtu में शेयर करें।';
+
+  @override
+  String get memoryNotes => 'नोट';
+
+  @override
+  String get memoryPrivate =>
+      'सिर्फ़ इसी फ़ोन पर सेव है। आपके सवालों के जवाब देने के लिए Gurtu इसे पढ़ता है।';
+
+  @override
+  String get memorySearchHint => 'खोजें, जैसे शुगर रिपोर्ट';
+
+  @override
+  String get memoryTextHint =>
+      'Gurtu छपे हुए शब्द पढ़ता है। आप उन्हें ठीक कर सकते हैं या और जोड़ सकते हैं।';
+
+  @override
+  String get memoryTextLabel => 'इसमें क्या लिखा है';
+
+  @override
+  String get memoryTitleHint => 'जैसे खून की जाँच की रिपोर्ट';
+
+  @override
+  String get memoryTitleLabel => 'शीर्षक';
+
+  @override
+  String get readingDocument => 'दस्तावेज़ पढ़ा जा रहा है…';
+
+  @override
+  String get recentHospitalLabel => 'पिछले 30 दिनों में अस्पताल या डॉक्टर';
+
+  @override
+  String get saveChanges => 'बदलाव सेव करें';
+
+  @override
+  String get saveToMemory => 'याद में सेव करें';
+
+  @override
+  String get saveToMemoryHint =>
+      'हर पेज की फ़ोटो लें। Gurtu इसे इसी फ़ोन पर पढ़ता है, ताकि बाद में आप इसे ढूँढ सकें और इसके बारे में पूछ सकें।';
+
+  @override
+  String get smartSearchDownload => 'डाउनलोड करें';
+
+  @override
+  String get smartSearchTitle => 'और समझदार खोज';
+
+  @override
+  String aboutPerson(String name) {
+    return '$name के बारे में';
+  }
+
+  @override
+  String addMedicinesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count दवाएँ सूची में जोड़ें',
+      one: '1 दवा सूची में जोड़ें',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String askThinking(String name) {
+    return '$name की याद में देखा जा रहा है…';
+  }
+
+  @override
+  String memoryNoResults(String query) {
+    return '“$query” के लिए कुछ नहीं मिला।';
+  }
+
+  @override
+  String memorySubtitle(String name) {
+    return '$name के बारे में सेव की गई हर बात: नोट, रिपोर्ट, विज़िट और दवाएँ।';
+  }
+
+  @override
+  String smartSearchBody(int size) {
+    return 'एक छोटा AI मॉडल ($size MB) डाउनलोड करें, ताकि Gurtu सिर्फ़ शब्द नहीं, मतलब से भी चीज़ें ढूँढे। यह इसी फ़ोन पर रहता है।';
+  }
+
+  @override
+  String smartSearchProgress(int percent) {
+    return 'डाउनलोड हो रहा है… $percent%';
+  }
 }

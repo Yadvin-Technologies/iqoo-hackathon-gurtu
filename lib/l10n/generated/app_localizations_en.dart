@@ -2334,4 +2334,163 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get skipConfirmBody =>
       'Gurtu won\'t remind again for this dose, and the family will be told.';
+
+  @override
+  String get addPage => 'Add another page';
+
+  @override
+  String get addToMemory => 'Add to memory';
+
+  @override
+  String get askExampleMedicines => 'Which medicines are taken at night?';
+
+  @override
+  String get askExampleReport => 'What did the last test report say?';
+
+  @override
+  String get askFailed =>
+      'Gurtu AI couldn\'t answer just now. Here is what I found in the memory:';
+
+  @override
+  String get askFoundInMemory =>
+      'Gurtu AI isn\'t on this phone yet, so here is what I found in the memory:';
+
+  @override
+  String get askHint => 'Ask about medicines, reports, visits…';
+
+  @override
+  String get askNewChat => 'New chat';
+
+  @override
+  String get askNothingFound =>
+      'I couldn\'t find anything about that in the memory yet. Try other words, or save the report or note first.';
+
+  @override
+  String get askSources => 'From memory';
+
+  @override
+  String get cantOpenFile => 'No app on this phone can open this file.';
+
+  @override
+  String get captureDocHint => 'Report, prescription or any document';
+
+  @override
+  String get changesSaved => 'Changes saved';
+
+  @override
+  String get clearSearch => 'Clear search';
+
+  @override
+  String get conditionsLabel => 'Health conditions';
+
+  @override
+  String get dailyMedicinesLabel => 'Takes medicines every day';
+
+  @override
+  String get deleteMemoryTitle => 'Delete this from memory?';
+
+  @override
+  String get editDetails => 'Edit details';
+
+  @override
+  String get editMemory => 'Edit';
+
+  @override
+  String get gettingAroundLabel => 'Getting around';
+
+  @override
+  String get memoryAll => 'All';
+
+  @override
+  String get memoryDocuments => 'Reports & scans';
+
+  @override
+  String get memoryEmptyBody =>
+      'Scan a report or prescription, write a note, or share a file to Gurtu from any app.';
+
+  @override
+  String get memoryNotes => 'Notes';
+
+  @override
+  String get memoryPrivate =>
+      'Saved only on this phone. Gurtu reads it to answer your questions.';
+
+  @override
+  String get memorySearchHint => 'Search, e.g. sugar report';
+
+  @override
+  String get memoryTextHint =>
+      'Gurtu reads the printed text. You can correct it or add more.';
+
+  @override
+  String get memoryTextLabel => 'What it says';
+
+  @override
+  String get memoryTitleHint => 'e.g. Blood test report';
+
+  @override
+  String get memoryTitleLabel => 'Title';
+
+  @override
+  String get readingDocument => 'Reading the document…';
+
+  @override
+  String get recentHospitalLabel => 'Hospital or doctor in the last 30 days';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get saveToMemory => 'Save to memory';
+
+  @override
+  String get saveToMemoryHint =>
+      'Photograph each page. Gurtu reads it on this phone so you can find it later and ask about it.';
+
+  @override
+  String get smartSearchDownload => 'Download';
+
+  @override
+  String get smartSearchTitle => 'Smarter search';
+
+  @override
+  String aboutPerson(String name) {
+    return 'About $name';
+  }
+
+  @override
+  String addMedicinesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add $count medicines to the list',
+      one: 'Add 1 medicine to the list',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String askThinking(String name) {
+    return 'Looking through $name\'s memory…';
+  }
+
+  @override
+  String memoryNoResults(String query) {
+    return 'Nothing found for “$query”.';
+  }
+
+  @override
+  String memorySubtitle(String name) {
+    return 'Everything saved about $name: notes, reports, visits and medicines.';
+  }
+
+  @override
+  String smartSearchBody(int size) {
+    return 'Download a small AI model ($size MB) so Gurtu finds things by meaning, not only exact words. It stays on this phone.';
+  }
+
+  @override
+  String smartSearchProgress(int percent) {
+    return 'Downloading… $percent%';
+  }
 }
