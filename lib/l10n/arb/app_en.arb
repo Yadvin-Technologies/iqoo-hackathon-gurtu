@@ -1335,5 +1335,10 @@
         "type": "int"
       }
     }
-  }
+  },
+  "addDocument": "Add a PDF or document",
+  "aiSummary": "Summary by Gurtu AI",
+  "summarising": "Gurtu AI is reading it…",
+  "documentNoText": "Saved. Gurtu couldn't read the words in this file, so type what matters below.",
+  "captureFileHint": "PDF, Word or text file"
 }

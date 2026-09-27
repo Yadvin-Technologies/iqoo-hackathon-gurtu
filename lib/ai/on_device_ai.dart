@@ -196,11 +196,15 @@ class GurtuAi extends ChangeNotifier with WidgetsBindingObserver {
   /// One prompt, one answer. Calls are queued: the model runs one
   /// conversation at a time. Throws if the model is not installed or the
   /// answer takes longer than [timeout].
+  ///
+  /// With [onPartial], the answer is streamed: it is called with the text so
+  /// far as each piece arrives, so a screen can show it being written.
   Future<String> generate({
     required String system,
     required String prompt,
     int maxOutputTokens = 512,
     Duration timeout = const Duration(seconds: 60),
+    ValueChanged<String>? onPartial,
   }) {
     if (!isReady) return Future.error(StateError('Gurtu AI is not installed'));
     return _run(() async {
@@ -218,6 +222,33 @@ class GurtuAi extends ChangeNotifier with WidgetsBindingObserver {
       );
       try {
         await session.addQueryChunk(Message(text: prompt, isUser: true));
+        if (onPartial != null) {
+          final text = StringBuffer();
+          final done = Completer<String>();
+          final sub = session.getResponseAsync().listen(
+            (piece) {
+              text.write(piece);
+              onPartial(text.toString());
+            },
+            onError: (Object e, StackTrace s) {
+              if (!done.isCompleted) done.completeError(e, s);
+            },
+            onDone: () {
+              if (!done.isCompleted) done.complete(text.toString());
+            },
+          );
+          try {
+            return await done.future.timeout(
+              timeout,
+              onTimeout: () async {
+                await session.stopGeneration();
+                throw TimeoutException('Gurtu AI took too long', timeout);
+              },
+            );
+          } finally {
+            await sub.cancel();
+          }
+        }
         return await session.getResponse().timeout(
           timeout,
           onTimeout: () async {

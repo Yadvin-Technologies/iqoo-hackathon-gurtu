@@ -13,6 +13,7 @@ import '../medicines/prescription_import_page.dart';
 import '../theme/gurtu_theme.dart';
 import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
+import 'document_reader.dart';
 import 'memory_editor_page.dart';
 
 /// One saved memory: its photos and documents, what it says, and who
@@ -127,9 +128,13 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
               padding: const EdgeInsets.all(14),
               child: Row(
                 children: [
-                  const IconBadge(
-                    icon: Icons.picture_as_pdf_rounded,
-                    color: GurtuColors.danger,
+                  IconBadge(
+                    icon: documentKind(f) == DocumentKind.pdf
+                        ? Icons.picture_as_pdf_rounded
+                        : Icons.description_rounded,
+                    color: documentKind(f) == DocumentKind.pdf
+                        ? GurtuColors.danger
+                        : GurtuColors.info,
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -146,6 +151,31 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
               ),
             ),
           ),
+        if (m.summary.trim().isNotEmpty) ...[
+          GurtuCard(
+            color: GurtuColors.primarySoft,
+            borderColor: GurtuColors.primarySoft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.auto_awesome_rounded,
+                      size: 18,
+                      color: GurtuColors.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(l.aiSummary, style: t.titleSmall)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                SelectableText(m.summary, style: t.bodyLarge),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
         if (detail.isNotEmpty)
           GurtuCard(child: SelectableText(detail, style: t.bodyLarge)),
         const SizedBox(height: 20),

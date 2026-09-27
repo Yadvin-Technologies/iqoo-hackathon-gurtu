@@ -164,7 +164,7 @@ void main() {
     expect(prefs.getString('care_data_v1'), contains('Felt dizzy'));
   });
 
-  testWidgets('Capture Care offers a document scan and a note only', (
+  testWidgets('Capture Care offers a scan, a document and a note', (
     tester,
   ) async {
     DocumentCamera.instance = _NoCamera();
@@ -176,7 +176,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Scan'), findsOneWidget);
     expect(find.text('Note'), findsOneWidget);
-    for (final gone in ['Voice', 'Vital', 'Document', 'Coming soon']) {
+    // PDFs, Word and text files too, read and summarised by Gurtu AI.
+    expect(find.text('Document'), findsOneWidget);
+    expect(find.text('PDF, Word or text file'), findsOneWidget);
+    for (final gone in ['Voice', 'Vital', 'Coming soon']) {
       expect(find.text(gone), findsNothing);
     }
     expect(find.text('Report, prescription or any document'), findsOneWidget);

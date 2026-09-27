@@ -113,7 +113,11 @@ class KnowledgeBase extends ChangeNotifier {
               _ => KnowledgeKind.document,
             },
             title: l.momentTitle(m),
-            text: l.momentDetail(m),
+            // Gurtu AI's summary first: the gist, then every word.
+            text: [
+              m.summary,
+              l.momentDetail(m),
+            ].where((s) => s.trim().isNotEmpty).join('\n\n'),
             date: m.timestamp,
             momentId: m.id,
           ),

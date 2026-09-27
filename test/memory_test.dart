@@ -11,6 +11,7 @@ import 'package:gurtutest/data/medicine_models.dart';
 import 'package:gurtutest/data/visit_models.dart';
 import 'package:gurtutest/l10n/language.dart';
 import 'package:gurtutest/medicines/prescription_import_page.dart';
+import 'package:gurtutest/memory/document_reader.dart';
 import 'package:gurtutest/memory/knowledge.dart';
 import 'package:gurtutest/memory/memory_detail_page.dart';
 import 'package:gurtutest/memory/memory_editor_page.dart';
@@ -102,6 +103,16 @@ class FakeInbox implements ShareInbox {
   Future<void> done() async => handled++;
 }
 
+/// Documents with no words in them (PDF reading needs the phone).
+class _NoDocuments implements DocumentReader {
+  @override
+  bool get available => true;
+  @override
+  Future<List<String>> pick() async => const [];
+  @override
+  Future<String> read(String path) async => '';
+}
+
 const report =
     'City Diagnostics\n'
     'HbA1c 7.2 %\n'
@@ -116,12 +127,14 @@ void main() {
     AttachmentStore.instance = store = FakeStore();
     ShareInbox.instance = inbox = FakeInbox();
     PhotoTextReader.instance = FakeReader(report);
+    DocumentReader.instance = _NoDocuments();
   });
   tearDown(() {
     AttachmentStore.instance = DeviceAttachmentStore();
     ShareInbox.instance = DeviceShareInbox();
     PhotoTextReader.instance = DevicePhotoTextReader();
     DocumentCamera.instance = DeviceDocumentCamera();
+    DocumentReader.instance = DeviceDocumentReader();
   });
 
   CareRepository repoOf(WidgetTester tester) =>
@@ -247,6 +260,16 @@ void main() {
 
     await openPage(tester, const MemoryEditorPage(scan: true));
     // The photo was taken and its printed text read on the phone.
+    await tester.scrollUntilVisible(
+      find.text(report),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byType(MemoryEditorPage),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
     expect(find.text(report), findsOneWidget);
     expect(find.widgetWithText(TextField, 'City Diagnostics'), findsOneWidget);
     expect(store.files, ['kept_0.jpg']);

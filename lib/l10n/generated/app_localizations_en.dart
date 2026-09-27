@@ -2493,4 +2493,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String smartSearchProgress(int percent) {
     return 'Downloading… $percent%';
   }
+
+  @override
+  String get addDocument => 'Add a PDF or document';
+
+  @override
+  String get aiSummary => 'Summary by Gurtu AI';
+
+  @override
+  String get summarising => 'Gurtu AI is reading it…';
+
+  @override
+  String get documentNoText =>
+      'Saved. Gurtu couldn\'t read the words in this file, so type what matters below.';
+
+  @override
+  String get captureFileHint => 'PDF, Word or text file';
 }

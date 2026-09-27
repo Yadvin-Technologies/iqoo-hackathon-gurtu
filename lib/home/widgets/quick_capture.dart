@@ -107,6 +107,7 @@ class _CaptureSheet extends StatelessWidget {
     final l = context.l10n;
     final options = [
       (MomentType.scan, l.captureDocHint, true),
+      (MomentType.document, l.captureFileHint, true),
       (MomentType.note, l.captureNoteHint, true),
     ];
     return SafeArea(
@@ -129,6 +130,10 @@ class _CaptureSheet extends StatelessWidget {
                   Navigator.pop(context);
                   if (type == MomentType.note) {
                     showNoteSheet(host);
+                  } else if (type == MomentType.document) {
+                    // A PDF, Word or text file from the phone, read and
+                    // summarised by Gurtu AI into the care memory.
+                    pushPage(host, const MemoryEditorPage(pickDocument: true));
                   } else {
                     // Photographs any report, prescription or bill into the
                     // care memory; its medicines can be added from there.

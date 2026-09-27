@@ -656,5 +656,10 @@
   "memoryNoResults": "“{query}”ৰ বাবে একো পোৱা নগ'ল।",
   "memorySubtitle": "{name}ৰ বিষয়ে ছেভ কৰা সকলো: টোকা, ৰিপৰ্ট, ভিজিট আৰু ঔষধ।",
   "smartSearchBody": "এটা সৰু AI মডেল ({size} MB) ডাউনলোড কৰক, তেতিয়া Gurtu-এ কেৱল শব্দেৰে নহয়, অৰ্থেৰেও বিচাৰিব। ই এই ফোনতে থাকে।",
-  "smartSearchProgress": "ডাউনলোড হৈ আছে… {percent}%"
+  "smartSearchProgress": "ডাউনলোড হৈ আছে… {percent}%",
+  "addDocument": "PDF বা নথি যোগ কৰক",
+  "aiSummary": "Gurtu AI-ৰ সাৰাংশ",
+  "summarising": "Gurtu AI-এ ইয়াক পঢ়ি আছে…",
+  "documentNoText": "ছেভ হ'ল। Gurtu-এ এই ফাইলৰ শব্দ পঢ়িব নোৱাৰিলে, সেয়েহে দৰকাৰী কথাখিনি তলত লিখক।",
+  "captureFileHint": "PDF, Word বা টেক্সট ফাইল"
 }

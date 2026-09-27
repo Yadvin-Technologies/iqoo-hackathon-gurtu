@@ -656,5 +656,10 @@
   "memoryNoResults": "“{query}” के लिए कुछ नहीं मिला।",
   "memorySubtitle": "{name} के बारे में सेव की गई हर बात: नोट, रिपोर्ट, विज़िट और दवाएँ।",
   "smartSearchBody": "एक छोटा AI मॉडल ({size} MB) डाउनलोड करें, ताकि Gurtu सिर्फ़ शब्द नहीं, मतलब से भी चीज़ें ढूँढे। यह इसी फ़ोन पर रहता है।",
-  "smartSearchProgress": "डाउनलोड हो रहा है… {percent}%"
+  "smartSearchProgress": "डाउनलोड हो रहा है… {percent}%",
+  "addDocument": "PDF या दस्तावेज़ जोड़ें",
+  "aiSummary": "Gurtu AI का सार",
+  "summarising": "Gurtu AI इसे पढ़ रहा है…",
+  "documentNoText": "सेव हो गया। Gurtu इस फ़ाइल के शब्द नहीं पढ़ पाया, इसलिए ज़रूरी बातें नीचे लिख दें।",
+  "captureFileHint": "PDF, Word या टेक्स्ट फ़ाइल"
 }

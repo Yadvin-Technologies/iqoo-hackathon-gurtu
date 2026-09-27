@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../data/care_models.dart';
 import '../data/visit_models.dart';
 import '../l10n/language.dart';
@@ -44,11 +46,19 @@ class IntakePlan {
     required this.symptoms,
     required this.followUps,
     this.medicineChanged = false,
+    this.adaptive = false,
   });
 
   /// Symptoms understood from the description (keywords included).
   final Set<Symptom> symptoms;
+
+  /// The questions to ask first. With [adaptive], more follow, each written
+  /// from the answers so far (see [VisitAssistant.nextFollowUp]).
   final List<FollowUp> followUps;
+
+  /// The conversation continues one question at a time, like a doctor
+  /// taking a history, rather than from a list written in advance.
+  final bool adaptive;
 
   /// They said a medicine was started, stopped or changed recently.
   final bool medicineChanged;
@@ -78,18 +88,39 @@ abstract class VisitAssistant {
   /// Reads the first description and decides what to ask next. Null means
   /// the assistant can't plan a conversation, and the fixed questions (since
   /// when, how bad…) are asked instead.
+  ///
+  /// [careNotes] is what else is saved about the person (medicines, recent
+  /// visits); [onPartial] gets the text as it is written.
   Future<IntakePlan?> planIntake({
     required PatientProfile patient,
     required Set<Symptom> picked,
     required String description,
     required Map<Symptom, List<String>> keywords,
     required AppLanguage language,
+    String careNotes = '',
+    ValueChanged<String>? onPartial,
+  }) async => null;
+
+  /// The next question of an adaptive conversation, written from
+  /// everything answered so far; null when enough is known. [ownAsked] is
+  /// how many of its own questions were asked already.
+  Future<FollowUp?> nextFollowUp({
+    required PatientProfile patient,
+    required String description,
+    required Set<Symptom> symptoms,
+    required List<IntakeAnswer> answers,
+    required int ownAsked,
+    required AppLanguage language,
+    String careNotes = '',
+    ValueChanged<String>? onPartial,
   }) async => null;
 
   Future<PrepSuggestion> suggestQuestions({
     required PatientProfile patient,
     required PrepAnswers answers,
     required AppLanguage language,
+    String careNotes = '',
+    ValueChanged<String>? onPartial,
   });
 }
 
@@ -119,6 +150,8 @@ class LocalVisitAssistant extends VisitAssistant {
     required PatientProfile patient,
     required PrepAnswers answers,
     required AppLanguage language,
+    String careNotes = '',
+    ValueChanged<String>? onPartial,
   }) async => PrepSuggestion(questions: questionsFor(patient, answers));
 
   /// Template questions, in order of importance.

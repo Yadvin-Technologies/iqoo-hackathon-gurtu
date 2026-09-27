@@ -4335,6 +4335,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Downloading… {percent}%'**
   String smartSearchProgress(int percent);
+
+  /// No description provided for @addDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a PDF or document'**
+  String get addDocument;
+
+  /// No description provided for @aiSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary by Gurtu AI'**
+  String get aiSummary;
+
+  /// No description provided for @summarising.
+  ///
+  /// In en, this message translates to:
+  /// **'Gurtu AI is reading it…'**
+  String get summarising;
+
+  /// No description provided for @documentNoText.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. Gurtu couldn\'t read the words in this file, so type what matters below.'**
+  String get documentNoText;
+
+  /// No description provided for @captureFileHint.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF, Word or text file'**
+  String get captureFileHint;
 }
 
 class _AppLocalizationsDelegate

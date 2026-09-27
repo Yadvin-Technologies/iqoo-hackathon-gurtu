@@ -30,6 +30,7 @@ class FakeAi extends GurtuAi {
     required String prompt,
     int maxOutputTokens = 512,
     Duration timeout = const Duration(seconds: 60),
+    ValueChanged<String>? onPartial,
   }) async {
     systems.add(system);
     prompts.add(prompt);
@@ -129,6 +130,121 @@ void main() {
     expect(system, contains('Never make up facts'));
     expect(system, contains('Never diagnose'));
     expect(system, contains('Reply in Hindi'));
+  });
+
+  test('Gurtu AI sees the whole history of doctor visits', () async {
+    final now = DateTime(2026, 9, 27, 10);
+    final (_, repo) = await amma(now);
+    final id = repo.selectedPatient!.id;
+    // A year of monthly visits, the oldest about the knee.
+    for (var i = 1; i <= 30; i++) {
+      repo.addVisit(
+        date: now.subtract(Duration(days: 30 * i + 5)),
+        doctorName: i == 30 ? 'Dr. Mehta' : 'Dr. Rao',
+        reason: i == 30 ? 'knee pain' : 'sugar check',
+        notes: i == 30
+            ? 'X-ray shows wear in the left knee. Physiotherapy twice a week.'
+            : 'Visit $i: sugar steady, keep walking every evening, '
+                  'less rice at night, check feet daily.',
+        medicines: [VisitMedicine(id: 'm$i', note: 'Metformin 500 mg 1-0-1')],
+      );
+    }
+    final latest = repo.visits
+        .where((v) => v.patientId == id)
+        .reduce((a, b) => a.date.isAfter(b.date) ? a : b);
+    // Questions taken to the latest visit, and a recording of the doctor.
+    repo.savePrep(
+      (pid, patientId) => VisitPrep(
+        id: pid,
+        patientId: patientId,
+        createdAt: now,
+        visitId: latest.id,
+        questions: [
+          DoctorQuestion(
+            id: 'qa',
+            kind: QuestionKind.custom,
+            text: 'Is the dizziness from the medicine?',
+            asked: true,
+          ),
+        ],
+      ),
+    );
+    repo.addAttachment(
+      latest,
+      VisitAttachment(
+        id: 'rec1',
+        kind: AttachmentKind.audio,
+        section: VisitSection.doctor,
+        file: 'rec1.m4a',
+        createdAt: now,
+      ),
+    );
+    final knee = repo.visits.firstWhere((v) => v.doctorName == 'Dr. Mehta');
+
+    final prompt = AskGurtuPage.buildPrompt(
+      question: 'What did the doctor say about the knee?',
+      patient: repo.selectedPatient!,
+      repo: repo,
+      // The search found the old knee visit.
+      related: [
+        KnowledgeDoc(
+          id: 'visit:${knee.id}',
+          patientId: id,
+          kind: KnowledgeKind.visit,
+          title: 'Dr. Mehta · knee pain',
+          text: knee.notes,
+          date: knee.date,
+          visitId: knee.id,
+        ),
+      ],
+      now: now,
+    );
+    expect(prompt, contains('DOCTOR VISIT HISTORY (31 saved, newest first)'));
+    // The latest visit in full, with what was asked and kept.
+    expect(
+      prompt,
+      contains('  Doctor said: Sugar is a little high. Walk every evening.'),
+    );
+    expect(
+      prompt,
+      contains(
+        '  Questions asked at this visit: Is the dizziness from the medicine?',
+      ),
+    );
+    expect(
+      prompt,
+      contains('  Kept with it: 1 voice recording(s), 0 photo(s)'),
+    );
+    // Older ones in a line each, within a budget...
+    expect(prompt, contains('Dr. Rao, for sugar check: Visit 5: sugar steady'));
+    expect(prompt, contains('(and '));
+    // ...but the old knee visit the question is about is always there, in
+    // full, and only once.
+    expect(
+      prompt,
+      contains(
+        '  Doctor said: X-ray shows wear in the left knee. '
+        'Physiotherapy twice a week.',
+      ),
+    );
+    expect('Physiotherapy'.allMatches(prompt).length, 1);
+    expect(prompt.length, lessThan(8000));
+
+    // A short history: every visit is there.
+    final (_, few) = await amma(now);
+    final small = AskGurtuPage.buildPrompt(
+      question: 'q',
+      patient: few.selectedPatient!,
+      repo: few,
+      related: const [],
+      now: now,
+    );
+    expect(small, contains('DOCTOR VISIT HISTORY (1 saved, newest first)'));
+    expect(small, isNot(contains('older visits')));
+    expect(
+      small,
+      contains('  Asked to come back: Monday 2026-09-28 (tomorrow)'),
+    );
   });
 
   test('answers are shown as plain text', () {

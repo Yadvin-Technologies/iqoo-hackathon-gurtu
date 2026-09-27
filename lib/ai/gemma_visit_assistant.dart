@@ -55,6 +55,8 @@ class GemmaVisitAssistant extends VisitAssistant {
     required String description,
     required Map<Symptom, List<String>> keywords,
     required AppLanguage language,
+    String careNotes = '',
+    ValueChanged<String>? onPartial,
   }) async {
     if (!ai.isReady) return null;
     final symptoms = {...picked, ...detectSymptoms(description, keywords)};
@@ -85,6 +87,7 @@ class GemmaVisitAssistant extends VisitAssistant {
         system: _intakeSystem(language, patient),
         prompt: [
           _about(patient),
+          if (careNotes.trim().isNotEmpty) ...['', careNotes.trim()],
           '',
           if (description.isNotEmpty) 'What they said: """$description"""',
           if (symptoms.isNotEmpty) 'Problems: ${_labels(symptoms)}',
@@ -103,8 +106,9 @@ class GemmaVisitAssistant extends VisitAssistant {
           for (final q in pool)
             if (!q.danger) _bankLine(q),
         ].join('\n'),
-        maxOutputTokens: english ? 500 : 1000,
-        timeout: const Duration(seconds: 75),
+        maxOutputTokens: english ? 350 : 700,
+        timeout: const Duration(seconds: 60),
+        onPartial: onPartial,
       );
       written = _writtenFollowUps(_json(reply)?['followUps'], pool, language);
     } on Object catch (e) {
@@ -132,8 +136,9 @@ class GemmaVisitAssistant extends VisitAssistant {
       );
     }
 
-    // The model's order, its own questions kept short, every danger check.
-    final room = (_maxFollowUps - danger.length).clamp(2, _maxOwnFollowUps);
+    // Its first question and every danger check; the rest of its questions
+    // come one at a time, from the answers (see [nextFollowUp]).
+    const room = 1;
     var kept = 0;
     final followUps = [
       for (final f in written)
@@ -159,8 +164,80 @@ class GemmaVisitAssistant extends VisitAssistant {
       symptoms: symptoms,
       medicineChanged: medicineChanged,
       followUps: followUps,
+      adaptive: true,
     );
   }
+
+  @override
+  Future<FollowUp?> nextFollowUp({
+    required PatientProfile patient,
+    required String description,
+    required Set<Symptom> symptoms,
+    required List<IntakeAnswer> answers,
+    required int ownAsked,
+    required AppLanguage language,
+    String careNotes = '',
+    ValueChanged<String>? onPartial,
+  }) async {
+    if (!ai.isReady || ownAsked >= _maxOwnFollowUps) return null;
+    final english = language == AppLanguage.english;
+    try {
+      final reply = await ai.generate(
+        system: _nextSystem(language, patient, _maxOwnFollowUps - ownAsked),
+        prompt: [
+          _about(patient),
+          if (careNotes.trim().isNotEmpty) ...['', careNotes.trim()],
+          '',
+          if (description.isNotEmpty) 'What they said: """$description"""',
+          if (symptoms.isNotEmpty) 'Problems: ${_labels(symptoms)}',
+          '',
+          'Asked so far, with their answers:',
+          for (final a in answers) '- ${a.question} → ${a.answer}',
+          if (answers.isEmpty) '(nothing yet)',
+          '',
+          'You have asked $ownAsked question(s) of your own so far.',
+        ].join('\n'),
+        maxOutputTokens: english ? 120 : 260,
+        timeout: const Duration(seconds: 40),
+        onPartial: onPartial,
+      );
+      final j = _json(reply);
+      if (j == null || j['done'] == true) return null;
+      final written = _writtenFollowUps(
+        [
+          {'id': 'new', 'question': j['question'], 'options': j['options']},
+        ],
+        const [],
+        language,
+      );
+      final next = written.firstOrNull;
+      if (next == null) return null;
+      // Never the same question twice: it would mean the model is looping.
+      final asked = {for (final a in answers) _key(a.question)};
+      if (asked.contains(_key(next.question))) return null;
+      return FollowUp(
+        id: 'ai_${ownAsked}_next',
+        question: next.question,
+        options: next.options,
+      );
+    } on Object catch (e) {
+      debugPrint('Gurtu AI next question: $e');
+      return null;
+    }
+  }
+
+  /// The question texts in a (possibly unfinished) JSON reply, as they are
+  /// being written: for showing the model's work while it streams.
+  static List<String> partialQuestions(String partial) => [
+    for (final m in RegExp(
+      r'"question"\s*:\s*"((?:[^"\\]|\\.)*)',
+    ).allMatches(partial))
+      m[1]!
+          .replaceAll(r'\"', '"')
+          .replaceAll(r'\n', ' ')
+          .replaceAll(RegExp(r'\\$'), '')
+          .trim(),
+  ].where((q) => q.isNotEmpty).toList();
 
   static String _bankLine(IntakeQuestion q) =>
       '- ${q.id}: ${q.text} Options: '
@@ -425,11 +502,17 @@ class GemmaVisitAssistant extends VisitAssistant {
     required PatientProfile patient,
     required PrepAnswers answers,
     required AppLanguage language,
+    String careNotes = '',
+    ValueChanged<String>? onPartial,
   }) async {
     final english = language == AppLanguage.english;
     final pool = _askPool(patient, answers);
     final must = _mustAsks(patient, answers);
-    final facts = '${_about(patient)}\n\n${_visit(answers)}';
+    final facts = [
+      _about(patient),
+      if (careNotes.trim().isNotEmpty) careNotes.trim(),
+      _visit(answers),
+    ].join('\n\n');
     final withoutAi = english
         ? PrepSuggestion(questions: _toQuestions(_defaultAsks(pool, must)))
         : PrepSuggestion(questions: fallback.questionsFor(patient, answers));
@@ -446,6 +529,7 @@ class GemmaVisitAssistant extends VisitAssistant {
         ].join('\n'),
         maxOutputTokens: english ? 700 : 1400,
         timeout: const Duration(seconds: 120),
+        onPartial: onPartial,
       );
       final written = _writtenAsks(
         _json(reply)?['questions'],
@@ -713,8 +797,8 @@ Use "symptoms": [] if none match.''';
 You help a family get ready for a doctor's appointment. Like a caring doctor, ask them a few short follow-up questions to understand this particular problem better before the visit.
 
 Rules:
-- Write up to $_maxOwnFollowUps questions of your own about exactly what they described: where it is, how it feels, when it comes, what makes it better or worse, what else comes with it. Use their own details and the patient's age and long-term conditions.
-- Never ask what they already told you. If they did not say when it started, or whether anything has helped so far, ask that.
+- Write ONE question of your own, first in the list: the single most useful thing a doctor would ask next about exactly what they described. More questions will be asked later, one at a time, after hearing each answer.
+- Use their own details and the patient's age, long-term conditions and medicines. Never ask what they already told you.
 - Include every safety check listed, with its id and its options in the same number and order. You may reword a safety check to fit this patient, but keep its meaning exactly.
 - ${_intakeVoice(p)}
 - Each question: one idea, short, everyday words. Give it 2 to 4 short answers to tap that cover the likely replies.
@@ -724,6 +808,26 @@ Rules:
 Reply with only this JSON and nothing else:
 {"followUps": [{"id": "new", "question": "...", "options": ["...", "..."]}]}
 Use "id": "new" for your own questions, and the listed id for a safety check or an idea you reuse.''';
+  }
+
+  /// One question at a time, from what has been answered.
+  static String _nextSystem(AppLanguage language, PatientProfile p, int left) {
+    final english = language == AppLanguage.english;
+    return '''
+You help a family get ready for a doctor's appointment. Like a caring doctor taking a history, you ask ONE short question at a time and listen to each answer before asking the next.
+
+Decide the single next question from everything already asked and answered:
+- Build on their last answers (for example, if the pain comes after meals, ask about food next). Never ask again what is already answered, even in other words.
+- Fill the gaps a doctor would want, only if still unknown and relevant: when it started, where exactly, how it feels, how bad, when it comes and how long it lasts, what makes it better or worse, what else comes with it, what they have tried, how it affects daily life.
+- You may ask at most $left more. When a doctor would already have what they need, reply done instead of asking.
+- ${_intakeVoice(p)}
+- One idea, short, everyday words, with 2 to 4 short answers to tap that cover the likely replies (add "Not sure" when it helps).
+- Only ask. Never give advice, a diagnosis, a medicine or a dose.
+- Write the question and answers in ${language.englishName}${english ? '' : ', in simple everyday words, without adding the English in brackets'}.
+
+Reply with only this JSON and nothing else:
+{"done": false, "question": "...", "options": ["...", "..."]}
+or, when enough is known: {"done": true}''';
   }
 
   /// How the chat speaks to the person using the app.

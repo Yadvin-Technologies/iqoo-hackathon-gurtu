@@ -8,6 +8,7 @@ import '../ai/visit_knowledge.dart';
 import '../data/care_repository.dart';
 import '../data/visit_models.dart';
 import '../l10n/language.dart';
+import '../medicines/medicine_text.dart';
 import '../onboarding/onboarding_state.dart';
 import '../theme/gurtu_theme.dart';
 import '../widgets/ai_status.dart';
@@ -25,6 +26,9 @@ enum _Stage {
 
   /// Gurtu AI's own follow-up questions.
   followUp,
+
+  /// Gurtu AI writing the next question from the answers so far.
+  nextQuestion,
 
   // The fixed questions, used when Gurtu AI isn't available.
   since,
@@ -79,6 +83,15 @@ class _PrepChatPageState extends State<PrepChatPage> {
   var _followUps = <FollowUp>[];
   var _intake = <IntakeAnswer>[];
 
+  /// Gurtu AI asks one question at a time, each from the answers so far.
+  var _adaptive = false;
+
+  /// An answer said to get help now: no more questions of its own.
+  var _urgent = false;
+
+  /// What Gurtu AI is writing right now, as it streams.
+  var _drafts = const <String>[];
+
   /// Bumped by "Start again" so a slow AI answer for the old conversation
   /// is dropped.
   var _run = 0;
@@ -121,6 +134,9 @@ class _PrepChatPageState extends State<PrepChatPage> {
     _byAi = false;
     _followUps = [];
     _intake = [];
+    _adaptive = false;
+    _urgent = false;
+    _drafts = const [];
     _run++;
     _describe.clear();
     _extra.clear();
@@ -136,6 +152,10 @@ class _PrepChatPageState extends State<PrepChatPage> {
   /// Moves on and brings the newest question into view.
   void _go(_Stage stage) {
     setState(() => _stage = stage);
+    _toBottom();
+  }
+
+  void _toBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_scroll.hasClients) return;
       _scroll.animateTo(
@@ -152,50 +172,112 @@ class _PrepChatPageState extends State<PrepChatPage> {
     final description = _describe.text.trim();
     final keywords = l.symptomKeywords;
     var heard = _assistant.detectSymptoms(description, keywords);
+    final chosen = {..._picked};
+    // What they said shows straight away, before Gurtu thinks about it.
+    // Their own words and taps; what Gurtu recognises in the words is
+    // confirmed after ("I heard: …").
+    final said = [
+      for (final s in Symptom.values)
+        if (chosen.contains(s)) s,
+    ];
+    _say(
+      (l) => [
+        if (description.isNotEmpty) '“$description”',
+        if (said.isNotEmpty) said.map(l.symptomLabel).join(', '),
+      ].join('\n'),
+      ai: false,
+    );
     final patient = CareScope.of(context).selectedPatient;
     IntakePlan? plan;
     if (patient != null && AiScope.read(context).isReady) {
       final run = _run;
+      final language = LanguageScope.of(context).value;
+      final notes = _careNotes();
+      setState(() => _drafts = const []);
       _go(_Stage.understanding);
       plan = await _assistant.planIntake(
         patient: patient,
-        picked: {..._picked},
+        picked: chosen,
         description: description,
         keywords: keywords,
-        language: LanguageScope.of(context).value,
+        language: language,
+        careNotes: notes,
+        onPartial: (text) => _showDraft(text, run),
       );
       if (!mounted || run != _run) return;
+      _drafts = const [];
       if (plan != null) heard = plan.symptoms;
     }
     final newlyHeard = [
       for (final s in Symptom.values)
-        if (heard.contains(s) && !_picked.contains(s)) s,
+        if (heard.contains(s) && !said.contains(s)) s,
     ];
     _picked.addAll(heard);
     final picked = [
       for (final s in Symptom.values)
         if (_picked.contains(s)) s,
     ];
-
-    _say(
-      (l) => [
-        if (description.isNotEmpty) '“$description”',
-        if (picked.isNotEmpty) picked.map(l.symptomLabel).join(', '),
-      ].join('\n'),
-      ai: false,
-    );
     if (newlyHeard.isNotEmpty) {
       _say((l) => l.prepHeard(newlyHeard.map(l.symptomLabel).join(', ')));
     }
     _answers = [for (final s in picked) SymptomAnswer(s)];
     _current = 0;
-    if (plan != null) {
+    if (plan != null && plan.followUps.isNotEmpty) {
       if (plan.medicineChanged) _newMedicine = true;
-      _followUps = plan.followUps;
+      _followUps = [...plan.followUps];
+      _adaptive = plan.adaptive;
       _askFollowUp();
     } else {
       _answers.isEmpty ? _askMedicine() : _askSince();
     }
+  }
+
+  /// Shows what Gurtu AI is writing, as it arrives.
+  void _showDraft(String partial, int run) {
+    if (!mounted || run != _run) return;
+    final drafts = GemmaVisitAssistant.partialQuestions(partial);
+    if (drafts.length == _drafts.length &&
+        (drafts.isEmpty || drafts.last == _drafts.last)) {
+      return;
+    }
+    setState(() => _drafts = drafts);
+    _toBottom();
+  }
+
+  /// Medicines and recent visits, so the questions fit this person. Names
+  /// only: a dose has no place in what Gurtu writes here.
+  String _careNotes() {
+    final repo = CareScope.of(context);
+    final id = repo.selectedPatient?.id;
+    if (id == null) return '';
+    final en = lookupAppLocalizations(const Locale('en'));
+    final medicines = [
+      for (final m in repo.medicines)
+        if (m.patientId == id && !m.isSample)
+          m.times.isEmpty
+              ? m.name
+              : '${m.name} (${m.times.map(en.doseLabel).join(', ').toLowerCase()})',
+    ];
+    final visits = [
+      for (final v in repo.visits)
+        if (v.patientId == id && !v.isSample) v,
+    ]..sort((a, b) => b.date.compareTo(a.date));
+    String day(DateTime d) =>
+        '${d.year}-${d.month.toString().padLeft(2, '0')}-'
+        '${d.day.toString().padLeft(2, '0')}';
+    String cut(String t, int max) {
+      final one = t.replaceAll(RegExp(r'\s+'), ' ').trim();
+      return one.length <= max ? one : '${one.substring(0, max)}…';
+    }
+
+    return [
+      if (medicines.isNotEmpty) 'Medicines they take: ${medicines.join('; ')}',
+      if (visits.isNotEmpty) 'Recent doctor visits:',
+      for (final v in visits.take(2))
+        '- ${day(v.date)}, ${en.doctorLabel(v)}'
+            '${en.reasonOf(v).isEmpty ? '' : ', for ${en.reasonOf(v)}'}'
+            '${en.notesOf(v).trim().isEmpty ? '' : ': ${cut(en.notesOf(v), 200)}'}',
+    ].join('\n');
   }
 
   void _askFollowUp() {
@@ -224,14 +306,51 @@ class _PrepChatPageState extends State<PrepChatPage> {
     }
     switch (option?.urgency) {
       case Urgency.emergency:
+        _urgent = true;
         _say((l) => l.urgentAnswer, urgent: true);
       case Urgency.selfHarm:
+        _urgent = true;
         _say((l) => l.urgentSelfHarm, urgent: true);
       case Urgency.none || null:
         break;
     }
     _current++;
     if (_current < _followUps.length) return _askFollowUp();
+    if (_adaptive && !_urgent) {
+      _nextFollowUp();
+      return;
+    }
+    _wrapUp();
+  }
+
+  /// Gurtu AI writes the next question from everything answered so far, or
+  /// decides it knows enough.
+  Future<void> _nextFollowUp() async {
+    final patient = CareScope.of(context).selectedPatient;
+    if (patient == null) return _wrapUp();
+    final run = _run;
+    final language = LanguageScope.of(context).value;
+    final notes = _careNotes();
+    setState(() => _drafts = const []);
+    _go(_Stage.nextQuestion);
+    final next = await _assistant.nextFollowUp(
+      patient: patient,
+      description: _describe.text.trim(),
+      symptoms: {for (final a in _answers) a.symptom},
+      answers: [..._intake],
+      ownAsked: _followUps.where((f) => f.id.startsWith('ai_')).length,
+      language: language,
+      careNotes: notes,
+      onPartial: (text) => _showDraft(text, run),
+    );
+    if (!mounted || run != _run) return;
+    _drafts = const [];
+    if (next == null) return _wrapUp();
+    _followUps.add(next);
+    _askFollowUp();
+  }
+
+  void _wrapUp() {
     _say((l) => l.askAnythingElse);
     _go(_Stage.extra);
   }
@@ -278,11 +397,13 @@ class _PrepChatPageState extends State<PrepChatPage> {
     FocusScope.of(context).unfocus();
     final extra = _extra.text.trim();
     if (extra.isNotEmpty) _say((_) => extra, ai: false);
+    setState(() => _drafts = const []);
     _go(_Stage.thinking);
 
     final patient = CareScope.of(context).selectedPatient;
     if (patient == null) return;
     final run = _run;
+    final notes = _careNotes();
     final suggestion = await _assistant.suggestQuestions(
       patient: patient,
       answers: PrepAnswers(
@@ -293,8 +414,11 @@ class _PrepChatPageState extends State<PrepChatPage> {
         intake: _intake,
       ),
       language: LanguageScope.of(context).value,
+      careNotes: notes,
+      onPartial: (text) => _showDraft(text, run),
     );
     if (!mounted || run != _run) return;
+    _drafts = const [];
     _questions = suggestion.questions;
     _byAi = suggestion.byAi;
     _say((l) => _byAi ? l.prepResultIntroAi : l.prepResultIntro);
@@ -454,8 +578,32 @@ class _PrepChatPageState extends State<PrepChatPage> {
         hint: l.noteHint,
         onChanged: (_) => setState(() {}),
       ),
-      _Stage.understanding => _Typing(text: l.prepUnderstanding),
-      _Stage.thinking => _Typing(text: l.prepThinking),
+      _Stage.understanding || _Stage.nextQuestion =>
+        _drafts.isEmpty
+            ? _Typing(text: l.prepUnderstanding)
+            : _Writing(text: _drafts.last),
+      _Stage.thinking => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _Typing(text: l.prepThinking),
+          // Each question shows as soon as Gurtu AI has written it.
+          for (final (i, q) in _drafts.indexed)
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${i + 1}.',
+                    style: t.titleSmall?.copyWith(color: GurtuColors.primary),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(q, style: t.bodyLarge)),
+                ],
+              ),
+            ),
+        ],
+      ),
       _Stage.result => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -636,6 +784,60 @@ class _Options extends StatelessWidget {
           ),
           const SizedBox(height: 10),
         ],
+      ],
+    );
+  }
+}
+
+/// A question Gurtu AI is still writing, word by word.
+class _Writing extends StatelessWidget {
+  const _Writing({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 34,
+          height: 34,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: GurtuColors.primaryGradient,
+          ),
+          child: const Icon(
+            Icons.auto_awesome_rounded,
+            color: Colors.white,
+            size: 18,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: GurtuColors.surface,
+              border: Border.all(color: GurtuColors.outline),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(4),
+                topRight: Radius.circular(18),
+                bottomLeft: Radius.circular(18),
+                bottomRight: Radius.circular(18),
+              ),
+            ),
+            child: Text(
+              '$text ▍',
+              style: const TextStyle(
+                color: GurtuColors.textSecondary,
+                fontSize: 16,
+                height: 1.35,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

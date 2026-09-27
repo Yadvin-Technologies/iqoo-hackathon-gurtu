@@ -2495,4 +2495,20 @@ class AppLocalizationsKn extends AppLocalizations {
   String smartSearchProgress(int percent) {
     return 'ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… $percent%';
   }
+
+  @override
+  String get addDocument => 'PDF ಅಥವಾ ದಾಖಲೆ ಸೇರಿಸಿ';
+
+  @override
+  String get aiSummary => 'Gurtu AI ಸಾರಾಂಶ';
+
+  @override
+  String get summarising => 'Gurtu AI ಇದನ್ನು ಓದುತ್ತಿದೆ…';
+
+  @override
+  String get documentNoText =>
+      'ಉಳಿಸಲಾಗಿದೆ. ಈ ಫೈಲ್‌ನ ಪದಗಳನ್ನು Gurtu ಓದಲಾಗಲಿಲ್ಲ, ಹಾಗಾಗಿ ಮುಖ್ಯವಾದುದನ್ನು ಕೆಳಗೆ ಬರೆಯಿರಿ.';
+
+  @override
+  String get captureFileHint => 'PDF, Word ಅಥವಾ ಪಠ್ಯ ಫೈಲ್';
 }

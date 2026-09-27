@@ -656,5 +656,10 @@
   "memoryNoResults": "“{query}” ਲਈ ਕੁਝ ਨਹੀਂ ਮਿਲਿਆ।",
   "memorySubtitle": "{name} ਬਾਰੇ ਸੇਵ ਕੀਤਾ ਸਭ ਕੁਝ: ਨੋਟ, ਰਿਪੋਰਟਾਂ, ਮੁਲਾਕਾਤਾਂ ਅਤੇ ਦਵਾਈਆਂ।",
   "smartSearchBody": "ਇੱਕ ਛੋਟਾ AI ਮਾਡਲ ({size} MB) ਡਾਊਨਲੋਡ ਕਰੋ, ਤਾਂ ਜੋ Gurtu ਸਿਰਫ਼ ਸ਼ਬਦਾਂ ਨਾਲ ਨਹੀਂ, ਮਤਲਬ ਨਾਲ ਵੀ ਲੱਭੇ। ਇਹ ਇਸੇ ਫ਼ੋਨ 'ਤੇ ਰਹਿੰਦਾ ਹੈ।",
-  "smartSearchProgress": "ਡਾਊਨਲੋਡ ਹੋ ਰਿਹਾ ਹੈ… {percent}%"
+  "smartSearchProgress": "ਡਾਊਨਲੋਡ ਹੋ ਰਿਹਾ ਹੈ… {percent}%",
+  "addDocument": "PDF ਜਾਂ ਦਸਤਾਵੇਜ਼ ਜੋੜੋ",
+  "aiSummary": "Gurtu AI ਦਾ ਸਾਰ",
+  "summarising": "Gurtu AI ਇਸ ਨੂੰ ਪੜ੍ਹ ਰਿਹਾ ਹੈ…",
+  "documentNoText": "ਸੇਵ ਹੋ ਗਿਆ। Gurtu ਇਸ ਫ਼ਾਈਲ ਦੇ ਸ਼ਬਦ ਨਹੀਂ ਪੜ੍ਹ ਸਕਿਆ, ਇਸ ਲਈ ਜ਼ਰੂਰੀ ਗੱਲਾਂ ਹੇਠਾਂ ਲਿਖੋ।",
+  "captureFileHint": "PDF, Word ਜਾਂ ਟੈਕਸਟ ਫ਼ਾਈਲ"
 }

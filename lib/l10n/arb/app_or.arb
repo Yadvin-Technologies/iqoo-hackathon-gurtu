@@ -656,5 +656,10 @@
   "memoryNoResults": "“{query}” ପାଇଁ କିଛି ମିଳିଲା ନାହିଁ।",
   "memorySubtitle": "{name}ଙ୍କ ବିଷୟରେ ସେଭ୍ ହୋଇଥିବା ସବୁକିଛି: ନୋଟ୍, ରିପୋର୍ଟ, ଭିଜିଟ୍ ଓ ଔଷଧ।",
   "smartSearchBody": "ଏକ ଛୋଟ AI ମଡେଲ୍ ({size} MB) ଡାଉନଲୋଡ୍ କରନ୍ତୁ, ଯାହାଦ୍ୱାରା Gurtu କେବଳ ଶବ୍ଦ ନୁହେଁ, ଅର୍ଥ ଦେଖି ମଧ୍ୟ ଖୋଜିବ। ଏହା ଏହି ଫୋନରେ ହିଁ ରହେ।",
-  "smartSearchProgress": "ଡାଉନଲୋଡ୍ ହେଉଛି… {percent}%"
+  "smartSearchProgress": "ଡାଉନଲୋଡ୍ ହେଉଛି… {percent}%",
+  "addDocument": "PDF ବା କାଗଜପତ୍ର ଯୋଡ଼ନ୍ତୁ",
+  "aiSummary": "Gurtu AI ସାରାଂଶ",
+  "summarising": "Gurtu AI ଏହାକୁ ପଢ଼ୁଛି…",
+  "documentNoText": "ସେଭ୍ ହେଲା। Gurtu ଏହି ଫାଇଲ୍‌ର ଶବ୍ଦ ପଢ଼ିପାରିଲା ନାହିଁ, ତେଣୁ ଜରୁରୀ କଥା ତଳେ ଲେଖନ୍ତୁ।",
+  "captureFileHint": "PDF, Word ବା ଟେକ୍ସଟ୍ ଫାଇଲ୍"
 }

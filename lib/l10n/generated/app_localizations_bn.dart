@@ -2480,4 +2480,20 @@ class AppLocalizationsBn extends AppLocalizations {
   String smartSearchProgress(int percent) {
     return 'ডাউনলোড হচ্ছে… $percent%';
   }
+
+  @override
+  String get addDocument => 'PDF বা নথি যোগ করুন';
+
+  @override
+  String get aiSummary => 'Gurtu AI-এর সারাংশ';
+
+  @override
+  String get summarising => 'Gurtu AI এটি পড়ছে…';
+
+  @override
+  String get documentNoText =>
+      'সেভ হয়েছে। এই ফাইলের লেখা Gurtu পড়তে পারেনি, তাই জরুরি কথাগুলো নিচে লিখুন।';
+
+  @override
+  String get captureFileHint => 'PDF, Word বা টেক্সট ফাইল';
 }

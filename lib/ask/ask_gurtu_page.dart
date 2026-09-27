@@ -6,6 +6,7 @@ import '../ai/visit_assistant.dart';
 import '../data/care_models.dart';
 import '../data/care_repository.dart';
 import '../data/medicine_models.dart';
+import '../data/visit_models.dart';
 import '../l10n/language.dart';
 import '../medicines/medicine_text.dart';
 import '../memory/knowledge.dart';
@@ -46,12 +47,15 @@ class AskGurtuPage extends StatefulWidget {
   static String systemPrompt(PatientProfile p, AppLanguage language) =>
       'You are Gurtu, a warm and practical care assistant on the phone of '
       'an Indian family looking after ${p.name}. You are given what the '
-      'family saved about ${p.name}: their profile, medicines, doctor '
-      'visits, notes and reports.\n'
+      'family saved about ${p.name}: their profile, medicines, their full '
+      'history of doctor visits, notes and reports.\n'
       'How to answer:\n'
       '- Use the saved information whenever it helps, and mention the '
       'specific details (medicine names and times, dates, test values, what '
       'the doctor said).\n'
+      '- Use the visit history: say which visit something is from, and '
+      'point out what changed between visits (medicines started or '
+      'stopped, advice, test results, how often they go).\n'
       '- If the question asks for a specific fact (a date, a value, what a '
       'report or the doctor said) that is not in the saved information, say '
       'plainly that it is not saved yet and what to save. Never make up '
@@ -139,21 +143,38 @@ class AskGurtuPage extends StatefulWidget {
       for (final v in visits)
         if (v.nextVisit case final next? when !next.isBefore(today)) next,
     ]..sort();
-    out.writeln('DOCTOR VISITS');
+    // Every visit, newest first: the latest ones (and any the question is
+    // about) in full, older ones in a line each, within a budget that leaves
+    // the model room to answer.
+    out.writeln('DOCTOR VISIT HISTORY (${visits.length} saved, newest first)');
     if (upcoming.isNotEmpty) out.writeln('Next visit: ${day(upcoming.first)}');
     if (visits.isEmpty) out.writeln('(none saved)');
-    for (final v in visits.take(2)) {
-      final said = [
-        en.notesOf(v),
-        en.medicinesOf(v),
-        en.testsOf(v),
-      ].where((s) => s.trim().isNotEmpty).join(' | ');
-      out.writeln(
-        '- ${day(v.date)}, ${en.doctorLabel(v)}'
-        '${en.reasonOf(v).isEmpty ? '' : ' for ${en.reasonOf(v)}'}'
-        '${said.isEmpty ? '' : ': ${cut(said, 300)}'}',
-      );
+    final inFull = {
+      for (final v in visits.take(3)) v.id,
+      for (final d in related) ?d.visitId,
+    };
+    // The ones in full are always kept; one-line visits fill what's left,
+    // newest first. Shown in date order either way.
+    // Keyed by the visit itself: ids made in the same instant can repeat.
+    final entries = Map<DoctorVisit, String>.identity();
+    for (final v in visits) {
+      if (inFull.contains(v.id)) {
+        entries[v] = _visitInFull(v, repo, en, day, cut);
+      }
     }
+    var budget = 3200 - entries.values.fold(0, (sum, e) => sum + e.length);
+    for (final v in visits) {
+      if (entries.containsKey(v)) continue;
+      final entry = _visitInBrief(v, en, day, cut);
+      if (entry.length > budget) break;
+      entries[v] = entry;
+      budget -= entry.length;
+    }
+    for (final v in visits) {
+      if (entries[v] case final entry?) out.writeln(entry);
+    }
+    final left = visits.length - entries.length;
+    if (left > 0) out.writeln('(and $left older visits)');
     out.writeln();
 
     // Questions saved for the doctor and not asked yet.
@@ -179,14 +200,20 @@ class AskGurtuPage extends StatefulWidget {
       out.writeln('RECENT NOTES');
       for (final m in recent.take(4)) {
         final title = m.title.isEmpty ? '' : '${m.title}: ';
-        out.writeln('- ${day(m.timestamp)}: $title${cut(m.detail, 140)}');
+        final gist = m.summary.trim().isNotEmpty ? m.summary : m.detail;
+        out.writeln('- ${day(m.timestamp)}: $title${cut(gist, 160)}');
       }
       out.writeln();
     }
 
-    if (related.isNotEmpty) {
+    // Visits are in the history above already.
+    final items = [
+      for (final d in related)
+        if (d.visitId == null) d,
+    ];
+    if (items.isNotEmpty) {
       out.writeln('SAVED ITEMS THAT MATCH THE QUESTION');
-      for (final (i, d) in related.indexed) {
+      for (final (i, d) in items.indexed) {
         out.writeln(
           '[${i + 1}] ${d.title} (${day(d.date)})\n${cut(d.text, 500)}',
         );
@@ -205,6 +232,67 @@ class AskGurtuPage extends StatefulWidget {
     }
     out.write('QUESTION FROM THE FAMILY: $question');
     return out.toString();
+  }
+
+  /// One visit with everything saved about it.
+  static String _visitInFull(
+    DoctorVisit v,
+    CareRepository repo,
+    AppLocalizations en,
+    String Function(DateTime) day,
+    String Function(String, int) cut,
+  ) {
+    final reason = en.reasonOf(v);
+    final medicines = [
+      for (final m in v.medicines)
+        if (m.note.trim().isNotEmpty) cut(m.note, 120),
+    ];
+    final asked = [
+      for (final prep in repo.preps)
+        if (prep.visitId == v.id)
+          for (final q in prep.questions)
+            if (q.asked) en.questionText(q),
+    ];
+    final recordings = v.attachments
+        .where((a) => a.kind == AttachmentKind.audio)
+        .length;
+    final photos = v.attachments
+        .where((a) => a.kind == AttachmentKind.photo)
+        .length;
+    return [
+      '- ${day(v.date)}, ${en.doctorLabel(v)}'
+          '${reason.isEmpty ? '' : ', for $reason'}',
+      if (en.notesOf(v).trim().isNotEmpty)
+        '  Doctor said: ${cut(en.notesOf(v), 450)}',
+      if (medicines.isNotEmpty)
+        '  Medicines given: ${medicines.join('; ')}'
+      else if (en.medicinesOf(v).trim().isNotEmpty)
+        '  Medicines given: ${cut(en.medicinesOf(v), 250)}',
+      if (en.testsOf(v).trim().isNotEmpty)
+        '  Tests: ${cut(en.testsOf(v), 200)}',
+      if (v.nextVisit case final next?) '  Asked to come back: ${day(next)}',
+      if (asked.isNotEmpty)
+        '  Questions asked at this visit: ${cut(asked.join('; '), 300)}',
+      if (recordings + photos > 0)
+        '  Kept with it: $recordings voice recording(s), $photos photo(s)',
+    ].join('\n');
+  }
+
+  /// An older visit, in one line.
+  static String _visitInBrief(
+    DoctorVisit v,
+    AppLocalizations en,
+    String Function(DateTime) day,
+    String Function(String, int) cut,
+  ) {
+    final reason = en.reasonOf(v);
+    final said = [
+      en.notesOf(v),
+      en.medicinesOf(v),
+    ].where((s) => s.trim().isNotEmpty).join(' | ');
+    return '- ${day(v.date)}, ${en.doctorLabel(v)}'
+        '${reason.isEmpty ? '' : ', for $reason'}'
+        '${said.isEmpty ? '' : ': ${cut(said, 140)}'}';
   }
 
   /// The model's reply as plain text: no markdown marks or headings.

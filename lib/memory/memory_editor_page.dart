@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -17,6 +18,7 @@ import '../theme/gurtu_theme.dart';
 import '../widgets/gurtu_page.dart';
 import '../widgets/gurtu_widgets.dart';
 import '../widgets/voice_input.dart';
+import 'document_reader.dart';
 import 'memory_detail_page.dart';
 
 /// Takes a photo of a page, or picks one. Behind an interface so tests run
@@ -59,6 +61,47 @@ bool isImageFile(String name) {
       lower.endsWith('.heic');
 }
 
+/// How Gurtu AI reads a saved document.
+String documentSummarySystem(AppLanguage language) =>
+    'You read a medical document an Indian family saved: a test report, '
+    'prescription, discharge summary, bill or letter. Its text was read '
+    'from a photo or file and may have small reading mistakes.\n'
+    'Reply with only this JSON and nothing else:\n'
+    '{"title": "...", "summary": "..."}\n'
+    '- title: what the document is, at most 6 words, e.g. "Blood sugar '
+    'report, March 2026".\n'
+    '- summary: 2 to 4 short sentences on what matters in it: the key '
+    'results with their values and whether the document marks them high '
+    'or low, diagnoses and medicines exactly as written, advice, dates '
+    'and next steps.\n'
+    '- Use only what is written. Never add your own interpretation, '
+    'diagnosis or advice, and never invent a value.\n'
+    '- Write both in ${language.englishName}, simply, without markdown.';
+
+/// The title and summary in Gurtu AI's reply, or null when unusable.
+({String title, String summary})? parseDocumentSummary(String reply) {
+  final start = reply.indexOf('{');
+  final end = reply.lastIndexOf('}');
+  if (start < 0 || end <= start) return null;
+  try {
+    final j = jsonDecode(reply.substring(start, end + 1));
+    if (j is! Map) return null;
+    String clean(Object? v, int max) {
+      final t = (v is String ? v : '')
+          .replaceAll(RegExp(r'[*#_`]+'), '')
+          .replaceAll(RegExp(r'\s+'), ' ')
+          .trim();
+      return t.length > max ? '${t.substring(0, max - 1)}…' : t;
+    }
+
+    final summary = clean(j['summary'], 700);
+    if (summary.length < 10) return null;
+    return (title: clean(j['title'], 70), summary: summary);
+  } on FormatException {
+    return null;
+  }
+}
+
 /// Saves a report, prescription, bill or any page to the person's care
 /// memory: photographed (Scan), shared from another app, or typed. The
 /// printed text is read on the phone, so it can be searched and Ask Gurtu
@@ -68,6 +111,7 @@ class MemoryEditorPage extends StatefulWidget {
     super.key,
     this.editing,
     this.scan = false,
+    this.pickDocument = false,
     this.sharedPaths = const [],
     this.sharedText = '',
   });
@@ -76,6 +120,9 @@ class MemoryEditorPage extends StatefulWidget {
 
   /// Opens the camera straight away.
   final bool scan;
+
+  /// Opens the phone's file picker straight away (PDF, Word, text).
+  final bool pickDocument;
 
   /// Files shared to Gurtu from another app (copied in on open).
   final List<String> sharedPaths;
@@ -98,6 +145,14 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
   bool _saved = false;
   bool _titleTyped = false;
 
+  /// Gurtu AI's summary of what the document says (streams in).
+  late String _summary = widget.editing?.summary ?? '';
+  bool _summarising = false;
+
+  /// The text last summarised, so the same words aren't read twice.
+  String? _summarisedText;
+  int _summaryRun = 0;
+
   @override
   void initState() {
     super.initState();
@@ -107,6 +162,7 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
         await _addFile(p);
       }
       if (widget.scan) await _pick(fromGallery: false);
+      if (widget.pickDocument) await _pickDocuments();
       _suggestTitle();
     });
   }
@@ -135,7 +191,15 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
     }
   }
 
-  /// Keeps the file with the memory and, for a photo, reads its text.
+  Future<void> _pickDocuments() async {
+    for (final path in await DocumentReader.instance.pick()) {
+      if (!mounted) return;
+      await _addFile(path);
+    }
+  }
+
+  /// Keeps the file with the memory and reads the words in it: a photo's
+  /// printed text, a PDF page by page, a Word or text file.
   Future<void> _addFile(String path) async {
     final store = AttachmentStore.instance;
     if (!store.available) return;
@@ -150,17 +214,22 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
         _files.add(file);
         _added.add(file);
       });
-      if (isImageFile(file)) {
-        final printed = (await PhotoTextReader.instance.read(
-          store.pathOf(file),
-        )).trim();
-        if (printed.isNotEmpty && mounted) {
-          final before = _text.text.trim();
-          _text.text = before.isEmpty ? printed : '$before\n\n$printed';
-        }
-      } else if (!_titleTyped && _title.text.isEmpty) {
-        // A shared PDF: its own name is the best title there is.
+      final kind = documentKind(file);
+      if (kind != DocumentKind.image && !_titleTyped && _title.text.isEmpty) {
+        // A document's own name is a good first title.
         _title.text = _niceName(path);
+      }
+      final printed = kind == DocumentKind.image
+          ? (await PhotoTextReader.instance.read(store.pathOf(file))).trim()
+          : await DocumentReader.instance.read(store.pathOf(file));
+      if (!mounted) return;
+      if (printed.isNotEmpty) {
+        final before = _text.text.trim();
+        _text.text = before.isEmpty ? printed : '$before\n\n$printed';
+      } else if (kind != DocumentKind.image) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(context.l10n.documentNoText)));
       }
       HapticFeedback.lightImpact();
     } on Object catch (e) {
@@ -179,39 +248,69 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
         .trim();
   }
 
-  /// A short title from the text: Gurtu AI's when it is installed, the
-  /// first line otherwise. Never over one the family typed.
+  /// A short title from the text (the first line), then Gurtu AI's own
+  /// title and a summary of what matters, written as it reads. Never over a
+  /// title the family typed.
   void _suggestTitle() {
-    if (!mounted || _titleTyped || _title.text.isNotEmpty) return;
+    if (!mounted || _reading > 0) return;
     final text = _text.text.trim();
     if (text.isEmpty) return;
-    final first = text
-        .split('\n')
-        .map((s) => s.trim())
-        .firstWhere((s) => s.length >= 3, orElse: () => '');
-    _title.text = first.length > 60 ? '${first.substring(0, 57)}…' : first;
-    final ai = AiScope.read(context);
-    if (!ai.isReady) return;
-    ai
-        .generate(
-          system:
-              'Give a short title (at most 6 words) for this medical '
-              'document, in the language it is written in. Reply with the '
-              'title only.',
-          prompt: text.length > 1500 ? text.substring(0, 1500) : text,
-          maxOutputTokens: 24,
-          timeout: const Duration(seconds: 30),
-        )
-        .then((t) {
-          final title = t.trim().replaceAll(RegExp('^["\'*#]+|["\'*]+\$'), '');
-          if (mounted &&
-              !_titleTyped &&
-              title.isNotEmpty &&
-              title.length < 80) {
-            _title.text = title;
-          }
-        }, onError: (Object _) {});
+    if (!_titleTyped && _title.text.isEmpty) {
+      final first = text
+          .split('\n')
+          .map((s) => s.trim())
+          .firstWhere((s) => s.length >= 3, orElse: () => '');
+      _title.text = first.length > 60 ? '${first.substring(0, 57)}…' : first;
+    }
+    _summarise(text);
   }
+
+  static final _summaryField = RegExp(r'"summary"\s*:\s*"((?:[^"\\]|\\.)*)');
+
+  Future<void> _summarise(String text) async {
+    final ai = AiScope.read(context);
+    if (!ai.isReady || text == _summarisedText) return;
+    _summarisedText = text;
+    final run = ++_summaryRun;
+    final language = LanguageScope.of(context).value;
+    setState(() {
+      _summarising = true;
+      _summary = '';
+    });
+    try {
+      final reply = await ai.generate(
+        system: documentSummarySystem(language),
+        prompt: text.length > 3000 ? '${text.substring(0, 3000)}…' : text,
+        maxOutputTokens: 320,
+        timeout: const Duration(seconds: 90),
+        onPartial: (partial) {
+          final m = _summaryField.firstMatch(partial);
+          if (m == null || !mounted || run != _summaryRun) return;
+          setState(() => _summary = _unescape(m[1]!));
+        },
+      );
+      if (!mounted || run != _summaryRun) return;
+      final parsed = parseDocumentSummary(reply);
+      setState(() {
+        if (parsed != null) {
+          _summary = parsed.summary;
+          if (!_titleTyped && parsed.title.isNotEmpty) {
+            _title.text = parsed.title;
+          }
+        }
+      });
+    } on Object catch (e) {
+      debugPrint('Gurtu AI summary: $e');
+    } finally {
+      if (mounted && run == _summaryRun) setState(() => _summarising = false);
+    }
+  }
+
+  static String _unescape(String s) => s
+      .replaceAll(r'\n', ' ')
+      .replaceAll(r'\"', '"')
+      .replaceAll(RegExp(r'\\$'), '')
+      .trim();
 
   void _removeFile(String file) {
     setState(() => _files.remove(file));
@@ -238,6 +337,7 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
           title: _title.text.trim(),
           detail: text,
           files: _files,
+          summary: _summary.trim(),
         ),
       );
     } else {
@@ -250,6 +350,7 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
         title: _title.text,
         detail: text,
         files: _files,
+        summary: _summarising ? '' : _summary,
       );
     }
     _saved = true;
@@ -315,6 +416,27 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
           ),
           const SizedBox(height: 14),
         ],
+        if (_summarising || _summary.isNotEmpty) ...[
+          _SummaryCard(
+            summary: _summary,
+            writing: _summarising,
+            onRemove: () => setState(() {
+              _summaryRun++;
+              _summarising = false;
+              _summary = '';
+            }),
+          ),
+          const SizedBox(height: 16),
+        ],
+        if (DocumentReader.instance.available) ...[
+          GurtuButton(
+            label: l.addDocument,
+            style: GurtuButtonStyle.ghost,
+            icon: Icons.upload_file_rounded,
+            onPressed: _reading > 0 ? null : _pickDocuments,
+          ),
+          const SizedBox(height: 10),
+        ],
         if (camera) ...[
           GurtuButton(
             label: _files.isEmpty ? l.takePhoto : l.addPage,
@@ -355,6 +477,77 @@ class _MemoryEditorPageState extends State<MemoryEditorPage> {
         const SizedBox(height: 12),
         InfoBanner(text: l.memoryPrivate),
       ],
+    );
+  }
+}
+
+/// What Gurtu AI understood from the document, as it writes it.
+class _SummaryCard extends StatelessWidget {
+  const _SummaryCard({
+    required this.summary,
+    required this.writing,
+    required this.onRemove,
+  });
+
+  final String summary;
+  final bool writing;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final t = Theme.of(context).textTheme;
+    return GurtuCard(
+      color: GurtuColors.primarySoft,
+      borderColor: GurtuColors.primarySoft,
+      padding: const EdgeInsets.fromLTRB(16, 12, 6, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.auto_awesome_rounded,
+                size: 18,
+                color: GurtuColors.primary,
+              ),
+              const SizedBox(width: 8),
+              Expanded(child: Text(l.aiSummary, style: t.titleSmall)),
+              if (writing)
+                const Padding(
+                  padding: EdgeInsets.all(12),
+                  child: SizedBox.square(
+                    dimension: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: GurtuColors.primary,
+                    ),
+                  ),
+                )
+              else
+                IconButton(
+                  tooltip: l.remove,
+                  visualDensity: VisualDensity.compact,
+                  onPressed: onRemove,
+                  icon: const Icon(Icons.close_rounded, size: 20),
+                ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Text(
+              summary.isEmpty
+                  ? l.summarising
+                  : (writing ? '$summary ▍' : summary),
+              style: t.bodyLarge?.copyWith(
+                color: summary.isEmpty
+                    ? GurtuColors.textMuted
+                    : GurtuColors.textPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

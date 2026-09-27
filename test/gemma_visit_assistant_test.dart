@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gurtutest/ai/gemma_visit_assistant.dart';
 import 'package:gurtutest/ai/on_device_ai.dart';
@@ -27,10 +28,17 @@ class _FakeAi extends GurtuAi {
     required String prompt,
     int maxOutputTokens = 512,
     Duration timeout = const Duration(seconds: 60),
+    ValueChanged<String>? onPartial,
   }) async {
     systems.add(system);
     prompts.add(prompt);
-    return replies[(prompts.length - 1).clamp(0, replies.length - 1)];
+    final reply = replies[(prompts.length - 1).clamp(0, replies.length - 1)];
+    // Streamed in two pieces, like the model writing it.
+    if (onPartial != null) {
+      onPartial(reply.substring(0, reply.length ~/ 2));
+      onPartial(reply);
+    }
+    return reply;
   }
 }
 
@@ -92,20 +100,16 @@ void main() {
       );
 
       expect(plan!.symptoms, {Symptom.headache}); // "flu" is not ours
+      // Only its first question up front, and every danger check: the rest
+      // are written one at a time, from the answers.
+      expect(plan.adaptive, isTrue);
       expect(plan.followUps.map((f) => f.question), [
         'Is your headache worse in the morning or at night?',
         // Left out by the model: asked anyway, right after the first.
         'Does it come with vomiting, blurred vision, weakness or confusion?',
         'Did your headache start suddenly, as the worst headache ever?',
-        'Does long screen time make your headache worse?',
       ]);
-      // A dose and a repeated question are dropped.
       expect(plan.followUps.first.id, startsWith('ai_'));
-      expect(plan.followUps.last.options.map((o) => o.text), [
-        'Yes',
-        'No',
-        'Not sure',
-      ]);
       // Danger answers carry their urgency to the chat, reworded or not.
       for (final id in ['hd_danger', 'hd_signs']) {
         final danger = plan.followUps.firstWhere((f) => f.id == id);
@@ -144,6 +148,119 @@ void main() {
         'Any slurred speech, drooping face, or weakness on one side?',
       );
       expect(danger.options.last.urgency, Urgency.emergency);
+    });
+
+    test('then one question at a time, from the answers so far', () async {
+      final ai = _FakeAi(prefs, [
+        '{"done": false, "question": "Does your headache get worse after '
+            'looking at a screen?", "options": "Yes | No | Not sure"}',
+      ]);
+      final partials = <String>[];
+      final next = await GemmaVisitAssistant(ai).nextFollowUp(
+        patient: me,
+        description: 'bad headache since morning',
+        symptoms: {Symptom.headache},
+        answers: [
+          IntakeAnswer(
+            question: 'Is your headache worse in the morning or at night?',
+            answer: 'Night',
+            id: 'ai_0',
+            choice: 1,
+          ),
+        ],
+        ownAsked: 1,
+        language: AppLanguage.english,
+        careNotes: 'Medicines they take: Paracetamol',
+        onPartial: partials.add,
+      );
+      expect(
+        next!.question,
+        'Does your headache get worse after looking at a screen?',
+      );
+      expect(next.options.map((o) => o.text), ['Yes', 'No', 'Not sure']);
+      expect(next.id, startsWith('ai_'));
+      // It sees every answer, the saved context, and how many are left.
+      expect(ai.prompts.single, contains('worse in the morning or at night?'));
+      expect(ai.prompts.single, contains('→ Night'));
+      expect(ai.prompts.single, contains('Paracetamol'));
+      expect(ai.systems.single, contains('ONE short question at a time'));
+      expect(ai.systems.single, contains('at most 3 more'));
+      // Streamed as it was written.
+      expect(partials, hasLength(2));
+      // Half written: the question so far.
+      expect(
+        GemmaVisitAssistant.partialQuestions(partials.first).single,
+        startsWith('Does your headache get worse'),
+      );
+    });
+
+    test('the conversation ends when enough is known, or it goes wrong', () async {
+      Future<FollowUp?> next(String reply, {int ownAsked = 1}) =>
+          GemmaVisitAssistant(_FakeAi(prefs, [reply])).nextFollowUp(
+            patient: me,
+            description: 'headache',
+            symptoms: {Symptom.headache},
+            answers: [
+              IntakeAnswer(
+                question: 'Is it worse at night?',
+                answer: 'Yes',
+                id: 'ai_0',
+              ),
+            ],
+            ownAsked: ownAsked,
+            language: AppLanguage.english,
+          );
+      expect(await next('{"done": true}'), isNull);
+      // Asked already, in other words it would loop.
+      expect(
+        await next(
+          '{"done": false, "question": "Is it worse at night?", '
+          '"options": ["Yes", "No"]}',
+        ),
+        isNull,
+      );
+      // A dose is never written.
+      expect(
+        await next(
+          '{"done": false, "question": "Did you take 500 mg of paracetamol?", '
+          '"options": ["Yes", "No"]}',
+        ),
+        isNull,
+      );
+      expect(await next('I am not sure what to ask.'), isNull);
+      // The limit on its own questions.
+      expect(
+        await next(
+          '{"done": false, "question": "Does light bother your eyes?", '
+          '"options": ["Yes", "No"]}',
+          ownAsked: 4,
+        ),
+        isNull,
+      );
+      // Without the model: nothing more to ask.
+      expect(
+        await GemmaVisitAssistant(_FakeAi(prefs, ['{}'], ready: false))
+            .nextFollowUp(
+              patient: me,
+              description: '',
+              symptoms: const {},
+              answers: const [],
+              ownAsked: 0,
+              language: AppLanguage.english,
+            ),
+        isNull,
+      );
+    });
+
+    test('questions show while they are being written', () {
+      expect(
+        GemmaVisitAssistant.partialQuestions(
+          '{"questions": [{"topic": "understand", "question": "What could be '
+          'causing \\"it\\"?"}, {"topic": "tests", "question": "Which te',
+        ),
+        ['What could be causing "it"?', 'Which te'],
+      );
+      expect(GemmaVisitAssistant.partialQuestions('{"quest'), isEmpty);
     });
 
     test('in English, the bank follow-ups when nothing is usable', () async {

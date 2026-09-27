@@ -656,5 +656,10 @@
   "memoryNoResults": "“{query}” ಗೆ ಏನೂ ಸಿಗಲಿಲ್ಲ.",
   "memorySubtitle": "{name} ಬಗ್ಗೆ ಉಳಿಸಿದ ಎಲ್ಲವೂ: ಟಿಪ್ಪಣಿಗಳು, ವರದಿಗಳು, ಭೇಟಿಗಳು ಮತ್ತು ಔಷಧಿಗಳು.",
   "smartSearchBody": "ಒಂದು ಚಿಕ್ಕ AI ಮಾದರಿಯನ್ನು ({size} MB) ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ; ಆಗ Gurtu ಪದಗಳಿಂದ ಮಾತ್ರವಲ್ಲ, ಅರ್ಥದಿಂದಲೂ ಹುಡುಕುತ್ತದೆ. ಇದು ಈ ಫೋನ್‌ನಲ್ಲೇ ಇರುತ್ತದೆ.",
-  "smartSearchProgress": "ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… {percent}%"
+  "smartSearchProgress": "ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… {percent}%",
+  "addDocument": "PDF ಅಥವಾ ದಾಖಲೆ ಸೇರಿಸಿ",
+  "aiSummary": "Gurtu AI ಸಾರಾಂಶ",
+  "summarising": "Gurtu AI ಇದನ್ನು ಓದುತ್ತಿದೆ…",
+  "documentNoText": "ಉಳಿಸಲಾಗಿದೆ. ಈ ಫೈಲ್‌ನ ಪದಗಳನ್ನು Gurtu ಓದಲಾಗಲಿಲ್ಲ, ಹಾಗಾಗಿ ಮುಖ್ಯವಾದುದನ್ನು ಕೆಳಗೆ ಬರೆಯಿರಿ.",
+  "captureFileHint": "PDF, Word ಅಥವಾ ಪಠ್ಯ ಫೈಲ್"
 }

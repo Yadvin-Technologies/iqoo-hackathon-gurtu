@@ -164,6 +164,7 @@ class CareMoment {
     this.sample,
     this.verified = false,
     this.files = const [],
+    this.summary = '',
   });
 
   final String id;
@@ -179,6 +180,10 @@ class CareMoment {
 
   /// Photos and documents kept with it (see `AttachmentStore`).
   final List<String> files;
+
+  /// What Gurtu AI understood from it: what it is and what matters in it.
+  /// Empty when it wasn't read by the AI.
+  final String summary;
   final SampleText? sample;
   final DateTime timestamp;
   final SourceRef source;
@@ -198,22 +203,28 @@ class CareMoment {
     'source': source.toJson(),
     'verified': verified,
     'files': files,
+    'summary': summary,
   };
 
-  CareMoment copyWith({String? title, String? detail, List<String>? files}) =>
-      CareMoment(
-        id: id,
-        patientId: patientId,
-        createdBy: createdBy,
-        type: type,
-        timestamp: timestamp,
-        source: source,
-        title: title ?? this.title,
-        detail: detail ?? this.detail,
-        sample: sample,
-        verified: verified,
-        files: files ?? this.files,
-      );
+  CareMoment copyWith({
+    String? title,
+    String? detail,
+    List<String>? files,
+    String? summary,
+  }) => CareMoment(
+    id: id,
+    patientId: patientId,
+    createdBy: createdBy,
+    type: type,
+    timestamp: timestamp,
+    source: source,
+    title: title ?? this.title,
+    detail: detail ?? this.detail,
+    sample: sample,
+    verified: verified,
+    files: files ?? this.files,
+    summary: summary ?? this.summary,
+  );
 
   factory CareMoment.fromJson(Map<String, dynamic> j) => CareMoment(
     id: j['id'] as String,
@@ -229,6 +240,7 @@ class CareMoment {
     source: SourceRef.fromJson(j['source'] as Map<String, dynamic>),
     verified: j['verified'] as bool? ?? false,
     files: List<String>.from(j['files'] as List? ?? const []),
+    summary: j['summary'] as String? ?? '',
   );
 }
 

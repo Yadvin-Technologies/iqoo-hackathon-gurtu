@@ -349,6 +349,7 @@ class CareRepository extends ChangeNotifier {
     String title = '',
     String detail = '',
     List<String> files = const [],
+    String summary = '',
     String? patientId,
   }) {
     final patient = patientId == null
@@ -372,6 +373,7 @@ class CareRepository extends ChangeNotifier {
         reference: files.isEmpty ? null : files.first,
       ),
       files: [...files],
+      summary: summary.trim(),
     );
     moments.add(moment);
     _save();
